@@ -6,7 +6,7 @@ namespace GhostNetwork.Profiles.Domain
 {
     public class WorkExperienceContext
     {
-        public WorkExperienceContext(string companyName, DateTime startWork, DateTime finishWork)
+        public WorkExperienceContext(string companyName, DateTime startWork, DateTime? finishWork)
         {
             CompanyName = companyName;
             StartWork = startWork;
@@ -17,6 +17,6 @@ namespace GhostNetwork.Profiles.Domain
 
         public DateTime StartWork { get; }
 
-        public DateTime FinishWork { get; }
+        public DateTime? FinishWork { get; }
     }
 }

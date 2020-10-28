@@ -9,9 +9,9 @@ namespace GhostNetwork.Profiles.Domain
     {
         Task<WorkExperience> GetByIdAsync(long id);
 
-        Task<(DomainResult, long)> CreateAsync(string companyName, DateTime startWork, DateTime finishWork, long profileId);
+        Task<(DomainResult, long)> CreateAsync(string companyName, DateTime startWork, DateTime? finishWork, long profileId);
 
-        Task<DomainResult> UpdateAsync(long id, string companyName, DateTime startWork, DateTime finishWork, long profileId);
+        Task<DomainResult> UpdateAsync(long id, string companyName, DateTime startWork, DateTime? finishWork, long profileId);
 
         Task DeleteAsync(long id);
     }
@@ -20,18 +20,21 @@ namespace GhostNetwork.Profiles.Domain
     {
         private readonly IWorkExperienceStorage experienceStorage;
         private readonly IProfileStorage profileStorage;
+        private readonly IValidator<WorkExperienceContext> validator;
 
-        public WorkExperienceService(IWorkExperienceStorage experienceStorage, IProfileStorage profileStorage)
+        public WorkExperienceService(IWorkExperienceStorage experienceStorage, IProfileStorage profileStorage, IValidator<WorkExperienceContext> validator)
         {
             this.experienceStorage = experienceStorage;
             this.profileStorage = profileStorage;
+            this.validator = validator;
         }
 
-        public async Task<(DomainResult, long)> CreateAsync(string companyName, DateTime startWork, DateTime finishWork, long profileId)
+        public async Task<(DomainResult, long)> CreateAsync(string companyName, DateTime startWork, DateTime? finishWork, long profileId)
         {
-            if (string.IsNullOrEmpty(companyName))
+            var result = validator.Validate(new WorkExperienceContext(companyName, startWork, finishWork));
+            if (!result.Successed)
             {
-                return (DomainResult.Error("Company not found."),-1);
+                return (result, -1);
             }
 
             if (await profileStorage.FindByIdAsync(profileId) == null)
@@ -54,11 +57,12 @@ namespace GhostNetwork.Profiles.Domain
             return await experienceStorage.FindByIdAsync(id);
         }
 
-        public async Task<DomainResult> UpdateAsync(long id,string companyName, DateTime startWork, DateTime finishWork, long profileId)
+        public async Task<DomainResult> UpdateAsync(long id,string companyName, DateTime startWork, DateTime? finishWork, long profileId)
         {
-            if (string.IsNullOrEmpty(companyName))
+            var result = validator.Validate(new WorkExperienceContext(companyName, startWork.Date, finishWork));
+            if (!result.Successed)
             {
-                return DomainResult.Error("Company not found.");
+                return result;
             }
 
             if (await profileStorage.FindByIdAsync(profileId) == null)
