@@ -1,0 +1,41 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.1",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "GhostNetwork.Profiles.Domain/1.0.0": {
+        "dependencies": {
+          "Boberneprotiv.Domain": "0.0.2"
+        },
+        "runtime": {
+          "GhostNetwork.Profiles.Domain.dll": {}
+        }
+      },
+      "Boberneprotiv.Domain/0.0.2": {
+        "runtime": {
+          "lib/netstandard1.0/Boberneprotiv.Domain.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "GhostNetwork.Profiles.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Boberneprotiv.Domain/0.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-f1MFTIBm2NkQRol4D2LxMWJE9MgjhL03bME2c4oYcH10Q/yHtbEl4jp8Args9clCGbPp294mGqWSDo0Y56PIiw==",
+      "path": "boberneprotiv.domain/0.0.2",
+      "hashPath": "boberneprotiv.domain.0.0.2.nupkg.sha512"
+    }
+  }
+}

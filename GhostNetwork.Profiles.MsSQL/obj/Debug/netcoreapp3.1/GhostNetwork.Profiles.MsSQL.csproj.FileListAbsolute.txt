@@ -1,0 +1,15 @@
+C:\Users\Vlad\source\repos\GhostNetwork.Profiles\GhostNetwork.Profiles.MsSQL\bin\Debug\netcoreapp3.1\GhostNetwork.Profiles.MsSQL.deps.json
+C:\Users\Vlad\source\repos\GhostNetwork.Profiles\GhostNetwork.Profiles.MsSQL\bin\Debug\netcoreapp3.1\GhostNetwork.Profiles.MsSQL.dll
+C:\Users\Vlad\source\repos\GhostNetwork.Profiles\GhostNetwork.Profiles.MsSQL\obj\Debug\netcoreapp3.1\GhostNetwork.Profiles.MsSQL.csprojAssemblyReference.cache
+C:\Users\Vlad\source\repos\GhostNetwork.Profiles\GhostNetwork.Profiles.MsSQL\obj\Debug\netcoreapp3.1\GhostNetwork.Profiles.MsSQL.AssemblyInfoInputs.cache
+C:\Users\Vlad\source\repos\GhostNetwork.Profiles\GhostNetwork.Profiles.MsSQL\obj\Debug\netcoreapp3.1\GhostNetwork.Profiles.MsSQL.AssemblyInfo.cs
+C:\Users\Vlad\source\repos\GhostNetwork.Profiles\GhostNetwork.Profiles.MsSQL\bin\Debug\netcoreapp3.1\GhostNetwork.Profiles.MsSQL.pdb
+C:\Users\Vlad\source\repos\GhostNetwork.Profiles\GhostNetwork.Profiles.MsSQL\bin\Debug\netcoreapp3.1\GhostNetwork.Profiles.Domain.dll
+C:\Users\Vlad\source\repos\GhostNetwork.Profiles\GhostNetwork.Profiles.MsSQL\bin\Debug\netcoreapp3.1\GhostNetwork.Profiles.Domain.pdb
+C:\Users\Vlad\source\repos\GhostNetwork.Profiles\GhostNetwork.Profiles.MsSQL\obj\Debug\netcoreapp3.1\GhostNetwork.Profiles.MsSQL.csproj.CopyComplete
+C:\Users\Vlad\source\repos\GhostNetwork.Profiles\GhostNetwork.Profiles.MsSQL\obj\Debug\netcoreapp3.1\GhostNetwork.Profiles.MsSQL.dll
+C:\Users\Vlad\source\repos\GhostNetwork.Profiles\GhostNetwork.Profiles.MsSQL\obj\Debug\netcoreapp3.1\GhostNetwork.Profiles.MsSQL.pdb
+C:\Users\Vlad\source\repos\GhostNetwork.Profiles\GhostNetwork.Profiles.MsSQL\bin\Debug\netcoreapp3.1\GhostNetwork.Profiles.MsSQL.runtimeconfig.json
+C:\Users\Vlad\source\repos\GhostNetwork.Profiles\GhostNetwork.Profiles.MsSQL\bin\Debug\netcoreapp3.1\GhostNetwork.Profiles.MsSQL.runtimeconfig.dev.json
+C:\Users\Vlad\source\repos\GhostNetwork.Profiles\GhostNetwork.Profiles.MsSQL\obj\Debug\netcoreapp3.1\GhostNetwork.Profiles.MsSQL.genruntimeconfig.cache
+C:\Users\Vlad\source\repos\GhostNetwork.Profiles\GhostNetwork.Profiles.MsSQL\obj\Debug\netcoreapp3.1\GhostNetwork.Profiles.MsSQL.csproj.CoreCompileInputs.cache

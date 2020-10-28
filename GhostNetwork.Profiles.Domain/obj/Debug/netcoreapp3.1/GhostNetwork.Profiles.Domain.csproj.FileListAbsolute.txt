@@ -1,0 +1,9 @@
+C:\Users\Vlad\source\repos\GhostNetwork.Profiles\GhostNetwork.Profiles.Domain\bin\Debug\netcoreapp3.1\GhostNetwork.Profiles.Domain.deps.json
+C:\Users\Vlad\source\repos\GhostNetwork.Profiles\GhostNetwork.Profiles.Domain\bin\Debug\netcoreapp3.1\GhostNetwork.Profiles.Domain.dll
+C:\Users\Vlad\source\repos\GhostNetwork.Profiles\GhostNetwork.Profiles.Domain\bin\Debug\netcoreapp3.1\GhostNetwork.Profiles.Domain.pdb
+C:\Users\Vlad\source\repos\GhostNetwork.Profiles\GhostNetwork.Profiles.Domain\obj\Debug\netcoreapp3.1\GhostNetwork.Profiles.Domain.csprojAssemblyReference.cache
+C:\Users\Vlad\source\repos\GhostNetwork.Profiles\GhostNetwork.Profiles.Domain\obj\Debug\netcoreapp3.1\GhostNetwork.Profiles.Domain.AssemblyInfoInputs.cache
+C:\Users\Vlad\source\repos\GhostNetwork.Profiles\GhostNetwork.Profiles.Domain\obj\Debug\netcoreapp3.1\GhostNetwork.Profiles.Domain.AssemblyInfo.cs
+C:\Users\Vlad\source\repos\GhostNetwork.Profiles\GhostNetwork.Profiles.Domain\obj\Debug\netcoreapp3.1\GhostNetwork.Profiles.Domain.dll
+C:\Users\Vlad\source\repos\GhostNetwork.Profiles\GhostNetwork.Profiles.Domain\obj\Debug\netcoreapp3.1\GhostNetwork.Profiles.Domain.pdb
+C:\Users\Vlad\source\repos\GhostNetwork.Profiles\GhostNetwork.Profiles.Domain\obj\Debug\netcoreapp3.1\GhostNetwork.Profiles.Domain.csproj.CoreCompileInputs.cache
