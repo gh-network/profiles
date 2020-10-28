@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace GhostNetwork.Profiles.MsSQL
 {
@@ -10,8 +11,8 @@ namespace GhostNetwork.Profiles.MsSQL
 
         public DateTime StartWork { get; set; }
 
-        public DateTime FinishWork { get; set; }
-
+        public DateTime? FinishWork { get; set; }
+        
         public long ProfileId { get; set; }
 
         public ProfileEntity Profile { get; set; }
