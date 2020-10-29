@@ -20,6 +20,7 @@ namespace GhostNetwork.Profiles.MsSQL
             {
                 return null;
             }
+
             return ToDomain(profile);
         }
 

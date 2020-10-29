@@ -8,7 +8,8 @@ namespace GhostNetwork.Profiles.MsSQL
 
         public DbSet<WorkExperienceEntity> WorkExperience { get; set; }
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
         {
         }
     }
