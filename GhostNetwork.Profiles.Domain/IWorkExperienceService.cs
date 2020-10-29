@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Domain;
@@ -11,9 +12,11 @@ namespace GhostNetwork.Profiles.Domain
 
         Task<(DomainResult, long)> CreateAsync(string companyName, DateTime startWork, DateTime? finishWork, long profileId);
 
-        Task<DomainResult> UpdateAsync(long id, string companyName, DateTime startWork, DateTime? finishWork, long profileId);
+        Task<DomainResult> UpdateAsync(long id, string companyName, DateTime startWork, DateTime? finishWork);
 
         Task DeleteAsync(long id);
+
+        Task<IEnumerable<WorkExperience>> GetAllExperienceByProfileId(long profileId);
     }
 
     public class WorkExperienceService : IWorkExperienceService
@@ -52,12 +55,17 @@ namespace GhostNetwork.Profiles.Domain
             await experienceStorage.DeleteAsync(id);
         }
 
+        public async Task<IEnumerable<WorkExperience>> GetAllExperienceByProfileId(long profileId)
+        {
+            return await experienceStorage.GetAllExperienceByProfileId(profileId);
+        }
+
         public async Task<WorkExperience> GetByIdAsync(long id)
         {
             return await experienceStorage.FindByIdAsync(id);
         }
 
-        public async Task<DomainResult> UpdateAsync(long id,string companyName, DateTime startWork, DateTime? finishWork, long profileId)
+        public async Task<DomainResult> UpdateAsync(long id, string companyName, DateTime startWork, DateTime? finishWork)
         {
             var result = validator.Validate(new WorkExperienceContext(companyName, startWork.Date, finishWork));
             if (!result.Successed)
@@ -65,17 +73,12 @@ namespace GhostNetwork.Profiles.Domain
                 return result;
             }
 
-            if (await profileStorage.FindByIdAsync(profileId) == null)
-            {
-                return DomainResult.Error("Profile not found.");
-            }
-
-            if (await profileStorage.FindByIdAsync(id) == null)
+            if (await experienceStorage.FindByIdAsync(id) == null)
             {
                 return DomainResult.Error("Work experience not found.");
             }
 
-            var workExperience = new WorkExperience(id, profileId, finishWork, startWork, companyName);
+            var workExperience = new WorkExperience(id, 0, finishWork, startWork, companyName);
             await experienceStorage.UpdateAsync(id, workExperience);
             return DomainResult.Success();
         }

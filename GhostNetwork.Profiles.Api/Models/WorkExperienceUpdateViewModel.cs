@@ -2,14 +2,12 @@
 
 namespace GhostNetwork.Profiles.Api.Models
 {
-    public class WorkExperienceCreateViewModel
+    public class WorkExperienceUpdateViewModel
     {
         public string CompanyName { get; set; }
 
         public DateTime StartWork { get; set; }
 
         public DateTime? FinishWork { get; set; }
-
-        public long ProfileId { get; set; }
     }
 }

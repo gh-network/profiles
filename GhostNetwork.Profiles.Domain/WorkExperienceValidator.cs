@@ -1,7 +1,6 @@
-﻿using Domain;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using Domain;
 
 namespace GhostNetwork.Profiles.Domain
 {

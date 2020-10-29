@@ -38,8 +38,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> CreateAsync([FromBody] ProfileCreateViewModel createModel)
         {
-            var (result, id) = await profileService.CreateAsync(createModel.FirstName, createModel.LastName, createModel.Gender, createModel.DateOfBirth,
-                createModel.City);
+            var (result, id) = await profileService.CreateAsync(createModel.FirstName, createModel.LastName, createModel.Gender, createModel.DateOfBirth, createModel.City);
 
             if (result.Successed)
             {
@@ -54,8 +53,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> UpdateAsync([FromRoute]long id, [FromBody] ProfileUpdateViewModel updateModel)
         {
-            var result = await profileService.UpdateAsync(id, updateModel.FirstName, updateModel.LastName,
-                updateModel.Gender, updateModel.DateOfBirth, updateModel.City);
+            var result = await profileService.UpdateAsync(id, updateModel.FirstName, updateModel.LastName, updateModel.Gender, updateModel.DateOfBirth, updateModel.City);
 
             if (result.Successed)
             {

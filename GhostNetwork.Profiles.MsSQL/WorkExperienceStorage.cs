@@ -1,5 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using GhostNetwork.Profiles.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace GhostNetwork.Profiles.MsSQL
 {
@@ -30,6 +33,16 @@ namespace GhostNetwork.Profiles.MsSQL
             return ToDomain(workExperience);
         }
 
+        public async Task DeleteAllExperienceInProfile(long profileId)
+        {
+            if (await context.Profiles.FindAsync(profileId) != null)
+            {
+                var workExperience = context.WorkExperience.Where(x => x.ProfileId == profileId);
+                context.WorkExperience.RemoveRange(workExperience);
+                await context.SaveChangesAsync();
+            }
+        }
+
         public async Task<long> InsertAsync(WorkExperience workExperience)
         {
             var newWorkExperience = new WorkExperienceEntity
@@ -49,7 +62,7 @@ namespace GhostNetwork.Profiles.MsSQL
 
         public async Task UpdateAsync(long id, WorkExperience workExperience)
         {
-            var experience = await context.WorkExperience.FindAsync(workExperience);
+            var experience = await context.WorkExperience.FindAsync(id);
             experience.CompanyName = workExperience.CompanyName;
             experience.FinishWork = workExperience.FinishWork;
             experience.StartWork = workExperience.StartWork;
@@ -57,6 +70,11 @@ namespace GhostNetwork.Profiles.MsSQL
             context.WorkExperience.Update(experience);
 
             await context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<WorkExperience>> GetAllExperienceByProfileId(long profileId)
+        {
+            return await context.WorkExperience.Where(x => x.ProfileId == profileId).Select(x => ToDomain(x)).ToListAsync();
         }
 
         private static WorkExperience ToDomain(WorkExperienceEntity entity)

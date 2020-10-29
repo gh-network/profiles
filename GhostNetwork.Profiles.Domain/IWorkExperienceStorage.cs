@@ -13,6 +13,10 @@ namespace GhostNetwork.Profiles.Domain
 
         Task UpdateAsync(long id, WorkExperience workExperience);
 
+        Task DeleteAllExperienceInProfile(long profileId);
+
+        Task<IEnumerable<WorkExperience>> GetAllExperienceByProfileId(long profileId);
+
         Task DeleteAsync(long id);
     }
 }
