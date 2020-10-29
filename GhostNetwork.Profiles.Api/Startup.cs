@@ -39,6 +39,7 @@ namespace GhostNetwork.Profiles.Api
             services.AddScoped<IValidator<ProfileContext>, ProfileValidator>();
             services.AddScoped<IWorkExperienceService, WorkExperienceService>();
             services.AddScoped<IWorkExperienceStorage, WorkExperienceStorage>();
+            services.AddScoped<IValidator<WorkExperienceContext>, WorkExperienceValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,7 +58,7 @@ namespace GhostNetwork.Profiles.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            }); ;
+            });
         }
     }
 }
