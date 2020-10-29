@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using GhostNetwork.Profiles.Api.Helpers;
 using GhostNetwork.Profiles.Api.Models;
 using GhostNetwork.Profiles.Domain;
@@ -12,10 +14,12 @@ namespace GhostNetwork.Profiles.Api.Controllers
     public class WorkExperienceController : ControllerBase
     {
         private readonly IWorkExperienceService workExperienceService;
+        private readonly IProfileService profileService;
 
-        public WorkExperienceController(IWorkExperienceService workExperienceService)
+        public WorkExperienceController(IWorkExperienceService workExperienceService, IProfileService profileService)
         {
             this.workExperienceService = workExperienceService;
+            this.profileService = profileService;
         }
 
         [HttpGet("{id}")]
@@ -25,9 +29,30 @@ namespace GhostNetwork.Profiles.Api.Controllers
         {
             var workExperience = await workExperienceService.GetByIdAsync(id);
 
-            if (workExperienceService != null)
+            if (workExperience != null)
             {
                 return Ok(workExperience);
+            }
+
+            return NotFound();
+        }
+
+        [HttpGet("users/{profileId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<WorkExperience>>> FindUserExperience(long profileId)
+        {
+            if (await profileService.GetByIdAsync(profileId) == null)
+            {
+                return BadRequest("Profile not found.");
+            }
+
+            var experience = await workExperienceService.GetAllExperienceByProfileId(profileId);
+
+            if (experience.Any())
+            {
+                return Ok(experience);
             }
 
             return NotFound();
@@ -38,12 +63,11 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> CreateAsync([FromBody] WorkExperienceCreateViewModel model)
         {
-            var (result, id) = await workExperienceService.CreateAsync(model.CompanyName, model.StartWork, model.FinishWork,
-                model.ProfileId);
+            var (result, id) = await workExperienceService.CreateAsync(model.CompanyName, model.StartWork, model.FinishWork, model.ProfileId);
 
             if (result.Successed)
             {
-                return Created(Url.Action("GetById", new {id}), await workExperienceService.GetByIdAsync(id));
+                return Created(Url.Action("GetById", new { id }), await workExperienceService.GetByIdAsync(id));
             }
 
             return BadRequest(result.ToProblemDetails());
@@ -61,6 +85,20 @@ namespace GhostNetwork.Profiles.Api.Controllers
 
             await workExperienceService.DeleteAsync(id);
             return Ok();
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> UpdateAsync([FromRoute]long id, [FromBody] WorkExperienceUpdateViewModel model)
+        {
+            var result = await workExperienceService.UpdateAsync(id, model.CompanyName, model.StartWork, model.FinishWork);
+            if (result.Successed)
+            {
+                return NoContent();
+            }
+
+            return BadRequest(result.ToProblemDetails());
         }
     }
 }
