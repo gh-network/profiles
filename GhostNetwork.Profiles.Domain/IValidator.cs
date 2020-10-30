@@ -14,11 +14,9 @@ namespace GhostNetwork.Profiles.Domain
     {
         public DomainResult Validate(ProfileContext param)
         {
-            var result = Validate(param.DateOfBirth,(nameof(param.FirstName), param.FirstName),
-                (nameof(param.LastName), param.LastName), (nameof(param.City), param.City));
+            var result = Validate(param.DateOfBirth, (nameof(param.FirstName), param.FirstName), (nameof(param.LastName), param.LastName), (nameof(param.City), param.City));
 
             return result;
-
         }
 
         private DomainResult Validate(DateTime date, params (string name, string value)[] str)
@@ -36,6 +34,7 @@ namespace GhostNetwork.Profiles.Domain
             {
                 results.Add(new DomainError("Date is greater than date now"));
             }
+
             return !results.Any() ? DomainResult.Success() : DomainResult.Error(results);
         }
     }

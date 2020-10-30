@@ -19,15 +19,16 @@ namespace GhostNetwork.Profiles.Domain
     {
         private readonly IProfileStorage profileStorage;
         private readonly IValidator<ProfileContext> profileValidator;
+        private readonly IWorkExperienceStorage workExperienceStorage;
 
-        public ProfileService(IProfileStorage profileStorage, IValidator<ProfileContext> profileValidator)
+        public ProfileService(IProfileStorage profileStorage, IValidator<ProfileContext> profileValidator, IWorkExperienceStorage workExperienceStorage)
         {
             this.profileStorage = profileStorage;
             this.profileValidator = profileValidator;
+            this.workExperienceStorage = workExperienceStorage;
         }
 
-        public async Task<(DomainResult, long)> CreateAsync(string firstName, string lastName, bool gender,
-            DateTime dateOfBirth, string city)
+        public async Task<(DomainResult, long)> CreateAsync(string firstName, string lastName, bool gender, DateTime dateOfBirth, string city)
         {
             var result = profileValidator.Validate(new ProfileContext(firstName, lastName, dateOfBirth, city));
 
@@ -45,6 +46,7 @@ namespace GhostNetwork.Profiles.Domain
 
         public async Task DeleteAsync(long id)
         {
+            await workExperienceStorage.DeleteAllExperienceInProfile(id);
             await profileStorage.DeleteAsync(id);
         }
 
