@@ -13,8 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GhostNetwork.Profiles.Domain\GhostNetwork.Profiles.Domain.csproj" />
-    <ProjectReference Include="..\Infrastructure\GhostNetwork.Profiles.MsSQL\GhostNetwork.Profiles.MsSQL.csproj" />
+    <ProjectReference Include="..\..\GhostNetwork.Profiles.Domain\GhostNetwork.Profiles.Domain.csproj" />
   </ItemGroup>
 
 </Project>
