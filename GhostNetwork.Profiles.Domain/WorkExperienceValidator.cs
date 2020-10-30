@@ -30,11 +30,6 @@ namespace GhostNetwork.Profiles.Domain
                 errors.Add(new DomainError("Finish work must be greater than start work."));
             }
 
-            if (param.StartWork > param.FinishWork)
-            {
-                errors.Add(new DomainError("Start work is greater than finish work."));
-            }
-
             return DomainResult.Error(errors);
         }
     }
