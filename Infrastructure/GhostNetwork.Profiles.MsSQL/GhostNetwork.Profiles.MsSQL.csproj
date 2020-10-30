@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-	<CodeAnalysisRuleSet>../GhostNetwork.ruleset</CodeAnalysisRuleSet>
+	<CodeAnalysisRuleSet>..\..\GhostNetwork.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GhostNetwork.Profiles.Domain\GhostNetwork.Profiles.Domain.csproj" />
+    <ProjectReference Include="..\..\GhostNetwork.Profiles.Domain\GhostNetwork.Profiles.Domain.csproj" />
   </ItemGroup>
 
 </Project>

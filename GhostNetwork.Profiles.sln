@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30309.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GhostNetwork.Profiles.MsSQL", "GhostNetwork.Profiles.MsSQL\GhostNetwork.Profiles.MsSQL.csproj", "{2111DBD2-8457-4120-8F48-D9621A2EC7E5}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GhostNetwork.Profiles.Api", "GhostNetwork.Profiles.Api\GhostNetwork.Profiles.Api.csproj", "{AFA5C08F-F763-4CE9-8E46-E46364A625C8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GhostNetwork.Profiles.Domain", "GhostNetwork.Profiles.Domain\GhostNetwork.Profiles.Domain.csproj", "{9B780D79-9E87-400E-8B50-57A6BD95D718}"
@@ -13,7 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3BEBF673-DAD1-49C5-8CE7-31480E00A455}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GhostNetwork.Profiles.Tests", "GhostNetwork.Profiles.Tests\GhostNetwork.Profiles.Tests.csproj", "{34CC5632-7C95-4EA2-9497-DCF48A8CC537}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GhostNetwork.Profiles.Tests", "GhostNetwork.Profiles.Tests\GhostNetwork.Profiles.Tests.csproj", "{34CC5632-7C95-4EA2-9497-DCF48A8CC537}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GhostNetwork.Profiles.MsSQL", "Infrastructure\GhostNetwork.Profiles.MsSQL\GhostNetwork.Profiles.MsSQL.csproj", "{FD6E64C3-DD92-449F-AA2C-97500E925000}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +21,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2111DBD2-8457-4120-8F48-D9621A2EC7E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2111DBD2-8457-4120-8F48-D9621A2EC7E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2111DBD2-8457-4120-8F48-D9621A2EC7E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2111DBD2-8457-4120-8F48-D9621A2EC7E5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AFA5C08F-F763-4CE9-8E46-E46364A625C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AFA5C08F-F763-4CE9-8E46-E46364A625C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFA5C08F-F763-4CE9-8E46-E46364A625C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -37,13 +33,17 @@ Global
 		{34CC5632-7C95-4EA2-9497-DCF48A8CC537}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34CC5632-7C95-4EA2-9497-DCF48A8CC537}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34CC5632-7C95-4EA2-9497-DCF48A8CC537}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD6E64C3-DD92-449F-AA2C-97500E925000}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD6E64C3-DD92-449F-AA2C-97500E925000}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD6E64C3-DD92-449F-AA2C-97500E925000}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD6E64C3-DD92-449F-AA2C-97500E925000}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{2111DBD2-8457-4120-8F48-D9621A2EC7E5} = {4ACA3F10-C8C1-4459-824C-02DB9492E5BE}
 		{34CC5632-7C95-4EA2-9497-DCF48A8CC537} = {3BEBF673-DAD1-49C5-8CE7-31480E00A455}
+		{FD6E64C3-DD92-449F-AA2C-97500E925000} = {4ACA3F10-C8C1-4459-824C-02DB9492E5BE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {33CD44E3-E2F3-4834-8166-73329E296C4C}
