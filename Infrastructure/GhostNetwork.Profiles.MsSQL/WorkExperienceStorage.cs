@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using GhostNetwork.Profiles.Domain;
+using GhostNetwork.Profiles.Domain.WorkExperiences;
 using Microsoft.EntityFrameworkCore;
 
 namespace GhostNetwork.Profiles.MsSQL

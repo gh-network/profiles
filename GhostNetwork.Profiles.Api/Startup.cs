@@ -1,4 +1,5 @@
 using GhostNetwork.Profiles.Domain;
+using GhostNetwork.Profiles.Domain.WorkExperiences;
 using GhostNetwork.Profiles.MsSQL;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

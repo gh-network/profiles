@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Domain;
+using GhostNetwork.Profiles.Domain.WorkExperiences;
 
 namespace GhostNetwork.Profiles.Domain
 {

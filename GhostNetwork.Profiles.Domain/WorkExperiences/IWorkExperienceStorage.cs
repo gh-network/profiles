@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GhostNetwork.Profiles.Domain
+namespace GhostNetwork.Profiles.Domain.WorkExperiences
 {
     public interface IWorkExperienceStorage
     {

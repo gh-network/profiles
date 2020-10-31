@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace GhostNetwork.Profiles.Domain
+namespace GhostNetwork.Profiles.Domain.WorkExperiences
 {
     public class WorkExperienceContext
     {

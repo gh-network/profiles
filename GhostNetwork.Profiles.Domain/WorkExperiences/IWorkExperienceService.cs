@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using Domain;
 
-namespace GhostNetwork.Profiles.Domain
+namespace GhostNetwork.Profiles.Domain.WorkExperiences
 {
     public interface IWorkExperienceService
     {
