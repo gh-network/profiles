@@ -9,11 +9,11 @@ namespace GhostNetwork.Profiles.WorkExperiences
 
         Task<string> InsertAsync(WorkExperience workExperience);
 
-        Task UpdateAsync(string id, WorkExperience workExperience);
+        Task UpdateAsync(WorkExperience workExperience);
 
-        Task DeleteAllExperienceInProfile(string profileId);
+        Task DeleteAllExperienceInProfileAsync(string profileId);
 
-        Task<IEnumerable<WorkExperience>> GetAllExperienceByProfileId(string profileId);
+        Task<IEnumerable<WorkExperience>> GetAllExperienceByProfileIdAsync(string profileId);
 
         Task DeleteAsync(string id);
     }

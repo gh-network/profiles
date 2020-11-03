@@ -34,7 +34,7 @@ namespace GhostNetwork.Profiles.MsSQL
             return ToDomain(workExperience);
         }
 
-        public async Task DeleteAllExperienceInProfile(string profileId)
+        public async Task DeleteAllExperienceInProfileAsync(string profileId)
         {
             if (long.TryParse(profileId, out var lProfileId))
             {
@@ -58,7 +58,7 @@ namespace GhostNetwork.Profiles.MsSQL
             {
                 throw new AggregateException(nameof(workExperience.ProfileId));
             }
-            
+
             var newWorkExperience = new WorkExperienceEntity
             {
                 ProfileId = lProfileId,
@@ -73,9 +73,9 @@ namespace GhostNetwork.Profiles.MsSQL
             return newWorkExperience.Id.ToString();
         }
 
-        public async Task UpdateAsync(string id, WorkExperience workExperience)
+        public async Task UpdateAsync(WorkExperience workExperience)
         {
-            var experience = await context.WorkExperience.FindAsync(id);
+            var experience = await context.WorkExperience.FindAsync(workExperience.Id);
             experience.CompanyName = workExperience.CompanyName;
             experience.FinishWork = workExperience.FinishWork;
             experience.StartWork = workExperience.StartWork;
@@ -85,17 +85,16 @@ namespace GhostNetwork.Profiles.MsSQL
             await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<WorkExperience>> GetAllExperienceByProfileId(string profileId)
+        public async Task<IEnumerable<WorkExperience>> GetAllExperienceByProfileIdAsync(string profileId)
         {
             if (long.TryParse(profileId, out var lProfileId))
             {
                 return Enumerable.Empty<WorkExperience>();
             }
 
-            return await context.WorkExperience
-                .Where(x => x.ProfileId == lProfileId)
-                .Select(x => ToDomain(x))
-                .ToListAsync();
+            var workExperience = await context.WorkExperience.Where(x => x.ProfileId == lProfileId).ToListAsync();
+
+            return workExperience.Select(ToDomain);
         }
 
         private static WorkExperience ToDomain(WorkExperienceEntity entity)
@@ -103,8 +102,8 @@ namespace GhostNetwork.Profiles.MsSQL
             return new WorkExperience(
                 entity.Id.ToString(),
                 entity.ProfileId.ToString(),
-                entity.FinishWork,
                 entity.StartWork,
+                entity.FinishWork,
                 entity.CompanyName);
         }
     }
