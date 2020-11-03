@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace GhostNetwork.Profiles.MsSQL
 {
@@ -13,7 +14,12 @@ namespace GhostNetwork.Profiles.MsSQL
 
         public async Task<Profile> FindByIdAsync(string id)
         {
-            var profile = await context.Profiles.FindAsync(id);
+            if (!long.TryParse(id, out var lId))
+            {
+                throw new ArgumentException(nameof(id));
+            }
+
+            var profile = await context.Profiles.FindAsync(lId);
 
             return profile == null
                 ? null

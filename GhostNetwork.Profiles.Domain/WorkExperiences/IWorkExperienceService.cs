@@ -45,8 +45,8 @@ namespace GhostNetwork.Profiles.WorkExperiences
             }
 
             var workExperience = new WorkExperience(default, profileId, startWork, finishWork, companyName);
-            await experienceStorage.InsertAsync(workExperience);
-            return (DomainResult.Success(), workExperience.Id);
+            var id = await experienceStorage.InsertAsync(workExperience);
+            return (DomainResult.Success(), id);
         }
 
         public async Task DeleteAsync(string id)
@@ -72,13 +72,15 @@ namespace GhostNetwork.Profiles.WorkExperiences
                 return result;
             }
 
-            if (await experienceStorage.FindByIdAsync(id) == null)
+            var workExp = await experienceStorage.FindByIdAsync(id);
+
+            if (workExp == null)
             {
                 return DomainResult.Error("Work experience not found.");
             }
 
-            var workExperience = new WorkExperience(id, default, startWork, finishWork, companyName);
-            await experienceStorage.UpdateAsync(workExperience);
+            workExp.Update(companyName, startWork, finishWork);
+            await experienceStorage.UpdateAsync(workExp);
             return DomainResult.Success();
         }
     }

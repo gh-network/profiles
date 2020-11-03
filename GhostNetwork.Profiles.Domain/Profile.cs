@@ -25,5 +25,14 @@ namespace GhostNetwork.Profiles
         public DateTime DateOfBirth { get; private set; }
 
         public string City { get; private set; }
+
+        public void Update(string firstName, string lastName, bool gender, DateTime dateOfBirth, string city)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Gender = gender;
+            DateOfBirth = dateOfBirth;
+            City = city;
+        }
     }
 }

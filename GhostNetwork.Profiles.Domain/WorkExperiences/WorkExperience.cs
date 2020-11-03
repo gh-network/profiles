@@ -21,6 +21,13 @@ namespace GhostNetwork.Profiles.WorkExperiences
 
         public DateTime? FinishWork { get; private set; }
 
-        public string ProfileId { get; private set; }
+        public string ProfileId { get; }
+
+        public void Update(string companyName, DateTime startWork, DateTime? finishWork)
+        {
+            CompanyName = companyName;
+            StartWork = startWork;
+            FinishWork = finishWork;
+        }
     }
 }

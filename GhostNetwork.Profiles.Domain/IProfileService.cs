@@ -69,8 +69,8 @@ namespace GhostNetwork.Profiles
                     return DomainResult.Error("Profile not found.");
                 }
 
-                var updatedProfile = new Profile(id, firstName, lastName, gender, dateOfBirth, city);
-                await profileStorage.UpdateAsync(id, updatedProfile);
+                profile.Update(firstName, lastName, gender, dateOfBirth, city);
+                await profileStorage.UpdateAsync(id, profile);
                 return DomainResult.Success();
             }
 

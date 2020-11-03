@@ -18,14 +18,24 @@ namespace GhostNetwork.Profiles.MsSQL
 
         public async Task DeleteAsync(string id)
         {
-            var experience = await context.WorkExperience.FindAsync(id);
+            if (!long.TryParse(id, out var lId))
+            {
+                return;
+            }
+
+            var experience = await context.WorkExperience.FindAsync(lId);
             context.WorkExperience.Remove(experience);
             await context.SaveChangesAsync();
         }
 
         public async Task<WorkExperience> FindByIdAsync(string id)
         {
-            var workExperience = await context.WorkExperience.FindAsync(id);
+            if (!long.TryParse(id, out var lId))
+            {
+                throw new ArgumentException(nameof(id));
+            }
+
+            var workExperience = await context.WorkExperience.FindAsync(lId);
             if (workExperience == null)
             {
                 return null;
@@ -54,7 +64,7 @@ namespace GhostNetwork.Profiles.MsSQL
 
         public async Task<string> InsertAsync(WorkExperience workExperience)
         {
-            if (long.TryParse(workExperience.ProfileId, out var lProfileId))
+            if (!long.TryParse(workExperience.ProfileId, out var lProfileId))
             {
                 throw new AggregateException(nameof(workExperience.ProfileId));
             }
@@ -75,7 +85,12 @@ namespace GhostNetwork.Profiles.MsSQL
 
         public async Task UpdateAsync(WorkExperience workExperience)
         {
-            var experience = await context.WorkExperience.FindAsync(workExperience.Id);
+            if (!long.TryParse(workExperience.Id, out var lId))
+            {
+                return;
+            }
+
+            var experience = await context.WorkExperience.FindAsync(lId);
             experience.CompanyName = workExperience.CompanyName;
             experience.FinishWork = workExperience.FinishWork;
             experience.StartWork = workExperience.StartWork;
@@ -87,7 +102,7 @@ namespace GhostNetwork.Profiles.MsSQL
 
         public async Task<IEnumerable<WorkExperience>> GetAllExperienceByProfileIdAsync(string profileId)
         {
-            if (long.TryParse(profileId, out var lProfileId))
+            if (!long.TryParse(profileId, out var lProfileId))
             {
                 return Enumerable.Empty<WorkExperience>();
             }
