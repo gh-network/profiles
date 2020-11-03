@@ -31,8 +31,7 @@ namespace GhostNetwork.Profiles.WorkExperiences
             this.validator = validator;
         }
 
-        public async Task<(DomainResult, string)> CreateAsync(string companyName, DateTime startWork,
-            DateTime? finishWork, string profileId)
+        public async Task<(DomainResult, string)> CreateAsync(string companyName, DateTime startWork, DateTime? finishWork, string profileId)
         {
             var result = validator.Validate(new WorkExperienceContext(companyName, startWork, finishWork));
             if (!result.Successed)
@@ -45,7 +44,7 @@ namespace GhostNetwork.Profiles.WorkExperiences
                 return (DomainResult.Error("Profile not found."), default);
             }
 
-            var workExperience = new WorkExperience(default, profileId, finishWork, startWork, companyName);
+            var workExperience = new WorkExperience(default, profileId, startWork, finishWork, companyName);
             await experienceStorage.InsertAsync(workExperience);
             return (DomainResult.Success(), workExperience.Id);
         }
@@ -65,8 +64,7 @@ namespace GhostNetwork.Profiles.WorkExperiences
             return await experienceStorage.FindByIdAsync(id);
         }
 
-        public async Task<DomainResult> UpdateAsync(string id, string companyName, DateTime startWork,
-            DateTime? finishWork)
+        public async Task<DomainResult> UpdateAsync(string id, string companyName, DateTime startWork, DateTime? finishWork)
         {
             var result = validator.Validate(new WorkExperienceContext(companyName, startWork.Date, finishWork));
             if (!result.Successed)
@@ -79,8 +77,8 @@ namespace GhostNetwork.Profiles.WorkExperiences
                 return DomainResult.Error("Work experience not found.");
             }
 
-            var workExperience = new WorkExperience(id, default, finishWork, startWork, companyName);
-            await experienceStorage.UpdateAsync(id, workExperience);
+            var workExperience = new WorkExperience(id, default, startWork, finishWork, companyName);
+            await experienceStorage.UpdateAsync(workExperience);
             return DomainResult.Success();
         }
     }

@@ -29,8 +29,7 @@ namespace GhostNetwork.Profiles
             this.workExperienceStorage = workExperienceStorage;
         }
 
-        public async Task<(DomainResult, string)> CreateAsync(string firstName, string lastName, bool gender,
-            DateTime dateOfBirth, string city)
+        public async Task<(DomainResult, string)> CreateAsync(string firstName, string lastName, bool gender, DateTime dateOfBirth, string city)
         {
             var result = profileValidator.Validate(new ProfileContext(firstName, lastName, dateOfBirth, city));
 
@@ -48,7 +47,7 @@ namespace GhostNetwork.Profiles
 
         public async Task DeleteAsync(string id)
         {
-            await workExperienceStorage.DeleteAllExperienceInProfile(id);
+            await workExperienceStorage.DeleteAllExperienceInProfileAsync(id);
             await profileStorage.DeleteAsync(id);
         }
 
@@ -57,8 +56,7 @@ namespace GhostNetwork.Profiles
             return await profileStorage.FindByIdAsync(id);
         }
 
-        public async Task<DomainResult> UpdateAsync(string id, string firstName, string lastName, bool gender,
-            DateTime dateOfBirth, string city)
+        public async Task<DomainResult> UpdateAsync(string id, string firstName, string lastName, bool gender, DateTime dateOfBirth, string city)
         {
             var result = profileValidator.Validate(new ProfileContext(firstName, lastName, dateOfBirth, city));
 
