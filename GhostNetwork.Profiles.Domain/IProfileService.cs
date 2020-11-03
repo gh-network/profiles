@@ -7,13 +7,13 @@ namespace GhostNetwork.Profiles
 {
     public interface IProfileService
     {
-        Task<Profile> GetByIdAsync(long id);
+        Task<Profile> GetByIdAsync(string id);
 
-        Task<(DomainResult, long)> CreateAsync(string firstName, string lastName, bool gender, DateTime dateOfBirth, string city);
+        Task<(DomainResult, string)> CreateAsync(string firstName, string lastName, bool gender, DateTime dateOfBirth, string city);
 
-        Task<DomainResult> UpdateAsync(long id, string firstName, string lastName, bool gender, DateTime dateOfBirth, string city);
+        Task<DomainResult> UpdateAsync(string id, string firstName, string lastName, bool gender, DateTime dateOfBirth, string city);
 
-        Task DeleteAsync(long id);
+        Task DeleteAsync(string id);
     }
 
     public class ProfileService : IProfileService
@@ -29,34 +29,36 @@ namespace GhostNetwork.Profiles
             this.workExperienceStorage = workExperienceStorage;
         }
 
-        public async Task<(DomainResult, long)> CreateAsync(string firstName, string lastName, bool gender, DateTime dateOfBirth, string city)
+        public async Task<(DomainResult, string)> CreateAsync(string firstName, string lastName, bool gender,
+            DateTime dateOfBirth, string city)
         {
             var result = profileValidator.Validate(new ProfileContext(firstName, lastName, dateOfBirth, city));
 
             if (!result.Successed)
             {
-                return (result, -1);
+                return (result, default);
             }
 
-            var profile = new Profile(0, firstName, lastName, gender, dateOfBirth, city);
+            var profile = new Profile(default, firstName, lastName, gender, dateOfBirth, city);
 
             var profileId = await profileStorage.InsertAsync(profile);
 
             return (DomainResult.Success(), profileId);
         }
 
-        public async Task DeleteAsync(long id)
+        public async Task DeleteAsync(string id)
         {
             await workExperienceStorage.DeleteAllExperienceInProfile(id);
             await profileStorage.DeleteAsync(id);
         }
 
-        public async Task<Profile> GetByIdAsync(long id)
+        public async Task<Profile> GetByIdAsync(string id)
         {
             return await profileStorage.FindByIdAsync(id);
         }
 
-        public async Task<DomainResult> UpdateAsync(long id, string firstName, string lastName, bool gender, DateTime dateOfBirth, string city)
+        public async Task<DomainResult> UpdateAsync(string id, string firstName, string lastName, bool gender,
+            DateTime dateOfBirth, string city)
         {
             var result = profileValidator.Validate(new ProfileContext(firstName, lastName, dateOfBirth, city));
 

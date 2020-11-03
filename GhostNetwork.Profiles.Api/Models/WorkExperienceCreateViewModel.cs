@@ -10,6 +10,6 @@ namespace GhostNetwork.Profiles.Api.Models
 
         public DateTime? FinishWork { get; set; }
 
-        public long ProfileId { get; set; }
+        public string ProfileId { get; set; }
     }
 }

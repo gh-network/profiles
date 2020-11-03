@@ -7,15 +7,15 @@ namespace GhostNetwork.Profiles.WorkExperiences
 {
     public interface IWorkExperienceService
     {
-        Task<WorkExperience> GetByIdAsync(long id);
+        Task<WorkExperience> GetByIdAsync(string id);
 
-        Task<(DomainResult, long)> CreateAsync(string companyName, DateTime startWork, DateTime? finishWork, long profileId);
+        Task<(DomainResult, string)> CreateAsync(string companyName, DateTime startWork, DateTime? finishWork, string profileId);
 
-        Task<DomainResult> UpdateAsync(long id, string companyName, DateTime startWork, DateTime? finishWork);
+        Task<DomainResult> UpdateAsync(string id, string companyName, DateTime startWork, DateTime? finishWork);
 
-        Task DeleteAsync(long id);
+        Task DeleteAsync(string id);
 
-        Task<IEnumerable<WorkExperience>> GetAllExperienceByProfileId(long profileId);
+        Task<IEnumerable<WorkExperience>> GetAllExperienceByProfileId(string profileId);
     }
 
     public class WorkExperienceService : IWorkExperienceService
@@ -31,40 +31,42 @@ namespace GhostNetwork.Profiles.WorkExperiences
             this.validator = validator;
         }
 
-        public async Task<(DomainResult, long)> CreateAsync(string companyName, DateTime startWork, DateTime? finishWork, long profileId)
+        public async Task<(DomainResult, string)> CreateAsync(string companyName, DateTime startWork,
+            DateTime? finishWork, string profileId)
         {
             var result = validator.Validate(new WorkExperienceContext(companyName, startWork, finishWork));
             if (!result.Successed)
             {
-                return (result, -1);
+                return (result, default);
             }
 
             if (await profileStorage.FindByIdAsync(profileId) == null)
             {
-                return (DomainResult.Error("Profile not found."), -1);
+                return (DomainResult.Error("Profile not found."), default);
             }
 
-            var workExperience = new WorkExperience(0, profileId, finishWork, startWork, companyName);
+            var workExperience = new WorkExperience(default, profileId, finishWork, startWork, companyName);
             await experienceStorage.InsertAsync(workExperience);
             return (DomainResult.Success(), workExperience.Id);
         }
 
-        public async Task DeleteAsync(long id)
+        public async Task DeleteAsync(string id)
         {
             await experienceStorage.DeleteAsync(id);
         }
 
-        public async Task<IEnumerable<WorkExperience>> GetAllExperienceByProfileId(long profileId)
+        public async Task<IEnumerable<WorkExperience>> GetAllExperienceByProfileId(string profileId)
         {
             return await experienceStorage.GetAllExperienceByProfileId(profileId);
         }
 
-        public async Task<WorkExperience> GetByIdAsync(long id)
+        public async Task<WorkExperience> GetByIdAsync(string id)
         {
             return await experienceStorage.FindByIdAsync(id);
         }
 
-        public async Task<DomainResult> UpdateAsync(long id, string companyName, DateTime startWork, DateTime? finishWork)
+        public async Task<DomainResult> UpdateAsync(string id, string companyName, DateTime startWork,
+            DateTime? finishWork)
         {
             var result = validator.Validate(new WorkExperienceContext(companyName, startWork.Date, finishWork));
             if (!result.Successed)
@@ -77,7 +79,7 @@ namespace GhostNetwork.Profiles.WorkExperiences
                 return DomainResult.Error("Work experience not found.");
             }
 
-            var workExperience = new WorkExperience(id, 0, finishWork, startWork, companyName);
+            var workExperience = new WorkExperience(id, default, finishWork, startWork, companyName);
             await experienceStorage.UpdateAsync(id, workExperience);
             return DomainResult.Success();
         }

@@ -4,7 +4,7 @@ namespace GhostNetwork.Profiles.WorkExperiences
 {
     public class WorkExperience
     {
-        public WorkExperience(long id, long profileId, DateTime? finishWork, DateTime startWork, string companyName)
+        public WorkExperience(string id, string profileId, DateTime? finishWork, DateTime startWork, string companyName)
         {
             Id = id;
             ProfileId = profileId;
@@ -13,7 +13,7 @@ namespace GhostNetwork.Profiles.WorkExperiences
             CompanyName = companyName;
         }
 
-        public long Id { get; }
+        public string Id { get; }
 
         public string CompanyName { get; private set; }
 
@@ -21,6 +21,6 @@ namespace GhostNetwork.Profiles.WorkExperiences
 
         public DateTime? FinishWork { get; private set; }
 
-        public long ProfileId { get; private set; }
+        public string ProfileId { get; private set; }
     }
 }

@@ -4,12 +4,12 @@ namespace GhostNetwork.Profiles
 {
     public interface IProfileStorage
     {
-        Task<Profile> FindByIdAsync(long id);
+        Task<Profile> FindByIdAsync(string id);
 
-        Task<long> InsertAsync(Profile profile);
+        Task<string> InsertAsync(Profile profile);
 
-        Task UpdateAsync(long id, Profile updatedProfile);
+        Task UpdateAsync(string id, Profile updatedProfile);
 
-        Task DeleteAsync(long id);
+        Task DeleteAsync(string id);
     }
 }

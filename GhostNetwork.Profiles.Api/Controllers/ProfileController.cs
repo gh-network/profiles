@@ -20,7 +20,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Profile>> GetByIdAsync([FromRoute] long id)
+        public async Task<ActionResult<Profile>> GetByIdAsync([FromRoute] string id)
         {
             var profile = await profileService.GetByIdAsync(id);
 
@@ -50,7 +50,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> UpdateAsync([FromRoute]long id, [FromBody] ProfileUpdateViewModel updateModel)
+        public async Task<ActionResult> UpdateAsync([FromRoute]string id, [FromBody] ProfileUpdateViewModel updateModel)
         {
             var result = await profileService.UpdateAsync(id, updateModel.FirstName, updateModel.LastName, updateModel.Gender, updateModel.DateOfBirth, updateModel.City);
 
@@ -65,7 +65,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> DeleteAsync(long id)
+        public async Task<ActionResult> DeleteAsync(string id)
         {
             if (await profileService.GetByIdAsync(id) == null)
             {

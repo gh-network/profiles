@@ -11,22 +11,19 @@ namespace GhostNetwork.Profiles.MsSQL
             this.context = context;
         }
 
-        public async Task<Profile> FindByIdAsync(long id)
+        public async Task<Profile> FindByIdAsync(string id)
         {
             var profile = await context.Profiles.FindAsync(id);
-            if (profile == null)
-            {
-                return null;
-            }
 
-            return ToDomain(profile);
+            return profile == null
+                ? null
+                : ToDomain(profile);
         }
 
-        public async Task<long> InsertAsync(Profile profile)
+        public async Task<string> InsertAsync(Profile profile)
         {
             var profileEntity = new ProfileEntity
             {
-                Id = profile.Id,
                 City = profile.City,
                 DateOfBirth = profile.DateOfBirth,
                 FirstName = profile.FirstName,
@@ -37,24 +34,36 @@ namespace GhostNetwork.Profiles.MsSQL
             await context.AddAsync(profileEntity);
             await context.SaveChangesAsync();
 
-            return profileEntity.Id;
+            return profileEntity.Id.ToString();
         }
 
-        public async Task UpdateAsync(long id, Profile updatedProfile)
+        public async Task UpdateAsync(string id, Profile updatedProfile)
         {
-            var profileEntity = await context.Profiles.FindAsync(id);
+            if (!long.TryParse(id, out var lId))
+            {
+                return;
+            }
+
+            var profileEntity = await context.Profiles.FindAsync(lId);
+
             profileEntity.City = updatedProfile.City;
             profileEntity.FirstName = updatedProfile.FirstName;
             profileEntity.LastName = updatedProfile.LastName;
             profileEntity.Gender = updatedProfile.Gender;
             profileEntity.DateOfBirth = updatedProfile.DateOfBirth;
+
             context.Profiles.Update(profileEntity);
             await context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(long id)
+        public async Task DeleteAsync(string id)
         {
-            var profileEntity = await context.Profiles.FindAsync(id);
+            if (!long.TryParse(id, out var lId))
+            {
+                return;
+            }
+
+            var profileEntity = await context.Profiles.FindAsync(lId);
             context.Profiles.Remove(profileEntity);
             await context.SaveChangesAsync();
         }
@@ -62,7 +71,7 @@ namespace GhostNetwork.Profiles.MsSQL
         private static Profile ToDomain(ProfileEntity entity)
         {
             return new Profile(
-                entity.Id,
+                entity.Id.ToString(),
                 entity.FirstName,
                 entity.LastName,
                 entity.Gender,

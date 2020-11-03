@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GhostNetwork.Profiles.WorkExperiences;
@@ -15,14 +16,14 @@ namespace GhostNetwork.Profiles.MsSQL
             this.context = context;
         }
 
-        public async Task DeleteAsync(long id)
+        public async Task DeleteAsync(string id)
         {
             var experience = await context.WorkExperience.FindAsync(id);
             context.WorkExperience.Remove(experience);
             await context.SaveChangesAsync();
         }
 
-        public async Task<WorkExperience> FindByIdAsync(long id)
+        public async Task<WorkExperience> FindByIdAsync(string id)
         {
             var workExperience = await context.WorkExperience.FindAsync(id);
             if (workExperience == null)
@@ -33,22 +34,34 @@ namespace GhostNetwork.Profiles.MsSQL
             return ToDomain(workExperience);
         }
 
-        public async Task DeleteAllExperienceInProfile(long profileId)
+        public async Task DeleteAllExperienceInProfile(string profileId)
         {
+            if (long.TryParse(profileId, out var lProfileId))
+            {
+                return;
+            }
+
             if (await context.Profiles.FindAsync(profileId) != null)
             {
-                var workExperience = context.WorkExperience.Where(x => x.ProfileId == profileId);
+                var workExperience = context.WorkExperience
+                    .Where(x => x.ProfileId == lProfileId)
+                    .ToList();
+
                 context.WorkExperience.RemoveRange(workExperience);
                 await context.SaveChangesAsync();
             }
         }
 
-        public async Task<long> InsertAsync(WorkExperience workExperience)
+        public async Task<string> InsertAsync(WorkExperience workExperience)
         {
+            if (long.TryParse(workExperience.ProfileId, out var lProfileId))
+            {
+                throw new AggregateException(nameof(workExperience.ProfileId));
+            }
+            
             var newWorkExperience = new WorkExperienceEntity
             {
-                Id = workExperience.Id,
-                ProfileId = workExperience.ProfileId,
+                ProfileId = lProfileId,
                 FinishWork = workExperience.FinishWork,
                 StartWork = workExperience.StartWork,
                 CompanyName = workExperience.CompanyName
@@ -57,10 +70,10 @@ namespace GhostNetwork.Profiles.MsSQL
             await context.WorkExperience.AddAsync(newWorkExperience);
             await context.SaveChangesAsync();
 
-            return newWorkExperience.Id;
+            return newWorkExperience.Id.ToString();
         }
 
-        public async Task UpdateAsync(long id, WorkExperience workExperience)
+        public async Task UpdateAsync(string id, WorkExperience workExperience)
         {
             var experience = await context.WorkExperience.FindAsync(id);
             experience.CompanyName = workExperience.CompanyName;
@@ -72,16 +85,24 @@ namespace GhostNetwork.Profiles.MsSQL
             await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<WorkExperience>> GetAllExperienceByProfileId(long profileId)
+        public async Task<IEnumerable<WorkExperience>> GetAllExperienceByProfileId(string profileId)
         {
-            return await context.WorkExperience.Where(x => x.ProfileId == profileId).Select(x => ToDomain(x)).ToListAsync();
+            if (long.TryParse(profileId, out var lProfileId))
+            {
+                return Enumerable.Empty<WorkExperience>();
+            }
+
+            return await context.WorkExperience
+                .Where(x => x.ProfileId == lProfileId)
+                .Select(x => ToDomain(x))
+                .ToListAsync();
         }
 
         private static WorkExperience ToDomain(WorkExperienceEntity entity)
         {
             return new WorkExperience(
-                entity.Id,
-                entity.ProfileId,
+                entity.Id.ToString(),
+                entity.ProfileId.ToString(),
                 entity.FinishWork,
                 entity.StartWork,
                 entity.CompanyName);

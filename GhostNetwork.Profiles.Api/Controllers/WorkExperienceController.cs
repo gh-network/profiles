@@ -25,7 +25,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<WorkExperience>> GetByIdAsync([FromRoute] long id)
+        public async Task<ActionResult<WorkExperience>> GetByIdAsync([FromRoute] string id)
         {
             var workExperience = await workExperienceService.GetByIdAsync(id);
 
@@ -37,11 +37,11 @@ namespace GhostNetwork.Profiles.Api.Controllers
             return NotFound();
         }
 
-        [HttpGet("users/{profileId}")]
+        [HttpGet("byprofile/{profileId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<WorkExperience>>> FindUserExperience(long profileId)
+        public async Task<ActionResult<IEnumerable<WorkExperience>>> FindUserExperience(string profileId)
         {
             if (await profileService.GetByIdAsync(profileId) == null)
             {
@@ -76,7 +76,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> DeleteAsync(long id)
+        public async Task<ActionResult> DeleteAsync(string id)
         {
             if (await workExperienceService.GetByIdAsync(id) == null)
             {
@@ -90,7 +90,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> UpdateAsync([FromRoute]long id, [FromBody] WorkExperienceUpdateViewModel model)
+        public async Task<ActionResult> UpdateAsync([FromRoute]string id, [FromBody] WorkExperienceUpdateViewModel model)
         {
             var result = await workExperienceService.UpdateAsync(id, model.CompanyName, model.StartWork, model.FinishWork);
             if (result.Successed)
