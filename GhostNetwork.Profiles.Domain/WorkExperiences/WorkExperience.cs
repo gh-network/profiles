@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GhostNetwork.Profiles.Domain.WorkExperiences
+namespace GhostNetwork.Profiles.WorkExperiences
 {
     public class WorkExperience
     {

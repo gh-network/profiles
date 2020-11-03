@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GhostNetwork.Profiles.Domain
+namespace GhostNetwork.Profiles
 {
     public class ProfileContext
     {

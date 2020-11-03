@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Domain;
 
-namespace GhostNetwork.Profiles.Domain
+namespace GhostNetwork.Profiles
 {
     public interface IValidator<in T>
     {

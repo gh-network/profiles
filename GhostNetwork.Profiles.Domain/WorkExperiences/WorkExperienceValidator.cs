@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Domain;
 
-namespace GhostNetwork.Profiles.Domain.WorkExperiences
+namespace GhostNetwork.Profiles.WorkExperiences
 {
     public class WorkExperienceValidator : IValidator<WorkExperienceContext>
     {

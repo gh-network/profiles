@@ -1,6 +1,5 @@
 ﻿using System;
 using Domain;
-using GhostNetwork.Profiles.Domain;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GhostNetwork.Profiles.Api.Helpers

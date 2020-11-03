@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using GhostNetwork.Profiles.Api.Helpers;
 using GhostNetwork.Profiles.Api.Models;
-using GhostNetwork.Profiles.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

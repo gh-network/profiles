@@ -1,6 +1,4 @@
 ﻿using System.Threading.Tasks;
-using GhostNetwork.Profiles.Domain;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace GhostNetwork.Profiles.MsSQL
 {

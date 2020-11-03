@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace GhostNetwork.Profiles.Domain
+namespace GhostNetwork.Profiles
 {
     public interface IProfileStorage
     {

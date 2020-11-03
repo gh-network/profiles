@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GhostNetwork.Profiles.Domain;
-using GhostNetwork.Profiles.Domain.WorkExperiences;
+using GhostNetwork.Profiles.WorkExperiences;
 using Microsoft.EntityFrameworkCore;
 
 namespace GhostNetwork.Profiles.MsSQL

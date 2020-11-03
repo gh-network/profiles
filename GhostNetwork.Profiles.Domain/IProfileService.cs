@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Domain;
-using GhostNetwork.Profiles.Domain.WorkExperiences;
+using GhostNetwork.Profiles.WorkExperiences;
 
-namespace GhostNetwork.Profiles.Domain
+namespace GhostNetwork.Profiles
 {
     public interface IProfileService
     {

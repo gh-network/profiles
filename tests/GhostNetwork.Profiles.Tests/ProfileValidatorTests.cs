@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using GhostNetwork.Profiles.Domain;
 using NUnit.Framework;
 
 namespace GhostNetwork.Profiles.Tests

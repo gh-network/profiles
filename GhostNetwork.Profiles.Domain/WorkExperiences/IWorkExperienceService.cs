@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Domain;
 
-namespace GhostNetwork.Profiles.Domain.WorkExperiences
+namespace GhostNetwork.Profiles.WorkExperiences
 {
     public interface IWorkExperienceService
     {

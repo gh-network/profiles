@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using GhostNetwork.Profiles.Domain.WorkExperiences;
+using GhostNetwork.Profiles.WorkExperiences;
 using NUnit.Framework;
 
 namespace GhostNetwork.Profiles.Tests
