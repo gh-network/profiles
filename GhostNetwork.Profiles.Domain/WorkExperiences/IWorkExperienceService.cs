@@ -15,7 +15,7 @@ namespace GhostNetwork.Profiles.WorkExperiences
 
         Task DeleteAsync(string id);
 
-        Task<IEnumerable<WorkExperience>> GetAllExperienceByProfileId(string profileId);
+        Task<IEnumerable<WorkExperience>> FindByProfileId(string profileId);
     }
 
     public class WorkExperienceService : IWorkExperienceService
@@ -54,9 +54,9 @@ namespace GhostNetwork.Profiles.WorkExperiences
             await experienceStorage.DeleteAsync(id);
         }
 
-        public async Task<IEnumerable<WorkExperience>> GetAllExperienceByProfileId(string profileId)
+        public async Task<IEnumerable<WorkExperience>> FindByProfileId(string profileId)
         {
-            return await experienceStorage.GetAllExperienceByProfileId(profileId);
+            return await experienceStorage.GetAllExperienceByProfileIdAsync(profileId);
         }
 
         public async Task<WorkExperience> GetByIdAsync(string id)

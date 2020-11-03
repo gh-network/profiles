@@ -48,7 +48,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
                 return BadRequest("Profile not found.");
             }
 
-            var experience = await workExperienceService.GetAllExperienceByProfileId(profileId);
+            var experience = await workExperienceService.FindByProfileId(profileId);
 
             if (experience.Any())
             {
