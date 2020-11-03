@@ -4,12 +4,12 @@ namespace GhostNetwork.Profiles.WorkExperiences
 {
     public class WorkExperience
     {
-        public WorkExperience(string id, string profileId, DateTime? finishWork, DateTime startWork, string companyName)
+        public WorkExperience(string id, string profileId, DateTime startWork, DateTime? finishWork, string companyName)
         {
             Id = id;
             ProfileId = profileId;
-            FinishWork = finishWork;
             StartWork = startWork;
+            FinishWork = finishWork;
             CompanyName = companyName;
         }
 
