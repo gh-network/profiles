@@ -14,23 +14,31 @@ namespace GhostNetwork.Profiles
     {
         public DomainResult Validate(ProfileContext param)
         {
-            var result = Validate(param.DateOfBirth, (nameof(param.FirstName), param.FirstName), (nameof(param.LastName), param.LastName), (nameof(param.City), param.City));
+            var result = Validate(param.DateOfBirth, param.FirstName, param.LastName, param.Gender);
 
             return result;
         }
 
-        private DomainResult Validate(DateTime date, params (string name, string value)[] str)
+        private DomainResult Validate(DateTime? date, string firstName, string lastName, string gender)
         {
             List<DomainError> results = new List<DomainError>();
-            foreach (var (name, value) in str)
+
+            if (firstName == null || firstName.Length > 150 || string.IsNullOrEmpty(firstName))
             {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    results.Add(new DomainError($"{name} is null or empty."));
-                }
+                results.Add(new DomainError($"{nameof(firstName)} can not be null, empty or more than 150 chars"));
             }
 
-            if (date > DateTime.Now)
+            if (lastName == null || lastName.Length > 150 || string.IsNullOrEmpty(lastName))
+            {
+                results.Add(new DomainError($"{nameof(lastName)} can not be null, empty or more than 150 chars"));
+            }
+
+            if (gender != null && (gender.Length > 150 || string.IsNullOrEmpty(gender)))
+            {
+                results.Add(new DomainError($"{nameof(gender)} can not be empty or more than 150 chars"));
+            }
+
+            if (date != null && date > DateTime.Now)
             {
                 results.Add(new DomainError("Date is greater than date now"));
             }

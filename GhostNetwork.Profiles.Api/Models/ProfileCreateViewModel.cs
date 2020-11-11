@@ -8,9 +8,9 @@ namespace GhostNetwork.Profiles.Api.Models
 
         public string LastName { get; set; }
 
-        public bool Gender { get; set; }
+        public string Gender { get; set; }
 
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
 
         public string City { get; set; }
     }

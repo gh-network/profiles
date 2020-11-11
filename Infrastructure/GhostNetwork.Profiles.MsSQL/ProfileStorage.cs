@@ -14,12 +14,12 @@ namespace GhostNetwork.Profiles.MsSQL
 
         public async Task<Profile> FindByIdAsync(string id)
         {
-            if (!long.TryParse(id, out var lId))
+            if (!Guid.TryParse(id, out var gId))
             {
                 throw new ArgumentException(nameof(id));
             }
 
-            var profile = await context.Profiles.FindAsync(lId);
+            var profile = await context.Profiles.FindAsync(gId);
 
             return profile == null
                 ? null
@@ -45,12 +45,12 @@ namespace GhostNetwork.Profiles.MsSQL
 
         public async Task UpdateAsync(string id, Profile updatedProfile)
         {
-            if (!long.TryParse(id, out var lId))
+            if (!Guid.TryParse(id, out var gId))
             {
-                return;
+                throw new ArgumentException(nameof(id));
             }
 
-            var profileEntity = await context.Profiles.FindAsync(lId);
+            var profileEntity = await context.Profiles.FindAsync(gId);
 
             profileEntity.City = updatedProfile.City;
             profileEntity.FirstName = updatedProfile.FirstName;
@@ -64,12 +64,12 @@ namespace GhostNetwork.Profiles.MsSQL
 
         public async Task DeleteAsync(string id)
         {
-            if (!long.TryParse(id, out var lId))
+            if (!Guid.TryParse(id, out var gId))
             {
-                return;
+                throw new ArgumentException(nameof(id));
             }
 
-            var profileEntity = await context.Profiles.FindAsync(lId);
+            var profileEntity = await context.Profiles.FindAsync(gId);
             context.Profiles.Remove(profileEntity);
             await context.SaveChangesAsync();
         }

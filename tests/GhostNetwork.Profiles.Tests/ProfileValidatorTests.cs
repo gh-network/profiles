@@ -7,13 +7,25 @@ namespace GhostNetwork.Profiles.Tests
     public class ProfileValidatorTests
     {
         [Test]
-        public void One_Null_Argument()
+        public void FirstName_Null_Argument()
         {
             // Setup
             var validator = new ProfileValidator();
 
             // Act
-            var result = validator.Validate(new ProfileContext("", "LastName", DateTime.Now, "City"));
+            var result = validator.Validate(new ProfileContext("", "LastName", "London", DateTime.Now, "man"));
+
+            // Assert
+            Assert.IsFalse(result.Successed && result.Errors.Count() == 1);
+        }
+
+        public void LastName_Null_Argument()
+        {
+            // Setup
+            var validator = new ProfileValidator();
+
+            // Act
+            var result = validator.Validate(new ProfileContext("FirstName", "", "London", DateTime.Now, "man"));
 
             // Assert
             Assert.IsFalse(result.Successed && result.Errors.Count() == 1);
@@ -26,10 +38,10 @@ namespace GhostNetwork.Profiles.Tests
             var validator = new ProfileValidator();
 
             // Act
-            var result = validator.Validate(new ProfileContext("", "LastName", DateTime.MaxValue, "City"));
+            var result = validator.Validate(new ProfileContext("FirstName", "LastName", "London", DateTime.Now.AddDays(1), "man"));
 
             // Assert
-            Assert.IsFalse(result.Successed && result.Errors.Count() == 2);
+            Assert.IsFalse(result.Successed && result.Errors.Count() == 1);
         }
 
         [Test]
@@ -39,7 +51,46 @@ namespace GhostNetwork.Profiles.Tests
             var validator = new ProfileValidator();
 
             // Act
-            var result = validator.Validate(new ProfileContext("FirstName", "LastName", DateTime.Now, "City"));
+            var result = validator.Validate(new ProfileContext("FirstName", "LastName", "London", DateTime.Now, "man"));
+
+            // Assert
+            Assert.IsTrue(result.Successed);
+        }
+
+        [Test]
+        public void Null_Data()
+        {
+            // Setup
+            var validator = new ProfileValidator();
+
+            // Act
+            var result = validator.Validate(new ProfileContext("FirstName", "LastName", "London", null, "man"));
+
+            // Assert
+            Assert.IsTrue(result.Successed);
+        }
+
+        [Test]
+        public void Null_Gender()
+        {
+            // Setup
+            var validator = new ProfileValidator();
+
+            // Act
+            var result = validator.Validate(new ProfileContext("FirstName", "LastName", "London", DateTime.Now, null));
+
+            // Assert
+            Assert.IsTrue(result.Successed);
+        }
+
+        [Test]
+        public void Null_City()
+        {
+            // Setup
+            var validator = new ProfileValidator();
+
+            // Act
+            var result = validator.Validate(new ProfileContext("FirstName", "LastName", null, DateTime.Now, "gender"));
 
             // Assert
             Assert.IsTrue(result.Successed);
