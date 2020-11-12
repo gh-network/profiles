@@ -4,7 +4,7 @@ namespace GhostNetwork.Profiles
 {
     public class Profile
     {
-        public Profile(string id, string firstName, string lastName, string gender, DateTime? dateOfBirth, string city)
+        public Profile(string id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city)
         {
             Id = id;
             FirstName = firstName;
@@ -22,11 +22,11 @@ namespace GhostNetwork.Profiles
 
         public string Gender { get; private set; }
 
-        public DateTime? DateOfBirth { get; private set; }
+        public DateTimeOffset? DateOfBirth { get; private set; }
 
         public string City { get; private set; }
 
-        public void Update(string firstName, string lastName, string gender, DateTime? dateOfBirth, string city)
+        public void Update(string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city)
         {
             FirstName = firstName;
             LastName = lastName;

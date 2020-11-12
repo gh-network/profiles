@@ -28,12 +28,22 @@ namespace GhostNetwork.Profiles.MsSQL
 
         public async Task<string> InsertAsync(Profile profile)
         {
+            long? dateBirthday;
+            if (DateTimeOffset.TryParse(profile.DateOfBirth.ToString(), out var dateB))
+            {
+                dateBirthday = dateB.ToUnixTimeMilliseconds();
+            }
+            else
+            {
+                dateBirthday = null;
+            }
+
             var profileEntity = new ProfileEntity
             {
                 City = profile.City,
-                DateOfBirth = profile.DateOfBirth,
                 FirstName = profile.FirstName,
                 LastName = profile.LastName,
+                DateOfBirth = dateBirthday,
                 Gender = profile.Gender
             };
 
@@ -50,13 +60,23 @@ namespace GhostNetwork.Profiles.MsSQL
                 throw new ArgumentException(nameof(id));
             }
 
+            long? dateBirthday;
+            if (DateTimeOffset.TryParse(updatedProfile.DateOfBirth.ToString(), out var dateB))
+            {
+                dateBirthday = dateB.ToUnixTimeMilliseconds();
+            }
+            else
+            {
+                dateBirthday = null;
+            }
+
             var profileEntity = await context.Profiles.FindAsync(gId);
 
             profileEntity.City = updatedProfile.City;
             profileEntity.FirstName = updatedProfile.FirstName;
             profileEntity.LastName = updatedProfile.LastName;
             profileEntity.Gender = updatedProfile.Gender;
-            profileEntity.DateOfBirth = updatedProfile.DateOfBirth;
+            profileEntity.DateOfBirth = dateBirthday;
 
             context.Profiles.Update(profileEntity);
             await context.SaveChangesAsync();
@@ -76,12 +96,23 @@ namespace GhostNetwork.Profiles.MsSQL
 
         private static Profile ToDomain(ProfileEntity entity)
         {
+            DateTimeOffset? dateOfBirth;
+            if (entity.DateOfBirth != null)
+            {
+                long time = (long)entity.DateOfBirth;
+                dateOfBirth = DateTimeOffset.FromUnixTimeMilliseconds(time);
+            }
+            else
+            {
+                dateOfBirth = null;
+            }
+
             return new Profile(
                 entity.Id.ToString(),
                 entity.FirstName,
                 entity.LastName,
                 entity.Gender,
-                entity.DateOfBirth,
+                dateOfBirth,
                 entity.City);
         }
     }

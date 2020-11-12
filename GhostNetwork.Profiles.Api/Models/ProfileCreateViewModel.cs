@@ -10,7 +10,7 @@ namespace GhostNetwork.Profiles.Api.Models
 
         public string Gender { get; set; }
 
-        public DateTime? DateOfBirth { get; set; }
+        public DateTimeOffset? DateOfBirth { get; set; }
 
         public string City { get; set; }
     }

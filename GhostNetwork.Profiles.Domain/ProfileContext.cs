@@ -4,7 +4,7 @@ namespace GhostNetwork.Profiles
 {
     public class ProfileContext
     {
-        public ProfileContext(string firstName, string lastName, string city, DateTime? dateOfBirth, string gender)
+        public ProfileContext(string firstName, string lastName, string city, DateTimeOffset? dateOfBirth, string gender)
         {
             FirstName = firstName;
             LastName = lastName;
@@ -19,7 +19,7 @@ namespace GhostNetwork.Profiles
 
         public string Gender { get; set; }
 
-        public DateTime? DateOfBirth { get; set; }
+        public DateTimeOffset? DateOfBirth { get; set; }
 
         public string City { get; }
     }

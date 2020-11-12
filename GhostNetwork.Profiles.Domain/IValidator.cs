@@ -19,7 +19,7 @@ namespace GhostNetwork.Profiles
             return result;
         }
 
-        private DomainResult Validate(DateTime? date, string firstName, string lastName, string gender)
+        private DomainResult Validate(DateTimeOffset? date, string firstName, string lastName, string gender)
         {
             List<DomainError> results = new List<DomainError>();
 

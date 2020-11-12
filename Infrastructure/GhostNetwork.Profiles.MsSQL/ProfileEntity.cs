@@ -20,7 +20,7 @@ namespace GhostNetwork.Profiles.MsSQL
         [MaxLength(150)]
         public string Gender { get; set; }
 
-        public DateTime? DateOfBirth { get; set; }
+        public long? DateOfBirth { get; set; }
 
         [MaxLength(150)]
         public string City { get; set; }
