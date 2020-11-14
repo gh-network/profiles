@@ -30,6 +30,11 @@ namespace GhostNetwork.Profiles.WorkExperiences
                 errors.Add(new DomainError("Finish work must be greater than start work."));
             }
 
+            if (param.Description != null && param.Description.Length > 5000)
+            {
+                errors.Add(new DomainError("Description can not be greater than 5000 characters"));
+            }
+
             return DomainResult.Error(errors);
         }
     }

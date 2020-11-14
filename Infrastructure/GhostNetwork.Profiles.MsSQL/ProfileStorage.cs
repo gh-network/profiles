@@ -28,14 +28,10 @@ namespace GhostNetwork.Profiles.MsSQL
 
         public async Task<string> InsertAsync(Profile profile)
         {
-            long? dateBirthday;
+            long? dateBirthday = null;
             if (DateTimeOffset.TryParse(profile.DateOfBirth.ToString(), out var dateB))
             {
                 dateBirthday = dateB.ToUnixTimeMilliseconds();
-            }
-            else
-            {
-                dateBirthday = null;
             }
 
             var profileEntity = new ProfileEntity
@@ -60,14 +56,10 @@ namespace GhostNetwork.Profiles.MsSQL
                 throw new ArgumentException(nameof(id));
             }
 
-            long? dateBirthday;
+            long? dateBirthday = null;
             if (DateTimeOffset.TryParse(updatedProfile.DateOfBirth.ToString(), out var dateB))
             {
                 dateBirthday = dateB.ToUnixTimeMilliseconds();
-            }
-            else
-            {
-                dateBirthday = null;
             }
 
             var profileEntity = await context.Profiles.FindAsync(gId);
@@ -96,15 +88,11 @@ namespace GhostNetwork.Profiles.MsSQL
 
         private static Profile ToDomain(ProfileEntity entity)
         {
-            DateTimeOffset? dateOfBirth;
-            if (entity.DateOfBirth != null)
+            DateTimeOffset? dateOfBirth = null;
+            if (entity.DateOfBirth.HasValue)
             {
                 long time = (long)entity.DateOfBirth;
                 dateOfBirth = DateTimeOffset.FromUnixTimeMilliseconds(time);
-            }
-            else
-            {
-                dateOfBirth = null;
             }
 
             return new Profile(

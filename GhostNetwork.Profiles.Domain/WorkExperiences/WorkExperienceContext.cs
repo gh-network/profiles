@@ -4,17 +4,20 @@ namespace GhostNetwork.Profiles.WorkExperiences
 {
     public class WorkExperienceContext
     {
-        public WorkExperienceContext(string companyName, DateTime startWork, DateTime? finishWork)
+        public WorkExperienceContext(string companyName, string description, DateTimeOffset? startWork, DateTimeOffset? finishWork)
         {
             CompanyName = companyName;
+            Description = description;
             StartWork = startWork;
             FinishWork = finishWork;
         }
 
         public string CompanyName { get; }
 
-        public DateTime StartWork { get; }
+        public string Description { get; set; }
 
-        public DateTime? FinishWork { get; }
+        public DateTimeOffset? StartWork { get; }
+
+        public DateTimeOffset? FinishWork { get; }
     }
 }

@@ -14,10 +14,10 @@ namespace GhostNetwork.Profiles.Tests
             var validator = new WorkExperienceValidator();
 
             // Act
-            var result = validator.Validate(new WorkExperienceContext("",DateTime.MinValue, null));
+            var result = validator.Validate(new WorkExperienceContext("", "Description", DateTimeOffset.MinValue, null));
 
             // Assert
-            Assert.IsFalse(result.Successed && result.Errors.Count() == 1);
+            Assert.IsFalse(result.Successed);
         }
 
         [Test]
@@ -27,10 +27,10 @@ namespace GhostNetwork.Profiles.Tests
             var validator = new WorkExperienceValidator();
 
             // Act
-            var result = validator.Validate(new WorkExperienceContext("", DateTime.Now.AddDays(1), DateTime.Now));
+            var result = validator.Validate(new WorkExperienceContext("CompanyName", "Description", DateTimeOffset.Now.AddDays(1), DateTimeOffset.Now));
 
             // Assert
-            Assert.IsFalse(result.Successed && result.Errors.Count() == 2);
+            Assert.IsFalse(result.Successed);
         }
 
         [Test]
@@ -40,10 +40,10 @@ namespace GhostNetwork.Profiles.Tests
             var validator = new WorkExperienceValidator();
 
             // Act
-            var result = validator.Validate(new WorkExperienceContext("1", DateTime.Now.AddDays(1), DateTime.Now));
+            var result = validator.Validate(new WorkExperienceContext("CompanyName", "Description", DateTimeOffset.Now.AddDays(1), DateTimeOffset.Now));
 
             // Assert
-            Assert.IsFalse(result.Successed && result.Errors.Count() == 2);
+            Assert.IsFalse(result.Successed);
         }
 
         [Test]
@@ -53,11 +53,12 @@ namespace GhostNetwork.Profiles.Tests
             var validator = new WorkExperienceValidator();
 
             // Act
-            var result = validator.Validate(new WorkExperienceContext("1", DateTime.Now, DateTime.Now.AddHours(1)));
+            var result = validator.Validate(new WorkExperienceContext("CompanyName", "Description",DateTimeOffset.Now, DateTimeOffset.Now.AddHours(1)));
 
             // Assert
-            Assert.IsFalse(result.Successed && result.Errors.Count() == 1);
+            Assert.IsFalse(result.Successed);
         }
+
 
         [Test]
         public void Correct_Request()
@@ -66,7 +67,7 @@ namespace GhostNetwork.Profiles.Tests
             var validator = new WorkExperienceValidator();
 
             // Act
-            var result = validator.Validate(new WorkExperienceContext("1", DateTime.MinValue, null));
+            var result = validator.Validate(new WorkExperienceContext("CompanyName", "Description", DateTimeOffset.MinValue, null));
 
             // Assert
             Assert.IsTrue(result.Successed);

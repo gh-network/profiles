@@ -18,7 +18,7 @@ namespace GhostNetwork.Profiles.MsSQL
 
         public async Task DeleteAsync(string id)
         {
-            if (!long.TryParse(id, out var lId))
+            if (!Guid.TryParse(id, out var lId))
             {
                 return;
             }
@@ -30,7 +30,7 @@ namespace GhostNetwork.Profiles.MsSQL
 
         public async Task<WorkExperience> FindByIdAsync(string id)
         {
-            if (!long.TryParse(id, out var lId))
+            if (!Guid.TryParse(id, out var lId))
             {
                 throw new ArgumentException(nameof(id));
             }
@@ -46,7 +46,7 @@ namespace GhostNetwork.Profiles.MsSQL
 
         public async Task DeleteAllExperienceInProfileAsync(string profileId)
         {
-            if (long.TryParse(profileId, out var lProfileId))
+            if (!Guid.TryParse(profileId, out var lProfileId))
             {
                 return;
             }
@@ -54,7 +54,7 @@ namespace GhostNetwork.Profiles.MsSQL
             if (await context.Profiles.FindAsync(profileId) != null)
             {
                 var workExperience = context.WorkExperience
-                    .Where(x => x.ProfileId == lProfileId)
+                    .Where(x => x.ProfileId == lProfileId.ToString())
                     .ToList();
 
                 context.WorkExperience.RemoveRange(workExperience);
@@ -64,16 +64,31 @@ namespace GhostNetwork.Profiles.MsSQL
 
         public async Task<string> InsertAsync(WorkExperience workExperience)
         {
-            if (!long.TryParse(workExperience.ProfileId, out var lProfileId))
+            if (!Guid.TryParse(workExperience.ProfileId, out var lProfileId))
             {
                 throw new AggregateException(nameof(workExperience.ProfileId));
             }
 
+            long? startWork = null;
+            long? finishWork = null;
+            if (workExperience.StartWork.HasValue)
+            {
+                DateTimeOffset start = workExperience.StartWork.Value;
+                startWork = start.ToUnixTimeMilliseconds();
+            }
+
+            if (workExperience.FinishWork.HasValue)
+            {
+                DateTimeOffset finish = workExperience.FinishWork.Value;
+                finishWork = finish.ToUnixTimeMilliseconds();
+            }
+
             var newWorkExperience = new WorkExperienceEntity
             {
-                ProfileId = lProfileId,
-                FinishWork = workExperience.FinishWork,
-                StartWork = workExperience.StartWork,
+                ProfileId = lProfileId.ToString(),
+                Description = workExperience.Description,
+                StartWork = startWork,
+                FinishWork = finishWork,
                 CompanyName = workExperience.CompanyName
             };
 
@@ -85,15 +100,30 @@ namespace GhostNetwork.Profiles.MsSQL
 
         public async Task UpdateAsync(WorkExperience workExperience)
         {
-            if (!long.TryParse(workExperience.Id, out var lId))
+            if (!Guid.TryParse(workExperience.Id, out var lId))
             {
                 return;
             }
 
+            long? startWork = null;
+            long? finishWork = null;
+            if (workExperience.StartWork.HasValue)
+            {
+                DateTimeOffset start = workExperience.StartWork.Value;
+                startWork = start.ToUnixTimeMilliseconds();
+            }
+
+            if (workExperience.FinishWork.HasValue)
+            {
+                DateTimeOffset finish = workExperience.FinishWork.Value;
+                finishWork = finish.ToUnixTimeMilliseconds();
+            }
+
             var experience = await context.WorkExperience.FindAsync(lId);
             experience.CompanyName = workExperience.CompanyName;
-            experience.FinishWork = workExperience.FinishWork;
-            experience.StartWork = workExperience.StartWork;
+            experience.Description = workExperience.Description;
+            experience.FinishWork = finishWork;
+            experience.StartWork = startWork;
 
             context.WorkExperience.Update(experience);
 
@@ -102,24 +132,37 @@ namespace GhostNetwork.Profiles.MsSQL
 
         public async Task<IEnumerable<WorkExperience>> GetAllExperienceByProfileIdAsync(string profileId)
         {
-            if (!long.TryParse(profileId, out var lProfileId))
+            if (!Guid.TryParse(profileId, out var lProfileId))
             {
                 return Enumerable.Empty<WorkExperience>();
             }
 
-            var workExperience = await context.WorkExperience.Where(x => x.ProfileId == lProfileId).ToListAsync();
+            var workExperience = await context.WorkExperience.Where(x => x.ProfileId == lProfileId.ToString()).ToListAsync();
 
             return workExperience.Select(ToDomain);
         }
 
         private static WorkExperience ToDomain(WorkExperienceEntity entity)
         {
+            DateTimeOffset? startWork = null;
+            DateTimeOffset? finishWork = null;
+            if (entity.StartWork.HasValue)
+            {
+                startWork = DateTimeOffset.FromUnixTimeMilliseconds(entity.StartWork.Value);
+            }
+
+            if (entity.FinishWork.HasValue)
+            {
+                finishWork = DateTimeOffset.FromUnixTimeMilliseconds(entity.FinishWork.Value);
+            }
+
             return new WorkExperience(
                 entity.Id.ToString(),
-                entity.ProfileId.ToString(),
-                entity.StartWork,
-                entity.FinishWork,
-                entity.CompanyName);
+                entity.ProfileId,
+                entity.CompanyName,
+                entity.Description,
+                startWork,
+                finishWork);
         }
     }
 }
