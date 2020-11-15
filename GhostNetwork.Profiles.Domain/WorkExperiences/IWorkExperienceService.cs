@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Domain;
 
@@ -15,7 +16,7 @@ namespace GhostNetwork.Profiles.WorkExperiences
 
         Task DeleteAsync(string id);
 
-        Task<IEnumerable<WorkExperience>> FindByProfileId(string profileId);
+        Task<IList<WorkExperience>> FindByProfileId(string profileId);
     }
 
     public class WorkExperienceService : IWorkExperienceService
@@ -23,12 +24,14 @@ namespace GhostNetwork.Profiles.WorkExperiences
         private readonly IWorkExperienceStorage experienceStorage;
         private readonly IProfileStorage profileStorage;
         private readonly IValidator<WorkExperienceContext> validator;
+        private readonly WorkExperienceSort workExperienceSort;
 
-        public WorkExperienceService(IWorkExperienceStorage experienceStorage, IProfileStorage profileStorage, IValidator<WorkExperienceContext> validator)
+        public WorkExperienceService(IWorkExperienceStorage experienceStorage, IProfileStorage profileStorage, IValidator<WorkExperienceContext> validator, WorkExperienceSort workExperienceSort)
         {
             this.experienceStorage = experienceStorage;
             this.profileStorage = profileStorage;
             this.validator = validator;
+            this.workExperienceSort = workExperienceSort;
         }
 
         public async Task<(DomainResult, string)> CreateAsync(string companyName, string description, DateTimeOffset? startWork, DateTimeOffset? finishWork, string profileId)
@@ -54,9 +57,10 @@ namespace GhostNetwork.Profiles.WorkExperiences
             await experienceStorage.DeleteAsync(id);
         }
 
-        public async Task<IEnumerable<WorkExperience>> FindByProfileId(string profileId)
+        public async Task<IList<WorkExperience>> FindByProfileId(string profileId)
         {
-            return await experienceStorage.GetAllExperienceByProfileIdAsync(profileId);
+            var workExperiences = await experienceStorage.GetAllExperienceByProfileIdAsync(profileId);
+            return workExperienceSort.Sort(workExperiences);
         }
 
         public async Task<WorkExperience> GetByIdAsync(string id)

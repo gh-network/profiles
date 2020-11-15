@@ -125,15 +125,15 @@ namespace GhostNetwork.Profiles.MsSQL
             await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<WorkExperience>> GetAllExperienceByProfileIdAsync(string profileId)
+        public async Task<IList<WorkExperience>> GetAllExperienceByProfileIdAsync(string profileId)
         {
             if (!Guid.TryParse(profileId, out var lProfileId))
             {
-                return Enumerable.Empty<WorkExperience>();
+                return new List<WorkExperience>();
             }
 
-            var workExperience = await context.WorkExperience.Where(x => x.ProfileId == lProfileId.ToString()).OrderBy(x => x.StartWork).ToListAsync();
-            return workExperience.Select(ToDomain);
+            var workExperience = context.WorkExperience.Where(x => x.ProfileId == lProfileId.ToString());
+            return workExperience.AsEnumerable().Select(ToDomain).ToList();
         }
 
         private static WorkExperience ToDomain(WorkExperienceEntity entity)
