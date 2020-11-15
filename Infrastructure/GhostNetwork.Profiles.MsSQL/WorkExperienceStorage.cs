@@ -32,15 +32,10 @@ namespace GhostNetwork.Profiles.MsSQL
         {
             if (!Guid.TryParse(id, out var lId))
             {
-                throw new ArgumentException(nameof(id));
-            }
-
-            var workExperience = await context.WorkExperience.FindAsync(lId);
-            if (workExperience == null)
-            {
                 return null;
             }
 
+            var workExperience = await context.WorkExperience.FindAsync(lId);
             return ToDomain(workExperience);
         }
 
@@ -66,7 +61,7 @@ namespace GhostNetwork.Profiles.MsSQL
         {
             if (!Guid.TryParse(workExperience.ProfileId, out var lProfileId))
             {
-                throw new AggregateException(nameof(workExperience.ProfileId));
+                return null;
             }
 
             long? startWork = null;
@@ -144,6 +139,10 @@ namespace GhostNetwork.Profiles.MsSQL
 
         private static WorkExperience ToDomain(WorkExperienceEntity entity)
         {
+            if (entity == null)
+            {
+                return null;
+            }
             DateTimeOffset? startWork = null;
             DateTimeOffset? finishWork = null;
             if (entity.StartWork.HasValue)
