@@ -60,7 +60,7 @@ namespace GhostNetwork.Profiles.WorkExperiences
         public async Task<IList<WorkExperience>> FindByProfileId(string profileId)
         {
             var workExperiences = await experienceStorage.GetAllExperienceByProfileIdAsync(profileId);
-            return workExperienceSort.Sort(workExperiences);
+            return workExperiences.OrderByDescending(x => x.StartWork.HasValue).ThenBy(x => x.StartWork).ToList();
         }
 
         public async Task<WorkExperience> GetByIdAsync(string id)
