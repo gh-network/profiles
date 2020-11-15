@@ -2,7 +2,7 @@
 
 namespace GhostNetwork.Profiles.WorkExperiences
 {
-    public interface IWorkExperienceSort<T>
+    public interface ISort<T>
     {
         IList<T> Sort(IList<T> array);
     }
