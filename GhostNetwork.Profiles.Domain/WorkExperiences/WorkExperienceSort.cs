@@ -3,7 +3,7 @@ using GhostNetwork.Profiles.WorkExperiences;
 
 namespace GhostNetwork.Profiles
 {
-    public class WorkExperienceSort : IWorkExperienceSort<WorkExperience>
+    public class WorkExperienceSort : ISort<WorkExperience>
     {
         public IList<WorkExperience> Sort(IList<WorkExperience> array)
         {

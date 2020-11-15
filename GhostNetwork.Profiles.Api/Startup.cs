@@ -40,7 +40,7 @@ namespace GhostNetwork.Profiles.Api
             services.AddScoped<IWorkExperienceService, WorkExperienceService>();
             services.AddScoped<IWorkExperienceStorage, WorkExperienceStorage>();
             services.AddScoped<IValidator<WorkExperienceContext>, WorkExperienceValidator>();
-            services.AddScoped<IWorkExperienceSort<WorkExperience>, WorkExperienceSort>();
+            services.AddScoped<ISort<WorkExperience>, WorkExperienceSort>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
