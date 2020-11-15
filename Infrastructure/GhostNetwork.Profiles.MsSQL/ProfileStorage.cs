@@ -16,7 +16,7 @@ namespace GhostNetwork.Profiles.MsSQL
         {
             if (!Guid.TryParse(id, out var gId))
             {
-                throw new ArgumentException(nameof(id));
+                return null;
             }
 
             var profile = await context.Profiles.FindAsync(gId);
@@ -53,7 +53,7 @@ namespace GhostNetwork.Profiles.MsSQL
         {
             if (!Guid.TryParse(id, out var gId))
             {
-                throw new ArgumentException(nameof(id));
+                return;
             }
 
             long? dateBirthday = null;
@@ -78,7 +78,7 @@ namespace GhostNetwork.Profiles.MsSQL
         {
             if (!Guid.TryParse(id, out var gId))
             {
-                throw new ArgumentException(nameof(id));
+                return;
             }
 
             var profileEntity = await context.Profiles.FindAsync(gId);

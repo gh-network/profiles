@@ -32,7 +32,7 @@ namespace GhostNetwork.Profiles.MsSQL
         {
             if (!Guid.TryParse(id, out var lId))
             {
-                throw new ArgumentException(nameof(id));
+                return null;
             }
 
             var workExperience = await context.WorkExperience.FindAsync(lId);
@@ -66,7 +66,7 @@ namespace GhostNetwork.Profiles.MsSQL
         {
             if (!Guid.TryParse(workExperience.ProfileId, out var lProfileId))
             {
-                throw new AggregateException(nameof(workExperience.ProfileId));
+                return null;
             }
 
             long? startWork = null;
