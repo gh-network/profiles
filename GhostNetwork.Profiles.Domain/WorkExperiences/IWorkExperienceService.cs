@@ -24,14 +24,12 @@ namespace GhostNetwork.Profiles.WorkExperiences
         private readonly IWorkExperienceStorage experienceStorage;
         private readonly IProfileStorage profileStorage;
         private readonly IValidator<WorkExperienceContext> validator;
-        private readonly ISort<WorkExperience> workExperienceSort;
 
-        public WorkExperienceService(IWorkExperienceStorage experienceStorage, IProfileStorage profileStorage, IValidator<WorkExperienceContext> validator, ISort<WorkExperience> workExperienceSort)
+        public WorkExperienceService(IWorkExperienceStorage experienceStorage, IProfileStorage profileStorage, IValidator<WorkExperienceContext> validator)
         {
             this.experienceStorage = experienceStorage;
             this.profileStorage = profileStorage;
             this.validator = validator;
-            this.workExperienceSort = workExperienceSort;
         }
 
         public async Task<(DomainResult, string)> CreateAsync(string companyName, string description, DateTimeOffset? startWork, DateTimeOffset? finishWork, string profileId)
