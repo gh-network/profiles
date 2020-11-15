@@ -24,9 +24,9 @@ namespace GhostNetwork.Profiles.WorkExperiences
         private readonly IWorkExperienceStorage experienceStorage;
         private readonly IProfileStorage profileStorage;
         private readonly IValidator<WorkExperienceContext> validator;
-        private readonly WorkExperienceSort workExperienceSort;
+        private readonly IWorkExperienceSort<WorkExperience> workExperienceSort;
 
-        public WorkExperienceService(IWorkExperienceStorage experienceStorage, IProfileStorage profileStorage, IValidator<WorkExperienceContext> validator, WorkExperienceSort workExperienceSort)
+        public WorkExperienceService(IWorkExperienceStorage experienceStorage, IProfileStorage profileStorage, IValidator<WorkExperienceContext> validator, IWorkExperienceSort<WorkExperience> workExperienceSort)
         {
             this.experienceStorage = experienceStorage;
             this.profileStorage = profileStorage;
