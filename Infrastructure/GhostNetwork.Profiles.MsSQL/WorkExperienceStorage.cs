@@ -143,6 +143,7 @@ namespace GhostNetwork.Profiles.MsSQL
             {
                 return null;
             }
+
             DateTimeOffset? startWork = null;
             DateTimeOffset? finishWork = null;
             if (entity.StartWork.HasValue)
