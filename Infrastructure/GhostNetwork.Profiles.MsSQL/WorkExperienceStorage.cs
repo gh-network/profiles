@@ -132,8 +132,7 @@ namespace GhostNetwork.Profiles.MsSQL
                 return Enumerable.Empty<WorkExperience>();
             }
 
-            var workExperience = await context.WorkExperience.Where(x => x.ProfileId == lProfileId.ToString()).ToListAsync();
-
+            var workExperience = await context.WorkExperience.Where(x => x.ProfileId == lProfileId.ToString()).OrderBy(x => x.StartWork).ToListAsync();
             return workExperience.Select(ToDomain);
         }
 

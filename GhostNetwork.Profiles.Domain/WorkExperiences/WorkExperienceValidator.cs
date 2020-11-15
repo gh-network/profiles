@@ -15,12 +15,12 @@ namespace GhostNetwork.Profiles.WorkExperiences
                 errors.Add(new DomainError("Company name is null or empty."));
             }
 
-            if (param.FinishWork != null && param.FinishWork > DateTime.Now)
+            if (param.FinishWork != null && param.FinishWork > DateTimeOffset.Now)
             {
                 errors.Add(new DomainError("Finish work can not be greater than date now."));
             }
 
-            if (param.StartWork > DateTime.Now)
+            if (param.StartWork > DateTimeOffset.Now)
             {
                 errors.Add(new DomainError("Start work can not be greater than date now."));
             }

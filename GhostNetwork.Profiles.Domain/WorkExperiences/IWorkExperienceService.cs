@@ -9,9 +9,9 @@ namespace GhostNetwork.Profiles.WorkExperiences
     {
         Task<WorkExperience> GetByIdAsync(string id);
 
-        Task<(DomainResult, string)> CreateAsync(string companyName, string description, DateTime startWork, DateTime? finishWork, string profileId);
+        Task<(DomainResult, string)> CreateAsync(string companyName, string description, DateTimeOffset? startWork, DateTimeOffset? finishWork, string profileId);
 
-        Task<DomainResult> UpdateAsync(string id, string companyName, string description, DateTime startWork, DateTime? finishWork);
+        Task<DomainResult> UpdateAsync(string id, string companyName, string description, DateTimeOffset? startWork, DateTimeOffset? finishWork);
 
         Task DeleteAsync(string id);
 
@@ -31,7 +31,7 @@ namespace GhostNetwork.Profiles.WorkExperiences
             this.validator = validator;
         }
 
-        public async Task<(DomainResult, string)> CreateAsync(string companyName, string description, DateTime startWork, DateTime? finishWork, string profileId)
+        public async Task<(DomainResult, string)> CreateAsync(string companyName, string description, DateTimeOffset? startWork, DateTimeOffset? finishWork, string profileId)
         {
             var result = validator.Validate(new WorkExperienceContext(companyName, description, startWork, finishWork));
             if (!result.Successed)
@@ -64,9 +64,9 @@ namespace GhostNetwork.Profiles.WorkExperiences
             return await experienceStorage.FindByIdAsync(id);
         }
 
-        public async Task<DomainResult> UpdateAsync(string id, string companyName, string description, DateTime startWork, DateTime? finishWork)
+        public async Task<DomainResult> UpdateAsync(string id, string companyName, string description, DateTimeOffset? startWork, DateTimeOffset? finishWork)
         {
-            var result = validator.Validate(new WorkExperienceContext(companyName, description, startWork.Date, finishWork));
+            var result = validator.Validate(new WorkExperienceContext(companyName, description, startWork, finishWork));
             if (!result.Successed)
             {
                 return result;
