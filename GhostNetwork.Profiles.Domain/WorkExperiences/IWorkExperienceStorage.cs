@@ -13,7 +13,7 @@ namespace GhostNetwork.Profiles.WorkExperiences
 
         Task DeleteAllExperienceInProfileAsync(string profileId);
 
-        Task<IList<WorkExperience>> GetAllExperienceByProfileIdAsync(string profileId);
+        Task<IEnumerable<WorkExperience>> GetAllExperienceByProfileIdAsync(string profileId);
 
         Task DeleteAsync(string id);
     }

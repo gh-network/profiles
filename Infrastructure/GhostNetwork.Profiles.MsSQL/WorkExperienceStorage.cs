@@ -49,7 +49,7 @@ namespace GhostNetwork.Profiles.MsSQL
             if (await context.Profiles.FindAsync(profileId) != null)
             {
                 var workExperience = context.WorkExperience
-                    .Where(x => x.ProfileId == lProfileId.ToString())
+                    .Where(x => x.ProfileId == lProfileId)
                     .ToList();
 
                 context.WorkExperience.RemoveRange(workExperience);
@@ -80,7 +80,7 @@ namespace GhostNetwork.Profiles.MsSQL
 
             var newWorkExperience = new WorkExperienceEntity
             {
-                ProfileId = lProfileId.ToString(),
+                ProfileId = lProfileId,
                 Description = workExperience.Description,
                 StartWork = startWork,
                 FinishWork = finishWork,
@@ -125,15 +125,15 @@ namespace GhostNetwork.Profiles.MsSQL
             await context.SaveChangesAsync();
         }
 
-        public async Task<IList<WorkExperience>> GetAllExperienceByProfileIdAsync(string profileId)
+        public async Task<IEnumerable<WorkExperience>> GetAllExperienceByProfileIdAsync(string profileId)
         {
             if (!Guid.TryParse(profileId, out var lProfileId))
             {
-                return new List<WorkExperience>();
+                return Enumerable.Empty<WorkExperience>();
             }
 
-            var workExperience = context.WorkExperience.Where(x => x.ProfileId == lProfileId.ToString());
-            return workExperience.AsEnumerable().Select(ToDomain).ToList();
+            var workExperience = await context.WorkExperience.Where(x => x.ProfileId == lProfileId).ToListAsync();
+            return workExperience.Select(ToDomain);
         }
 
         private static WorkExperience ToDomain(WorkExperienceEntity entity)
@@ -157,7 +157,7 @@ namespace GhostNetwork.Profiles.MsSQL
 
             return new WorkExperience(
                 entity.Id.ToString(),
-                entity.ProfileId,
+                entity.ProfileId.ToString(),
                 entity.CompanyName,
                 entity.Description,
                 startWork,

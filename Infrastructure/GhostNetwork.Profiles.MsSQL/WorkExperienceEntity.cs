@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GhostNetwork.Profiles.MsSQL
 {
@@ -18,8 +19,7 @@ namespace GhostNetwork.Profiles.MsSQL
 
         public long? FinishWork { get; set; }
 
-        [Required]
-        public string ProfileId { get; set; }
+        public Guid ProfileId { get; set; }
 
         public ProfileEntity Profile { get; set; }
     }
