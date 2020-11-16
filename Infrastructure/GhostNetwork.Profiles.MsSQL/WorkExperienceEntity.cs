@@ -1,19 +1,25 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GhostNetwork.Profiles.MsSQL
 {
     public class WorkExperienceEntity
     {
-        public long Id { get; set; }
+        public Guid Id { get; set; }
 
+        [Required]
+        [MaxLength(150)]
         public string CompanyName { get; set; }
 
-        public DateTime StartWork { get; set; }
+        [MaxLength(5000)]
+        public string Description { get; set; }
 
-        public DateTime? FinishWork { get; set; }
+        public long? StartWork { get; set; }
 
-        public long ProfileId { get; set; }
+        public long? FinishWork { get; set; }
+
+        public Guid ProfileId { get; set; }
 
         public ProfileEntity Profile { get; set; }
     }

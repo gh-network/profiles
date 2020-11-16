@@ -4,14 +4,16 @@ using GhostNetwork.Profiles.MsSQL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GhostNetwork.Profiles.MsSQL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201115135124_changeDateTypeInExperience")]
+    partial class changeDateTypeInExperience
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,7 +71,11 @@ namespace GhostNetwork.Profiles.MsSQL.Migrations
                     b.Property<long?>("FinishWork")
                         .HasColumnType("bigint");
 
-                    b.Property<Guid>("ProfileId")
+                    b.Property<string>("ProfileId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("ProfileId1")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<long?>("StartWork")
@@ -77,7 +83,7 @@ namespace GhostNetwork.Profiles.MsSQL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProfileId");
+                    b.HasIndex("ProfileId1");
 
                     b.ToTable("WorkExperience");
                 });
@@ -86,9 +92,7 @@ namespace GhostNetwork.Profiles.MsSQL.Migrations
                 {
                     b.HasOne("GhostNetwork.Profiles.MsSQL.ProfileEntity", "Profile")
                         .WithMany("WorkExperience")
-                        .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProfileId1");
                 });
 #pragma warning restore 612, 618
         }

@@ -6,8 +6,10 @@ namespace GhostNetwork.Profiles.Api.Models
     {
         public string CompanyName { get; set; }
 
-        public DateTime StartWork { get; set; }
+        public string Description { get; set; }
 
-        public DateTime? FinishWork { get; set; }
+        public DateTimeOffset? StartWork { get; set; }
+
+        public DateTimeOffset? FinishWork { get; set; }
     }
 }

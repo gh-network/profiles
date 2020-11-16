@@ -63,7 +63,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> CreateAsync([FromBody] WorkExperienceCreateViewModel model)
         {
-            var (result, id) = await workExperienceService.CreateAsync(model.CompanyName, model.StartWork, model.FinishWork, model.ProfileId);
+            var (result, id) = await workExperienceService.CreateAsync(model.CompanyName, model.Description, model.StartWork, model.FinishWork, model.ProfileId);
 
             if (result.Successed)
             {
@@ -92,7 +92,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> UpdateAsync([FromRoute]string id, [FromBody] WorkExperienceUpdateViewModel model)
         {
-            var result = await workExperienceService.UpdateAsync(id, model.CompanyName, model.StartWork, model.FinishWork);
+            var result = await workExperienceService.UpdateAsync(id, model.CompanyName, model.Description, model.StartWork, model.FinishWork);
             if (result.Successed)
             {
                 return NoContent();
