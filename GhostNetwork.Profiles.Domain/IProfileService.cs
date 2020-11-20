@@ -11,7 +11,7 @@ namespace GhostNetwork.Profiles
 
         Task<(DomainResult, string)> CreateAsync(string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city);
 
-        Task<DomainResult> UpdateAsync(string id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city);
+        Task<DomainResult> UpdateAsync(string id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city, string avatarUrl);
 
         Task DeleteAsync(string id);
     }
@@ -38,7 +38,7 @@ namespace GhostNetwork.Profiles
                 return (result, default);
             }
 
-            var profile = new Profile(default, firstName, lastName, gender, dateOfBirth, city);
+            var profile = new Profile(default, firstName, lastName, gender, dateOfBirth, city, null);
 
             var profileId = await profileStorage.InsertAsync(profile);
 
@@ -56,7 +56,7 @@ namespace GhostNetwork.Profiles
             return await profileStorage.FindByIdAsync(id);
         }
 
-        public async Task<DomainResult> UpdateAsync(string id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city)
+        public async Task<DomainResult> UpdateAsync(string id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city, string url)
         {
             var result = profileValidator.Validate(new ProfileContext(firstName, lastName, city, dateOfBirth, gender));
 
@@ -69,7 +69,8 @@ namespace GhostNetwork.Profiles
                     return DomainResult.Error("Profile not found.");
                 }
 
-                profile.Update(firstName, lastName, gender, dateOfBirth, city);
+                profile.Update(firstName, lastName, gender, dateOfBirth, city, url);
+
                 await profileStorage.UpdateAsync(id, profile);
                 return DomainResult.Success();
             }

@@ -25,6 +25,9 @@ namespace GhostNetwork.Profiles.MsSQL
         [MaxLength(150)]
         public string City { get; set; }
 
+        [MaxLength(150)]
+        public string AvatarUrl { get; set; }
+
         public virtual List<WorkExperienceEntity> WorkExperience { get; set; }
     }
 }

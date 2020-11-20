@@ -69,6 +69,7 @@ namespace GhostNetwork.Profiles.MsSQL
             profileEntity.LastName = updatedProfile.LastName;
             profileEntity.Gender = updatedProfile.Gender;
             profileEntity.DateOfBirth = dateBirthday;
+            profileEntity.AvatarUrl = updatedProfile.AvatarUrl;
 
             context.Profiles.Update(profileEntity);
             await context.SaveChangesAsync();
@@ -92,20 +93,21 @@ namespace GhostNetwork.Profiles.MsSQL
             {
                 return null;
             }
-            
+
             DateTimeOffset? dateOfBirth = null;
             if (entity.DateOfBirth.HasValue)
             {
                 dateOfBirth = DateTimeOffset.FromUnixTimeMilliseconds(entity.DateOfBirth.Value);
             }
-            
+
             return new Profile(
                 entity.Id.ToString(),
                 entity.FirstName,
                 entity.LastName,
                 entity.Gender,
                 dateOfBirth,
-                entity.City);
+                entity.City,
+                entity.AvatarUrl);
         }
     }
 }
