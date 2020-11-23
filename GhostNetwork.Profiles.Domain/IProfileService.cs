@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Domain;
+using GhostNetwork.Profiles.Avatars;
 using GhostNetwork.Profiles.WorkExperiences;
 
 namespace GhostNetwork.Profiles
@@ -11,9 +13,13 @@ namespace GhostNetwork.Profiles
 
         Task<(DomainResult, string)> CreateAsync(string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city);
 
-        Task<DomainResult> UpdateAsync(string id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city, string avatarUrl);
+        Task<DomainResult> UpdateAsync(string id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city);
 
         Task DeleteAsync(string id);
+
+        Task<DomainResult> DeleteAvatarAsync(string profileId);
+
+        Task<DomainResult> UpdateAvatarAsync(string profileId, Stream stream, string extension);
     }
 
     public class ProfileService : IProfileService
@@ -21,12 +27,14 @@ namespace GhostNetwork.Profiles
         private readonly IProfileStorage profileStorage;
         private readonly IValidator<ProfileContext> profileValidator;
         private readonly IWorkExperienceStorage workExperienceStorage;
+        private readonly IAvatarStorage avatarStorage;
 
-        public ProfileService(IProfileStorage profileStorage, IValidator<ProfileContext> profileValidator, IWorkExperienceStorage workExperienceStorage)
+        public ProfileService(IProfileStorage profileStorage, IValidator<ProfileContext> profileValidator, IWorkExperienceStorage workExperienceStorage, IAvatarStorage avatarStorage)
         {
             this.profileStorage = profileStorage;
             this.profileValidator = profileValidator;
             this.workExperienceStorage = workExperienceStorage;
+            this.avatarStorage = avatarStorage;
         }
 
         public async Task<(DomainResult, string)> CreateAsync(string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city)
@@ -51,12 +59,43 @@ namespace GhostNetwork.Profiles
             await profileStorage.DeleteAsync(id);
         }
 
+        public async Task<DomainResult> DeleteAvatarAsync(string profileId)
+        {
+            var profile = await profileStorage.FindByIdAsync(profileId);
+            if (profile == null)
+            {
+                return DomainResult.Error("Profile not found.");
+            }
+
+            if (profile.AvatarUrl == null)
+            {
+                return DomainResult.Error("Avatar not found");
+            }
+
+            await avatarStorage.DeleteAsync(profileId);
+            return DomainResult.Success();
+        }
+
+        public async Task<DomainResult> UpdateAvatarAsync(string profileId, Stream stream, string extension)
+        {
+            var profile = await profileStorage.FindByIdAsync(profileId);
+            if (profile == null)
+            {
+                return DomainResult.Error("Profile not found.");
+            }
+
+            var fileName = Guid.NewGuid() + extension;
+            stream.Position = 0;
+            await avatarStorage.UploadAsync(stream, fileName, profileId);
+            return DomainResult.Success();
+        }
+
         public async Task<Profile> GetByIdAsync(string id)
         {
             return await profileStorage.FindByIdAsync(id);
         }
 
-        public async Task<DomainResult> UpdateAsync(string id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city, string url)
+        public async Task<DomainResult> UpdateAsync(string id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city)
         {
             var result = profileValidator.Validate(new ProfileContext(firstName, lastName, city, dateOfBirth, gender));
 
@@ -69,7 +108,7 @@ namespace GhostNetwork.Profiles
                     return DomainResult.Error("Profile not found.");
                 }
 
-                profile.Update(firstName, lastName, gender, dateOfBirth, city, url);
+                profile.Update(firstName, lastName, gender, dateOfBirth, city);
 
                 await profileStorage.UpdateAsync(id, profile);
                 return DomainResult.Success();

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 using GhostNetwork.Profiles.Api.Helpers;
 using GhostNetwork.Profiles.Api.Models;
 using Microsoft.AspNetCore.Http;
@@ -52,7 +53,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> UpdateAsync([FromRoute]string id, [FromBody] ProfileUpdateViewModel updateModel)
         {
-            var result = await profileService.UpdateAsync(id, updateModel.FirstName, updateModel.LastName, updateModel.Gender, updateModel.DateOfBirth, updateModel.City, null);
+            var result = await profileService.UpdateAsync(id, updateModel.FirstName, updateModel.LastName, updateModel.Gender, updateModel.DateOfBirth, updateModel.City);
 
             if (result.Successed)
             {
@@ -74,6 +75,40 @@ namespace GhostNetwork.Profiles.Api.Controllers
 
             await profileService.DeleteAsync(id);
             return Ok();
+        }
+
+        [HttpPost("profile/{profileId}/avatar")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> UploadAvatarAsync(IFormFile file, [FromRoute] string profileId)
+        {
+            if (file != null && file.Length > 0)
+            {
+                await using (var memoryStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(memoryStream);
+                    string extension = Path.GetExtension(file.FileName);
+                    await profileService.UpdateAvatarAsync(profileId, memoryStream, extension);
+                }
+
+                return Ok();
+            }
+
+            return BadRequest();
+        }
+
+        [HttpDelete("profile/{profileId}/avatar")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> DeleteAvatarAsync([FromRoute] string profileId)
+        {
+            var result = await profileService.DeleteAvatarAsync(profileId);
+            if (result.Successed)
+            {
+                return Ok();
+            }
+
+            return BadRequest(result.ToProblemDetails());
         }
     }
 }

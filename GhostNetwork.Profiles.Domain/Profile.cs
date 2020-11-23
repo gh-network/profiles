@@ -29,14 +29,13 @@ namespace GhostNetwork.Profiles
 
         public string AvatarUrl { get; private set; }
 
-        public void Update(string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city, string url)
+        public void Update(string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city)
         {
             FirstName = firstName;
             LastName = lastName;
             Gender = gender;
             DateOfBirth = dateOfBirth;
             City = city;
-            AvatarUrl = url;
         }
     }
 }

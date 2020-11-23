@@ -43,10 +43,10 @@ namespace GhostNetwork.Profiles.Api
             services.AddScoped<IWorkExperienceStorage, WorkExperienceStorage>();
             services.AddScoped<IValidator<WorkExperienceContext>, WorkExperienceValidator>();
 
-            services.AddScoped<IAvatarService>(provider => new AvatarService(
+            services.AddScoped<IAvatarStorage>(provider => new AvatarStorage(
                 new BlobServiceClient(
                     Configuration.GetValue<string>("AzureBlobStorageConnectionString")), 
-                    Configuration.GetValue<string>("Container"), (IProfileService)provider.GetService(typeof(IProfileService))));
+                    Configuration.GetValue<string>("Container"), (ApplicationDbContext)provider.GetService(typeof(ApplicationDbContext))));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
