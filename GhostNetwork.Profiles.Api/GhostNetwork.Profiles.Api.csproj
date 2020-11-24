@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GhostNetwork.Profiles.Azure\GhostNetwork.Profiles.Azure.csproj" />
     <ProjectReference Include="..\GhostNetwork.Profiles.Domain\GhostNetwork.Profiles.Domain.csproj" />
     <ProjectReference Include="..\Infrastructure\GhostNetwork.Profiles.MsSQL\GhostNetwork.Profiles.MsSQL.csproj" />
   </ItemGroup>

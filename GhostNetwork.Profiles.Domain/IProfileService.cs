@@ -73,6 +73,7 @@ namespace GhostNetwork.Profiles
             }
 
             await avatarStorage.DeleteAsync(profileId);
+            await profileStorage.DeleteAvatarAsync(profileId);
             return DomainResult.Success();
         }
 
@@ -86,7 +87,14 @@ namespace GhostNetwork.Profiles
 
             var fileName = Guid.NewGuid() + extension;
             stream.Position = 0;
-            await avatarStorage.UploadAsync(stream, fileName, profileId);
+            var avatarUrl = await avatarStorage.UploadAsync(stream, fileName);
+            if (profile.AvatarUrl != null)
+            {
+
+                await avatarStorage.DeleteAsync(profile.AvatarUrl);
+            }
+
+            await profileStorage.UpdateAvatarAsync(profileId, avatarUrl);
             return DomainResult.Success();
         }
 

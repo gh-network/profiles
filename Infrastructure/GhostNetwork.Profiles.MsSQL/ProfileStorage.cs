@@ -87,6 +87,30 @@ namespace GhostNetwork.Profiles.MsSQL
             await context.SaveChangesAsync();
         }
 
+        public async Task UpdateAvatarAsync(string profileId, string avatarUrl)
+        {
+            if (!Guid.TryParse(profileId, out var gId))
+            {
+                return;
+            }
+
+            var profileEntity = await context.Profiles.FindAsync(gId);
+            profileEntity.AvatarUrl = avatarUrl;
+            await context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAvatarAsync(string profileId)
+        {
+            if (!Guid.TryParse(profileId, out var gId))
+            {
+                return;
+            }
+
+            var profileEntity = await context.Profiles.FindAsync(gId);
+            profileEntity.AvatarUrl = null;
+            await context.SaveChangesAsync();
+        }
+
         private static Profile ToDomain(ProfileEntity entity)
         {
             if (entity == null)

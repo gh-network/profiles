@@ -11,5 +11,9 @@ namespace GhostNetwork.Profiles
         Task UpdateAsync(string id, Profile updatedProfile);
 
         Task DeleteAsync(string id);
+
+        Task UpdateAvatarAsync(string profileId, string avatarUrl);
+
+        Task DeleteAvatarAsync(string profileId);
     }
 }

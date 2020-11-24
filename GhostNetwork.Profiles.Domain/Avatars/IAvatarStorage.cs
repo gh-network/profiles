@@ -5,8 +5,8 @@ namespace GhostNetwork.Profiles.Avatars
 {
     public interface IAvatarStorage
     {
-        Task UploadAsync(Stream stream, string fileName, string profileId);
+        Task<string> UploadAsync(Stream stream, string fileName);
 
-        Task DeleteAsync(string profileId);
+        Task<bool> DeleteAsync(string avatarUrl);
     }
 }

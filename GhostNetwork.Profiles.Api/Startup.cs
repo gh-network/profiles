@@ -1,5 +1,6 @@
 using Azure.Storage.Blobs;
 using GhostNetwork.Profiles.Avatars;
+using GhostNetwork.Profiles.Azure;
 using GhostNetwork.Profiles.MsSQL;
 using GhostNetwork.Profiles.WorkExperiences;
 using Microsoft.AspNetCore.Builder;
@@ -46,7 +47,7 @@ namespace GhostNetwork.Profiles.Api
             services.AddScoped<IAvatarStorage>(provider => new AvatarStorage(
                 new BlobServiceClient(
                     Configuration.GetValue<string>("AzureBlobStorageConnectionString")), 
-                    Configuration.GetValue<string>("Container"), (ApplicationDbContext)provider.GetService(typeof(ApplicationDbContext))));
+                    Configuration.GetValue<string>("Container")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
