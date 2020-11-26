@@ -78,23 +78,30 @@ namespace GhostNetwork.Profiles.Api.Controllers
         }
 
         [HttpPost("profile/{profileId}/avatar")]
+        [RequestSizeLimit(3145728)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status413PayloadTooLarge)]
         public async Task<ActionResult> UploadAvatarAsync(IFormFile file, [FromRoute] string profileId)
         {
-            if (file != null && file.Length > 0)
+            if (file != null)
             {
                 await using (var memoryStream = new MemoryStream())
                 {
                     await file.CopyToAsync(memoryStream);
                     string extension = Path.GetExtension(file.FileName);
-                    await profileService.UpdateAvatarAsync(profileId, memoryStream, extension);
-                }
+                    var result = await profileService.UpdateAvatarAsync(profileId, memoryStream, extension);
+                    if (result.Successed)
+                    {
+                        return Ok();
+                    }
 
-                return Ok();
+                    return BadRequest(result.ToProblemDetails());
+                }
             }
 
-            return BadRequest();
+            return BadRequest("File is null");
+
         }
 
         [HttpDelete("profile/{profileId}/avatar")]

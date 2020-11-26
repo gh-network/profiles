@@ -72,7 +72,7 @@ namespace GhostNetwork.Profiles
                 return DomainResult.Error("Avatar not found");
             }
 
-            await avatarStorage.DeleteAsync(profileId);
+            await avatarStorage.DeleteAsync(profile.AvatarUrl);
             await profileStorage.DeleteAvatarAsync(profileId);
             return DomainResult.Success();
         }

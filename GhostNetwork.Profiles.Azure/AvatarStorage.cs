@@ -7,18 +7,16 @@ namespace GhostNetwork.Profiles.Azure
 {
     public class AvatarStorage : IAvatarStorage
     {
-        private readonly BlobServiceClient blobServiceClient;
-        private readonly string containerName;
+        private readonly AvatarStorageConfig config;
 
-        public AvatarStorage(BlobServiceClient blobServiceClient, string containerName)
+        public AvatarStorage(AvatarStorageConfig config)
         {
-            this.blobServiceClient = blobServiceClient;
-            this.containerName = containerName;
+            this.config = config;
         }
 
         public async Task<string> UploadAsync(Stream stream, string fileName)
         {
-            var containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+            var containerClient = config.BlobServiceClient.GetBlobContainerClient(config.ContainerName);
             var blobClient = containerClient.GetBlobClient(fileName);
             await blobClient.UploadAsync(stream);
             return containerClient.Uri.AbsoluteUri + "/" + fileName;
@@ -26,7 +24,7 @@ namespace GhostNetwork.Profiles.Azure
 
         public async Task<bool> DeleteAsync(string avatarUrl)
         {
-            var containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+            var containerClient = config.BlobServiceClient.GetBlobContainerClient(config.ContainerName);
             var arr = avatarUrl.Split(new char[] {'/'});
             var result = await containerClient.DeleteBlobIfExistsAsync(arr[arr.Length - 1]);
             if (result)
