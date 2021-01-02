@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using GhostNetwork.Profiles.Api.Helpers;
 using GhostNetwork.Profiles.Api.Models;
@@ -11,12 +10,12 @@ namespace GhostNetwork.Profiles.Api.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class WorkExperienceController : ControllerBase
+    public class WorkExperiencesController : ControllerBase
     {
         private readonly IWorkExperienceService workExperienceService;
         private readonly IProfileService profileService;
 
-        public WorkExperienceController(IWorkExperienceService workExperienceService, IProfileService profileService)
+        public WorkExperiencesController(IWorkExperienceService workExperienceService, IProfileService profileService)
         {
             this.workExperienceService = workExperienceService;
             this.profileService = profileService;
@@ -68,6 +67,20 @@ namespace GhostNetwork.Profiles.Api.Controllers
             return BadRequest(result.ToProblemDetails());
         }
 
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> UpdateAsync([FromRoute] string id, [FromBody] WorkExperienceUpdateViewModel model)
+        {
+            var result = await workExperienceService.UpdateAsync(id, model.CompanyName, model.Description, model.StartWork, model.FinishWork);
+            if (result.Successed)
+            {
+                return NoContent();
+            }
+
+            return BadRequest(result.ToProblemDetails());
+        }
+
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -81,20 +94,6 @@ namespace GhostNetwork.Profiles.Api.Controllers
             await workExperienceService.DeleteAsync(id);
 
             return Ok();
-        }
-
-        [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> UpdateAsync([FromRoute] string id, [FromBody] WorkExperienceUpdateViewModel model)
-        {
-            var result = await workExperienceService.UpdateAsync(id, model.CompanyName, model.Description, model.StartWork, model.FinishWork);
-            if (result.Successed)
-            {
-                return NoContent();
-            }
-
-            return BadRequest(result.ToProblemDetails());
         }
     }
 }

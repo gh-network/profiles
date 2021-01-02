@@ -8,11 +8,11 @@ namespace GhostNetwork.Profiles.Api.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class ProfileController : ControllerBase
+    public class ProfilesController : ControllerBase
     {
         private readonly IProfileService profileService;
 
-        public ProfileController(IProfileService profileService)
+        public ProfilesController(IProfileService profileService)
         {
             this.profileService = profileService;
         }
