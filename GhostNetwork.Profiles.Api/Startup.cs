@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+using GhostNetwork.Profiles.Api.Helpers.OpenApi;
 using GhostNetwork.Profiles.MsSQL;
 using GhostNetwork.Profiles.WorkExperiences;
 using Microsoft.AspNetCore.Builder;
@@ -7,13 +9,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace GhostNetwork.Profiles.Api
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -30,9 +31,11 @@ namespace GhostNetwork.Profiles.Api
                     Title = "Profiles API V1",
                     Version = "1.0.0"
                 });
+
+                options.OperationFilter<OperationIdFilter>();
+                options.OperationFilter<AddResponseHeadersFilter>();
             });
-            services.AddSwaggerGen();
-            services.AddControllers();
+
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ProfilesConnection")));
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<IProfileStorage, ProfileStorage>();
@@ -40,17 +43,28 @@ namespace GhostNetwork.Profiles.Api
             services.AddScoped<IWorkExperienceService, WorkExperienceService>();
             services.AddScoped<IWorkExperienceStorage, WorkExperienceStorage>();
             services.AddScoped<IValidator<WorkExperienceContext>, WorkExperienceValidator>();
+
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
-                app.UseSwagger().UseSwaggerUI(config =>
-                {
-                    config.SwaggerEndpoint("/swagger/v1/swagger.json", "Profiles Api V1");
-                });
+                app
+                    .UseSwagger()
+                    .UseSwaggerUI(config =>
+                    {
+                        config.SwaggerEndpoint("/swagger/v1/swagger.json", "Profiles Api V1");
+                    });
+
+                app.UseCors(builder => builder.AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowAnyOrigin());
             }
 
             app.UseRouting();
