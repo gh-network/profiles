@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GhostNetwork.Profiles.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class WorkExperienceController : ControllerBase
     {
@@ -29,12 +29,12 @@ namespace GhostNetwork.Profiles.Api.Controllers
         {
             var workExperience = await workExperienceService.GetByIdAsync(id);
 
-            if (workExperience != null)
+            if (workExperience == null)
             {
-                return Ok(workExperience);
+                return NotFound();
             }
 
-            return NotFound();
+            return Ok(workExperience);
         }
 
         [HttpGet("byprofile/{profileId}")]
@@ -45,17 +45,12 @@ namespace GhostNetwork.Profiles.Api.Controllers
         {
             if (await profileService.GetByIdAsync(profileId) == null)
             {
-                return BadRequest("Profile not found.");
+                return NotFound();
             }
 
             var experience = await workExperienceService.FindByProfileId(profileId);
 
-            if (experience.Any())
-            {
-                return Ok(experience);
-            }
-
-            return NotFound();
+            return Ok(experience);
         }
 
         [HttpPost]
@@ -84,13 +79,14 @@ namespace GhostNetwork.Profiles.Api.Controllers
             }
 
             await workExperienceService.DeleteAsync(id);
+
             return Ok();
         }
 
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> UpdateAsync([FromRoute]string id, [FromBody] WorkExperienceUpdateViewModel model)
+        public async Task<ActionResult> UpdateAsync([FromRoute] string id, [FromBody] WorkExperienceUpdateViewModel model)
         {
             var result = await workExperienceService.UpdateAsync(id, model.CompanyName, model.Description, model.StartWork, model.FinishWork);
             if (result.Successed)

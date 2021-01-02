@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GhostNetwork.Profiles.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class ProfileController : ControllerBase
     {
@@ -24,12 +24,12 @@ namespace GhostNetwork.Profiles.Api.Controllers
         {
             var profile = await profileService.GetByIdAsync(id);
 
-            if (profile != null)
+            if (profile == null)
             {
-                return Ok(profile);
+                return NotFound();
             }
 
-            return NotFound();
+            return Ok(profile);
         }
 
         [HttpPost]
@@ -50,7 +50,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> UpdateAsync([FromRoute]string id, [FromBody] ProfileUpdateViewModel updateModel)
+        public async Task<ActionResult> UpdateAsync([FromRoute] string id, [FromBody] ProfileUpdateViewModel updateModel)
         {
             var result = await profileService.UpdateAsync(id, updateModel.FirstName, updateModel.LastName, updateModel.Gender, updateModel.DateOfBirth, updateModel.City);
 
