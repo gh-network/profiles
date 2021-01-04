@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  api:
+    build: .
+    ports:
+      - "5300:80"    
+    environment:
+      - MONGO_ADDRESS=db:27017
+      - ASPNETCORE_ENVIRONMENT=Development
+  db:
+    image: mvertes/alpine-mongo
