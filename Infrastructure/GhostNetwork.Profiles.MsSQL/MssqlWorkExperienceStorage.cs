@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GhostNetwork.Profiles.MsSQL
 {
-    public class WorkExperienceStorage : IWorkExperienceStorage
+    public class MssqlWorkExperienceStorage : IWorkExperienceStorage
     {
         private readonly ApplicationDbContext context;
 
-        public WorkExperienceStorage(ApplicationDbContext context)
+        public MssqlWorkExperienceStorage(ApplicationDbContext context)
         {
             this.context = context;
         }
@@ -157,11 +157,11 @@ namespace GhostNetwork.Profiles.MsSQL
 
             return new WorkExperience(
                 entity.Id.ToString(),
-                entity.ProfileId.ToString(),
                 entity.CompanyName,
                 entity.Description,
                 startWork,
-                finishWork);
+                finishWork,
+                entity.ProfileId.ToString());
         }
     }
 }

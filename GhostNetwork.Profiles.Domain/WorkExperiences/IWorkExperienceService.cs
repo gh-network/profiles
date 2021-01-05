@@ -45,7 +45,7 @@ namespace GhostNetwork.Profiles.WorkExperiences
                 return (DomainResult.Error("Profile not found."), default);
             }
 
-            var workExperience = new WorkExperience(default, profileId, companyName, description, startWork, finishWork);
+            var workExperience = new WorkExperience(default, companyName, description, startWork, finishWork, profileId);
             var id = await experienceStorage.InsertAsync(workExperience);
             return (DomainResult.Success(), id);
         }
