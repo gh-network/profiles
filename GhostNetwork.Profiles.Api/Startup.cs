@@ -41,8 +41,8 @@ namespace GhostNetwork.Profiles.Api
 
             services.AddScoped(provider =>
             {
-                var client = new MongoClient($"mongodb://{Configuration["MONGO_ADDRESS"]}/profiles");
-                return new MongoDbContext(client.GetDatabase("profiles"));
+                var client = new MongoClient($"mongodb://{Configuration["MONGO_ADDRESS"]}/gprofiles");
+                return new MongoDbContext(client.GetDatabase("gprofiles"));
             });
 
             services.AddScoped<IProfileStorage, MongoProfileStorage>();
