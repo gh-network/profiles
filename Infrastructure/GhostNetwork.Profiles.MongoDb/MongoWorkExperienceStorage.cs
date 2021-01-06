@@ -41,11 +41,6 @@ namespace GhostNetwork.Profiles.MongoDb
 
         public async Task<string> InsertAsync(WorkExperience workExperience)
         {
-            if (!Guid.TryParse(workExperience.ProfileId, out var lProfileId))
-            {
-                return null;
-            }
-
             long? startWork = null;
             long? finishWork = null;
             if (workExperience.StartWork.HasValue)
@@ -146,7 +141,7 @@ namespace GhostNetwork.Profiles.MongoDb
                 entity.Description,
                 startWork,
                 finishWork,
-                entity.ProfileId.ToString()
+                entity.ProfileId
                 );
         }
     }

@@ -48,15 +48,15 @@ namespace GhostNetwork.Profiles.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> UpdateAsync([FromRoute] string id, [FromBody] ProfileUpdateViewModel updateModel)
+        public async Task<ActionResult<Profile>> UpdateAsync([FromRoute] string id, [FromBody] ProfileUpdateViewModel updateModel)
         {
             var result = await profileService.UpdateAsync(id, updateModel.FirstName, updateModel.LastName, updateModel.Gender, updateModel.DateOfBirth, updateModel.City);
 
             if (result.Successed)
             {
-                return NoContent();
+                return Ok(await profileService.GetByIdAsync(id));
             }
 
             return BadRequest(result.ToProblemDetails());

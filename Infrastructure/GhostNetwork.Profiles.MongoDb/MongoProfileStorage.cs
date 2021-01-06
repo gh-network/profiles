@@ -58,12 +58,18 @@ namespace GhostNetwork.Profiles.MongoDb
                 return;
             }
 
+            long? dateBirthday = null;
+            if (DateTimeOffset.TryParse(updatedProfile.DateOfBirth.ToString(), out var dateB))
+            {
+                dateBirthday = dateB.ToUnixTimeMilliseconds();
+            }
+
             var filter = Builders<ProfileEntity>.Filter.Eq(p => p.Id, oId);
 
             var update = Builders<ProfileEntity>.Update.Set(s => s.FirstName, updatedProfile.FirstName)
                 .Set(s => s.LastName, updatedProfile.LastName)
                 .Set(s => s.Gender, updatedProfile.Gender)
-                .Set(s => DateTimeOffset.FromUnixTimeMilliseconds(s.DateOfBirth.Value), updatedProfile.DateOfBirth)
+                .Set(s => s.DateOfBirth, dateBirthday)
                 .Set(s => s.City, updatedProfile.City);
 
             await context.Profiles.UpdateOneAsync(filter, update);
