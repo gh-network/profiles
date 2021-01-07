@@ -31,10 +31,9 @@ namespace GhostNetwork.Profiles.MongoDb
         public async Task<string> InsertAsync(Profile profile)
         {
             long? dateBirthday = null;
-
-            if (DateTimeOffset.TryParse(profile.DateOfBirth.ToString(), out var dateB))
+            if (profile.DateOfBirth.HasValue)
             {
-                dateBirthday = dateB.ToUnixTimeMilliseconds();
+                dateBirthday = profile.DateOfBirth.Value.ToUnixTimeMilliseconds();
             }
 
             var entity = new ProfileEntity
@@ -59,9 +58,9 @@ namespace GhostNetwork.Profiles.MongoDb
             }
 
             long? dateBirthday = null;
-            if (DateTimeOffset.TryParse(updatedProfile.DateOfBirth.ToString(), out var dateB))
+            if (updatedProfile.DateOfBirth.HasValue)
             {
-                dateBirthday = dateB.ToUnixTimeMilliseconds();
+                dateBirthday = updatedProfile.DateOfBirth.Value.ToUnixTimeMilliseconds();
             }
 
             var filter = Builders<ProfileEntity>.Filter.Eq(p => p.Id, oId);

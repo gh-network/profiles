@@ -45,13 +45,11 @@ namespace GhostNetwork.Profiles.MongoDb
             long? finishWork = null;
             if (workExperience.StartWork.HasValue)
             {
-                DateTimeOffset start = workExperience.StartWork.Value;
-                startWork = start.ToUnixTimeMilliseconds();
+                startWork = workExperience.StartWork.Value.ToUnixTimeMilliseconds();
             }
             if (workExperience.FinishWork.HasValue)
             {
-                DateTimeOffset finish = workExperience.FinishWork.Value;
-                finishWork = finish.ToUnixTimeMilliseconds();
+                startWork = workExperience.FinishWork.Value.ToUnixTimeMilliseconds();
             }
 
             var entity = new WorkExperienceEntity
@@ -78,14 +76,11 @@ namespace GhostNetwork.Profiles.MongoDb
             long? finishWork = null;
             if (workExperience.StartWork.HasValue)
             {
-                DateTimeOffset start = workExperience.StartWork.Value;
-                startWork = start.ToUnixTimeMilliseconds();
+                startWork = workExperience.StartWork.Value.ToUnixTimeMilliseconds();
             }
-
             if (workExperience.FinishWork.HasValue)
             {
-                DateTimeOffset finish = workExperience.FinishWork.Value;
-                finishWork = finish.ToUnixTimeMilliseconds();
+                startWork = workExperience.FinishWork.Value.ToUnixTimeMilliseconds();
             }
 
             var filter = Builders<WorkExperienceEntity>.Filter.Eq(p => p.Id, oId);
