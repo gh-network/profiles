@@ -32,7 +32,8 @@ namespace GhostNetwork.Profiles.WorkExperiences
             this.validator = validator;
         }
 
-        public async Task<(DomainResult, string)> CreateAsync(string companyName, string description, DateTimeOffset? startWork, DateTimeOffset? finishWork, string profileId)
+        public async Task<(DomainResult, string)> CreateAsync(string companyName,
+            string description, DateTimeOffset? startWork, DateTimeOffset? finishWork, string profileId)
         {
             var result = validator.Validate(new WorkExperienceContext(companyName, description, startWork, finishWork));
             if (!result.Successed)
@@ -45,7 +46,7 @@ namespace GhostNetwork.Profiles.WorkExperiences
                 return (DomainResult.Error("Profile not found."), default);
             }
 
-            var workExperience = new WorkExperience(default, profileId, companyName, description, startWork, finishWork);
+            var workExperience = new WorkExperience(default, companyName, description, startWork, finishWork, profileId);
             var id = await experienceStorage.InsertAsync(workExperience);
             return (DomainResult.Success(), id);
         }
@@ -66,7 +67,8 @@ namespace GhostNetwork.Profiles.WorkExperiences
             return await experienceStorage.FindByIdAsync(id);
         }
 
-        public async Task<DomainResult> UpdateAsync(string id, string companyName, string description, DateTimeOffset? startWork, DateTimeOffset? finishWork)
+        public async Task<DomainResult> UpdateAsync(string id,
+            string companyName, string description, DateTimeOffset? startWork, DateTimeOffset? finishWork)
         {
             var result = validator.Validate(new WorkExperienceContext(companyName, description, startWork, finishWork));
             if (!result.Successed)

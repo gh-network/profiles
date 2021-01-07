@@ -1,5 +1,7 @@
+using System;
 using System.Text.Json.Serialization;
 using GhostNetwork.Profiles.Api.Helpers.OpenApi;
+using GhostNetwork.Profiles.MongoDb;
 using GhostNetwork.Profiles.MsSQL;
 using GhostNetwork.Profiles.WorkExperiences;
 using Microsoft.AspNetCore.Builder;
@@ -9,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using MongoDB.Driver;
 using Swashbuckle.AspNetCore.Filters;
 
 namespace GhostNetwork.Profiles.Api
@@ -36,12 +39,18 @@ namespace GhostNetwork.Profiles.Api
                 options.OperationFilter<AddResponseHeadersFilter>();
             });
 
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ProfilesConnection")));
+            services.AddScoped(provider =>
+            {
+                var client = new MongoClient($"mongodb://{Configuration["MONGO_ADDRESS"]}/gprofiles");
+                return new MongoDbContext(client.GetDatabase("gprofiles"));
+            });
+
+            services.AddScoped<IProfileStorage, MongoProfileStorage>();
             services.AddScoped<IProfileService, ProfileService>();
-            services.AddScoped<IProfileStorage, ProfileStorage>();
             services.AddScoped<IValidator<ProfileContext>, ProfileValidator>();
+
+            services.AddScoped<IWorkExperienceStorage, MongoWorkExperienceStorage>();
             services.AddScoped<IWorkExperienceService, WorkExperienceService>();
-            services.AddScoped<IWorkExperienceStorage, WorkExperienceStorage>();
             services.AddScoped<IValidator<WorkExperienceContext>, WorkExperienceValidator>();
 
             services.AddControllers()

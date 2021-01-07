@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 
 namespace GhostNetwork.Profiles.MsSQL
 {
-    public class ProfileStorage : IProfileStorage
+    public class MssqlProfileStorage : IProfileStorage
     {
         private readonly ApplicationDbContext context;
 
-        public ProfileStorage(ApplicationDbContext context)
+        public MssqlProfileStorage(ApplicationDbContext context)
         {
             this.context = context;
         }
@@ -92,13 +92,13 @@ namespace GhostNetwork.Profiles.MsSQL
             {
                 return null;
             }
-            
+
             DateTimeOffset? dateOfBirth = null;
             if (entity.DateOfBirth.HasValue)
             {
                 dateOfBirth = DateTimeOffset.FromUnixTimeMilliseconds(entity.DateOfBirth.Value);
             }
-            
+
             return new Profile(
                 entity.Id.ToString(),
                 entity.FirstName,

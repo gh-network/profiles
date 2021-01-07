@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GhostNetwork.Profiles.Domain\GhostNetwork.Profiles.Domain.csproj" />
+    <ProjectReference Include="..\Infrastructure\GhostNetwork.Profiles.MongoDb\GhostNetwork.Profiles.MongoDb.csproj" />
     <ProjectReference Include="..\Infrastructure\GhostNetwork.Profiles.MsSQL\GhostNetwork.Profiles.MsSQL.csproj" />
   </ItemGroup>
 

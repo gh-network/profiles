@@ -22,14 +22,17 @@ namespace GhostNetwork.Profiles
         private readonly IValidator<ProfileContext> profileValidator;
         private readonly IWorkExperienceStorage workExperienceStorage;
 
-        public ProfileService(IProfileStorage profileStorage, IValidator<ProfileContext> profileValidator, IWorkExperienceStorage workExperienceStorage)
+        public ProfileService(IProfileStorage profileStorage,
+            IValidator<ProfileContext> profileValidator,
+            IWorkExperienceStorage workExperienceStorage)
         {
             this.profileStorage = profileStorage;
             this.profileValidator = profileValidator;
             this.workExperienceStorage = workExperienceStorage;
         }
 
-        public async Task<(DomainResult, string)> CreateAsync(string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city)
+        public async Task<(DomainResult, string)> CreateAsync(string firstName,
+            string lastName, string gender, DateTimeOffset? dateOfBirth, string city)
         {
             var result = profileValidator.Validate(new ProfileContext(firstName, lastName, city, dateOfBirth, gender));
 
@@ -56,7 +59,8 @@ namespace GhostNetwork.Profiles
             return await profileStorage.FindByIdAsync(id);
         }
 
-        public async Task<DomainResult> UpdateAsync(string id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city)
+        public async Task<DomainResult> UpdateAsync(string id, string firstName,
+            string lastName, string gender, DateTimeOffset? dateOfBirth, string city)
         {
             var result = profileValidator.Validate(new ProfileContext(firstName, lastName, city, dateOfBirth, gender));
 

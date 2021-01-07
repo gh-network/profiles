@@ -4,21 +4,21 @@ namespace GhostNetwork.Profiles.WorkExperiences
 {
     public class WorkExperience
     {
-        public WorkExperience(string id, string profileId, string companyName, string description, DateTimeOffset? startWork, DateTimeOffset? finishWork)
+        public WorkExperience(string id, string companyName, string description, DateTimeOffset? startWork, DateTimeOffset? finishWork, string profileId)
         {
             Id = id;
-            ProfileId = profileId;
-            StartWork = startWork;
-            FinishWork = finishWork;
             CompanyName = companyName;
             Description = description;
+            StartWork = startWork;
+            FinishWork = finishWork;
+            ProfileId = profileId;
         }
 
         public string Id { get; }
 
-        public string Description { get; set; }
-
         public string CompanyName { get; private set; }
+
+        public string Description { get; set; }
 
         public DateTimeOffset? StartWork { get; private set; }
 
@@ -29,9 +29,9 @@ namespace GhostNetwork.Profiles.WorkExperiences
         public void Update(string companyName, string description, DateTimeOffset? startWork, DateTimeOffset? finishWork)
         {
             CompanyName = companyName;
+            Description = description;
             StartWork = startWork;
             FinishWork = finishWork;
-            Description = description;
         }
     }
 }
