@@ -17,6 +17,12 @@ namespace GhostNetwork.Profiles.Api.Controllers
             this.profileService = profileService;
         }
 
+        /// <summary>
+        /// Get profile by id
+        /// </summary>
+        /// <param name="id">Profile id</param>
+        /// <response code="200">Returns profile</response>
+        /// <response code="404">Profile not found</response>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -32,6 +38,12 @@ namespace GhostNetwork.Profiles.Api.Controllers
             return Ok(profile);
         }
 
+        /// <summary>
+        /// Create one profile
+        /// </summary>
+        /// <param name="createModel">Profile</param>
+        /// <response code="201">Profile successfully created</response>
+        /// <response code="400">Validation failed</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -47,8 +59,15 @@ namespace GhostNetwork.Profiles.Api.Controllers
             return BadRequest(result.ToProblemDetails());
         }
 
+        /// <summary>
+        /// Update on profile
+        /// </summary>
+        /// <param name="id">Profile id</param>
+        /// <param name="updateModel">Updated profile</param>
+        /// <response code="204">Profile successfully updated</response>
+        /// <response code="400">Validation failed</response>
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Profile>> UpdateAsync([FromRoute] string id, [FromBody] ProfileUpdateViewModel updateModel)
         {
@@ -56,14 +75,20 @@ namespace GhostNetwork.Profiles.Api.Controllers
 
             if (result.Successed)
             {
-                return Ok(await profileService.GetByIdAsync(id));
+                return NoContent();
             }
 
             return BadRequest(result.ToProblemDetails());
         }
 
+        /// <summary>
+        /// Delete one profile
+        /// </summary>
+        /// <param name="id">Profile id</param>
+        /// <response code="204">Profile successfully deleted</response>
+        /// <response code="404">Profile not found</response>
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeleteAsync(string id)
         {
@@ -73,7 +98,8 @@ namespace GhostNetwork.Profiles.Api.Controllers
             }
 
             await profileService.DeleteAsync(id);
-            return Ok();
+
+            return NoContent();
         }
     }
 }

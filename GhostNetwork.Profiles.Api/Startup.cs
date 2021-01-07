@@ -1,12 +1,9 @@
-using System;
 using System.Text.Json.Serialization;
 using GhostNetwork.Profiles.Api.Helpers.OpenApi;
 using GhostNetwork.Profiles.MongoDb;
-using GhostNetwork.Profiles.MsSQL;
 using GhostNetwork.Profiles.WorkExperiences;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -37,6 +34,8 @@ namespace GhostNetwork.Profiles.Api
 
                 options.OperationFilter<OperationIdFilter>();
                 options.OperationFilter<AddResponseHeadersFilter>();
+
+                options.IncludeXmlComments(XmlPathProvider.XmlPath);
             });
 
             services.AddScoped(provider =>

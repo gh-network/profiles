@@ -21,37 +21,31 @@ namespace GhostNetwork.Profiles.Api.Controllers
             this.profileService = profileService;
         }
 
-        [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<WorkExperience>> GetByIdAsync([FromRoute] string id)
-        {
-            var workExperience = await workExperienceService.GetByIdAsync(id);
-
-            if (workExperience == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(workExperience);
-        }
-
+        /// <summary>
+        /// Get all profile experiences
+        /// </summary>
+        /// <param name="profileId">Profile id</param>
+        /// <response code="200">Sequence of experiences</response>
+        /// <response code="404">Profile not found</response>
         [HttpGet("byprofile/{profileId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<WorkExperience>>> FindUserExperience(string profileId)
+        public async Task<ActionResult<IEnumerable<WorkExperience>>> FindByProfileAsync(string profileId)
         {
             if (await profileService.GetByIdAsync(profileId) == null)
             {
                 return NotFound();
             }
 
-            var experience = await workExperienceService.FindByProfileId(profileId);
-
-            return Ok(experience);
+            return Ok(await workExperienceService.FindByProfileId(profileId));
         }
 
+        /// <summary>
+        /// Create one experience
+        /// </summary>
+        /// <param name="model">Experience</param>
+        /// <response code="201">Experience successfully created</response>
+        /// <response code="400">Validation failed</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -67,6 +61,13 @@ namespace GhostNetwork.Profiles.Api.Controllers
             return BadRequest(result.ToProblemDetails());
         }
 
+        /// <summary>
+        /// Update one experience
+        /// </summary>
+        /// <param name="id">Experience id</param>
+        /// <param name="model">Updated experience</param>
+        /// <response code="204">Experience successfully updated</response>
+        /// <response code="400">Validation failed</response>
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -81,8 +82,14 @@ namespace GhostNetwork.Profiles.Api.Controllers
             return BadRequest(result.ToProblemDetails());
         }
 
+        /// <summary>
+        /// Delete one experience
+        /// </summary>
+        /// <param name="id">Experience id</param>
+        /// <response code="204">Experience successfully deleted</response>
+        /// <response code="404">Experience not found</response>
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeleteAsync(string id)
         {
@@ -93,7 +100,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
 
             await workExperienceService.DeleteAsync(id);
 
-            return Ok();
+            return NoContent();
         }
     }
 }

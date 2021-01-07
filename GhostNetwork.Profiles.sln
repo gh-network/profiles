@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GhostNetwork.Profiles.Domai
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{4ACA3F10-C8C1-4459-824C-02DB9492E5BE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GhostNetwork.Profiles.MsSQL", "Infrastructure\GhostNetwork.Profiles.MsSQL\GhostNetwork.Profiles.MsSQL.csproj", "{FD6E64C3-DD92-449F-AA2C-97500E925000}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GhostNetwork.Profiles.Tests", "tests\GhostNetwork.Profiles.Tests\GhostNetwork.Profiles.Tests.csproj", "{A04DE697-6E28-416B-8F9B-6025E7167CDD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{BC887F31-BC9B-4DAD-A806-0F482FB7AE0A}"
@@ -38,10 +36,6 @@ Global
 		{9B780D79-9E87-400E-8B50-57A6BD95D718}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B780D79-9E87-400E-8B50-57A6BD95D718}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B780D79-9E87-400E-8B50-57A6BD95D718}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FD6E64C3-DD92-449F-AA2C-97500E925000}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FD6E64C3-DD92-449F-AA2C-97500E925000}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FD6E64C3-DD92-449F-AA2C-97500E925000}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FD6E64C3-DD92-449F-AA2C-97500E925000}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A04DE697-6E28-416B-8F9B-6025E7167CDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A04DE697-6E28-416B-8F9B-6025E7167CDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A04DE697-6E28-416B-8F9B-6025E7167CDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -55,7 +49,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{FD6E64C3-DD92-449F-AA2C-97500E925000} = {4ACA3F10-C8C1-4459-824C-02DB9492E5BE}
 		{A04DE697-6E28-416B-8F9B-6025E7167CDD} = {BC887F31-BC9B-4DAD-A806-0F482FB7AE0A}
 		{28537BEE-1A60-4BC0-A892-73DCC2A1A7EF} = {4ACA3F10-C8C1-4459-824C-02DB9492E5BE}
 	EndGlobalSection
