@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GhostNetwork.Profiles.Api.Helpers;
 using GhostNetwork.Profiles.Api.Models;
@@ -30,7 +31,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [HttpGet("byprofile/{profileId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<WorkExperience>>> FindByProfileAsync(string profileId)
+        public async Task<ActionResult<IEnumerable<WorkExperience>>> FindByProfileAsync(Guid profileId)
         {
             if (await profileService.GetByIdAsync(profileId) == null)
             {
@@ -71,7 +72,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> UpdateAsync([FromRoute] string id, [FromBody] WorkExperienceUpdateViewModel model)
+        public async Task<ActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] WorkExperienceUpdateViewModel model)
         {
             var result = await workExperienceService.UpdateAsync(id, model.CompanyName, model.Description, model.StartWork, model.FinishWork);
             if (result.Successed)
@@ -91,7 +92,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> DeleteAsync(string id)
+        public async Task<ActionResult> DeleteAsync(Guid id)
         {
             if (await workExperienceService.GetByIdAsync(id) == null)
             {

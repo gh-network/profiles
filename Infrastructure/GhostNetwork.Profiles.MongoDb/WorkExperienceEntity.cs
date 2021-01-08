@@ -1,4 +1,4 @@
-﻿using MongoDB.Bson;
+﻿using System;
 using MongoDB.Bson.Serialization.Attributes;
 
 
@@ -6,7 +6,8 @@ namespace GhostNetwork.Profiles.MongoDb
 {
     public class WorkExperienceEntity
     {
-        public ObjectId Id { get; set; }
+        [BsonId]
+        public Guid Id { get; set; }
 
         [BsonElement("companyName")]
         public string CompanyName { get; set; }
@@ -21,6 +22,6 @@ namespace GhostNetwork.Profiles.MongoDb
         public long? FinishWork { get; set; }
 
         [BsonElement("profileId")]
-        public string ProfileId { get; set; }
+        public Guid ProfileId { get; set; }
     }
 }

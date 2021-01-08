@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using MongoDB.Bson;
 using MongoDB.Driver;
-
 
 namespace GhostNetwork.Profiles.MongoDb
 {
@@ -15,78 +13,53 @@ namespace GhostNetwork.Profiles.MongoDb
             this.context = context;
         }
 
-        public async Task<Profile> FindByIdAsync(string id)
+        public async Task<Profile> FindByIdAsync(Guid id)
         {
-            if (!ObjectId.TryParse(id, out var oId))
-            {
-                return null;
-            }
-
-            var filter = Builders<ProfileEntity>.Filter.Eq(p => p.Id, oId);
+            var filter = Builders<ProfileEntity>.Filter.Eq(p => p.Id, id);
             var entity = await context.Profiles.Find(filter).FirstOrDefaultAsync();
 
             return entity == null ? null : ToDomain(entity);
         }
 
-        public async Task<string> InsertAsync(Profile profile)
+        public async Task<Guid> InsertAsync(Profile profile)
         {
-            long? dateBirthday = null;
-            if (profile.DateOfBirth.HasValue)
-            {
-                dateBirthday = profile.DateOfBirth.Value.ToUnixTimeMilliseconds();
-            }
-
             var entity = new ProfileEntity
             {
+                Id = profile.Id,
                 FirstName = profile.FirstName,
                 LastName = profile.LastName,
                 Gender = profile.Gender,
-                DateOfBirth = dateBirthday,
+                DateOfBirth = profile.DateOfBirth?.ToUnixTimeMilliseconds(),
                 City = profile.City
             };
 
             await context.Profiles.InsertOneAsync(entity);
 
-            return entity.Id.ToString();
+            return entity.Id;
         }
 
-        public async Task UpdateAsync(string id, Profile updatedProfile)
+        public async Task UpdateAsync(Guid id, Profile updatedProfile)
         {
-            if (!ObjectId.TryParse(updatedProfile.Id, out var oId))
-            {
-                return;
-            }
+            var filter = Builders<ProfileEntity>.Filter.Eq(p => p.Id, updatedProfile.Id);
 
-            long? dateBirthday = null;
-            if (updatedProfile.DateOfBirth.HasValue)
-            {
-                dateBirthday = updatedProfile.DateOfBirth.Value.ToUnixTimeMilliseconds();
-            }
-
-            var filter = Builders<ProfileEntity>.Filter.Eq(p => p.Id, oId);
-
-            var update = Builders<ProfileEntity>.Update.Set(s => s.FirstName, updatedProfile.FirstName)
+            var update = Builders<ProfileEntity>.Update
+                .Set(s => s.FirstName, updatedProfile.FirstName)
                 .Set(s => s.LastName, updatedProfile.LastName)
                 .Set(s => s.Gender, updatedProfile.Gender)
-                .Set(s => s.DateOfBirth, dateBirthday)
+                .Set(s => s.DateOfBirth, updatedProfile.DateOfBirth?.ToUnixTimeMilliseconds())
                 .Set(s => s.City, updatedProfile.City);
 
             await context.Profiles.UpdateOneAsync(filter, update);
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task DeleteAsync(Guid id)
         {
-            if (!ObjectId.TryParse(id, out var oId))
-            {
-                return;
-            }
-
-            var filter = Builders<ProfileEntity>.Filter.Eq(p => p.Id, oId);
+            var filter = Builders<ProfileEntity>.Filter.Eq(p => p.Id, id);
 
             await context.Profiles.DeleteOneAsync(filter);
         }
 
-        public static Profile ToDomain(ProfileEntity entity)
+        private static Profile ToDomain(ProfileEntity entity)
         {
             DateTimeOffset? dateOfBirth = null;
             if (entity.DateOfBirth.HasValue)
@@ -95,7 +68,7 @@ namespace GhostNetwork.Profiles.MongoDb
             }
 
             return new Profile(
-                entity.Id.ToString(),
+                entity.Id,
                 entity.FirstName,
                 entity.LastName,
                 entity.Gender,

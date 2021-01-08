@@ -8,15 +8,15 @@ namespace GhostNetwork.Profiles.WorkExperiences
 {
     public interface IWorkExperienceService
     {
-        Task<WorkExperience> GetByIdAsync(string id);
+        Task<WorkExperience> GetByIdAsync(Guid id);
 
-        Task<(DomainResult, string)> CreateAsync(string companyName, string description, DateTimeOffset? startWork, DateTimeOffset? finishWork, string profileId);
+        Task<(DomainResult, Guid)> CreateAsync(string companyName, string description, DateTimeOffset? startWork, DateTimeOffset? finishWork, Guid profileId);
 
-        Task<DomainResult> UpdateAsync(string id, string companyName, string description, DateTimeOffset? startWork, DateTimeOffset? finishWork);
+        Task<DomainResult> UpdateAsync(Guid id, string companyName, string description, DateTimeOffset? startWork, DateTimeOffset? finishWork);
 
-        Task DeleteAsync(string id);
+        Task DeleteAsync(Guid id);
 
-        Task<IEnumerable<WorkExperience>> FindByProfileId(string profileId);
+        Task<IEnumerable<WorkExperience>> FindByProfileId(Guid profileId);
     }
 
     public class WorkExperienceService : IWorkExperienceService
@@ -32,8 +32,8 @@ namespace GhostNetwork.Profiles.WorkExperiences
             this.validator = validator;
         }
 
-        public async Task<(DomainResult, string)> CreateAsync(string companyName,
-            string description, DateTimeOffset? startWork, DateTimeOffset? finishWork, string profileId)
+        public async Task<(DomainResult, Guid)> CreateAsync(string companyName,
+            string description, DateTimeOffset? startWork, DateTimeOffset? finishWork, Guid profileId)
         {
             var result = validator.Validate(new WorkExperienceContext(companyName, description, startWork, finishWork));
             if (!result.Successed)
@@ -51,23 +51,23 @@ namespace GhostNetwork.Profiles.WorkExperiences
             return (DomainResult.Success(), id);
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task DeleteAsync(Guid id)
         {
             await experienceStorage.DeleteAsync(id);
         }
 
-        public async Task<IEnumerable<WorkExperience>> FindByProfileId(string profileId)
+        public async Task<IEnumerable<WorkExperience>> FindByProfileId(Guid profileId)
         {
             var workExperiences = await experienceStorage.GetAllExperienceByProfileIdAsync(profileId);
             return workExperiences.OrderByDescending(x => x.StartWork.HasValue).ThenBy(x => x.StartWork).ToList();
         }
 
-        public async Task<WorkExperience> GetByIdAsync(string id)
+        public async Task<WorkExperience> GetByIdAsync(Guid id)
         {
             return await experienceStorage.FindByIdAsync(id);
         }
 
-        public async Task<DomainResult> UpdateAsync(string id,
+        public async Task<DomainResult> UpdateAsync(Guid id,
             string companyName, string description, DateTimeOffset? startWork, DateTimeOffset? finishWork)
         {
             var result = validator.Validate(new WorkExperienceContext(companyName, description, startWork, finishWork));

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using GhostNetwork.Profiles.Api.Helpers;
 using GhostNetwork.Profiles.Api.Models;
 using Microsoft.AspNetCore.Http;
@@ -26,7 +27,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Profile>> GetByIdAsync([FromRoute] string id)
+        public async Task<ActionResult<Profile>> GetByIdAsync([FromRoute] Guid id)
         {
             var profile = await profileService.GetByIdAsync(id);
 
@@ -49,7 +50,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> CreateAsync([FromBody] ProfileCreateViewModel createModel)
         {
-            var (result, id) = await profileService.CreateAsync(createModel.FirstName, createModel.LastName, createModel.Gender, createModel.DateOfBirth, createModel.City);
+            var (result, id) = await profileService.CreateAsync(createModel.Id, createModel.FirstName, createModel.LastName, createModel.Gender, createModel.DateOfBirth, createModel.City);
 
             if (result.Successed)
             {
@@ -69,7 +70,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Profile>> UpdateAsync([FromRoute] string id, [FromBody] ProfileUpdateViewModel updateModel)
+        public async Task<ActionResult<Profile>> UpdateAsync([FromRoute] Guid id, [FromBody] ProfileUpdateViewModel updateModel)
         {
             var result = await profileService.UpdateAsync(id, updateModel.FirstName, updateModel.LastName, updateModel.Gender, updateModel.DateOfBirth, updateModel.City);
 
@@ -90,7 +91,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> DeleteAsync(string id)
+        public async Task<ActionResult> DeleteAsync(Guid id)
         {
             if (await profileService.GetByIdAsync(id) == null)
             {

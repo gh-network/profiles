@@ -1,15 +1,16 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace GhostNetwork.Profiles
 {
     public interface IProfileStorage
     {
-        Task<Profile> FindByIdAsync(string id);
+        Task<Profile> FindByIdAsync(Guid id);
 
-        Task<string> InsertAsync(Profile profile);
+        Task<Guid> InsertAsync(Profile profile);
 
-        Task UpdateAsync(string id, Profile updatedProfile);
+        Task UpdateAsync(Guid id, Profile updatedProfile);
 
-        Task DeleteAsync(string id);
+        Task DeleteAsync(Guid id);
     }
 }

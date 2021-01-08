@@ -12,6 +12,6 @@ namespace GhostNetwork.Profiles.Api.Models
 
         public DateTimeOffset? FinishWork { get; set; }
 
-        public string ProfileId { get; set; }
+        public Guid ProfileId { get; set; }
     }
 }

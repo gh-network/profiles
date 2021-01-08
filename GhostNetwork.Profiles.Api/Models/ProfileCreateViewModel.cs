@@ -4,6 +4,8 @@ namespace GhostNetwork.Profiles.Api.Models
 {
     public class ProfileCreateViewModel
     {
+        public Guid? Id { get; set; }
+
         public string FirstName { get; set; }
 
         public string LastName { get; set; }

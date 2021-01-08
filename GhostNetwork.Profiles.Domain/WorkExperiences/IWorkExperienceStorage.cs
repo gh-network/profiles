@@ -1,20 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace GhostNetwork.Profiles.WorkExperiences
 {
     public interface IWorkExperienceStorage
     {
-        Task<WorkExperience> FindByIdAsync(string id);
+        Task<WorkExperience> FindByIdAsync(Guid id);
 
-        Task<string> InsertAsync(WorkExperience workExperience);
+        Task<Guid> InsertAsync(WorkExperience workExperience);
 
         Task UpdateAsync(WorkExperience workExperience);
 
-        Task DeleteAllExperienceInProfileAsync(string profileId);
+        Task DeleteAllExperienceInProfileAsync(Guid profileId);
 
-        Task<IEnumerable<WorkExperience>> GetAllExperienceByProfileIdAsync(string profileId);
+        Task<IEnumerable<WorkExperience>> GetAllExperienceByProfileIdAsync(Guid profileId);
 
-        Task DeleteAsync(string id);
+        Task DeleteAsync(Guid id);
     }
 }
