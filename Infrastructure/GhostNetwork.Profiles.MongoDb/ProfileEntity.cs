@@ -1,4 +1,5 @@
 ﻿using System;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 
@@ -7,6 +8,7 @@ namespace GhostNetwork.Profiles.MongoDb
     public class ProfileEntity
     {
         [BsonId]
+        [BsonRepresentation(BsonType.String)]
         public Guid Id { get; set; }
 
         [BsonElement("firstName")]
