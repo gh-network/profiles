@@ -45,7 +45,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         /// Create one experience
         /// </summary>
         /// <param name="model">Experience</param>
-        /// <response code="201">Experience successfully created</response>
+        /// <response code="200">Experience successfully created</response>
         /// <response code="400">Validation failed</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
