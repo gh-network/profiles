@@ -56,7 +56,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
 
             if (result.Successed)
             {
-                return Ok();
+                return Ok(await workExperienceService.GetByIdAsync(id));
             }
 
             return BadRequest(result.ToProblemDetails());
