@@ -48,7 +48,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         /// <response code="201">Experience successfully created</response>
         /// <response code="400">Validation failed</response>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> CreateAsync([FromBody] WorkExperienceCreateViewModel model)
         {
@@ -56,7 +56,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
 
             if (result.Successed)
             {
-                return Created(Url.Action("GetById", new { id }), await workExperienceService.GetByIdAsync(id));
+                return Ok();
             }
 
             return BadRequest(result.ToProblemDetails());
