@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GhostNetwork.Profiles.FriendsFuntionality
 {
     public class Friend
     {
-        public Friend(Guid id, Guid userId, Guid friendId)
+        public Friend(Guid id, Guid userId, Guid friendId, bool isFriend)
         {
             Id = id;
             UserId = userId;
             FriendId = friendId;
+            IsFriend = isFriend;
         }
 
         public Guid Id { get; }
@@ -18,5 +17,12 @@ namespace GhostNetwork.Profiles.FriendsFuntionality
         public Guid UserId { get; private set; }
 
         public Guid FriendId { get; private set; }
+
+        public bool IsFriend { get; private set; }
+
+        public void Update(bool isFriend, bool isFollower)
+        {
+            IsFriend = isFriend;
+        }
     }
 }

@@ -10,10 +10,13 @@ namespace GhostNetwork.Profiles.MongoDb
         [BsonId]
         public Guid Id { get; set; }
 
-        [BsonElement("userId")]
-        public Guid UserId { get; set; }
+        [BsonElement("fromUser")]
+        public Guid FromUser { get; set; }
 
-        [BsonElement("friendId")]
-        public Guid FriendId { get; set; }
+        [BsonElement("toUser")]
+        public Guid ToUser { get; set; }
+
+        [BsonElement("isFriends")]
+        public bool IsFriends { get; set; }
     }
 }
