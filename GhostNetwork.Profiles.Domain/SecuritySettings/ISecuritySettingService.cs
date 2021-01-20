@@ -46,7 +46,7 @@ namespace GhostNetwork.Profiles.SecuritySettings
                 securitySettings.Update(accessForPosts, accessForFriends, certainUsersForPosts.ToList(), certainUsersForFriends.ToList());
             }
 
-            await securitySettingsStorage.UpdateAsync(securitySettings);
+            await securitySettingsStorage.UpsertAsync(securitySettings);
             return DomainResult.Success();
         }
 

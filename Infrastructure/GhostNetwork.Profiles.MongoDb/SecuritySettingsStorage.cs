@@ -14,7 +14,7 @@ namespace GhostNetwork.Profiles.MongoDb
             this.context = context;
         }
 
-        public async Task UpdateAsync(SecuritySetting updatedSettings)
+        public async Task UpsertAsync(SecuritySetting updatedSettings)
         {
             var filter = Builders<SecuritySettingsEntity>.Filter.Eq(x => x.UserId, updatedSettings.UserId);
             var update = Builders<SecuritySettingsEntity>.Update.Set(s => s.AccessToPosts, updatedSettings.AccessToPosts)
