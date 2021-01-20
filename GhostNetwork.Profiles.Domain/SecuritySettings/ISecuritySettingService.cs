@@ -7,9 +7,9 @@ namespace GhostNetwork.Profiles.SecuritySettings
 {
     public interface ISecuritySettingService
     {
-        Task<DomainResult> UpdateAsync(Guid profileId, Access accessForPosts, Guid[] certainUsersForPosts, Access accessForFriends, Guid[] certainForFriends);
+        Task<DomainResult> UpsertAsync(Guid profileId, Access accessForPosts, Guid[] certainUsersForPosts, Access accessForFriends, Guid[] certainForFriends);
 
-        Task<(DomainResult, SecuritySetting)> GetByUserIdAsync(Guid profileId);
+        Task<SecuritySetting> GetByUserIdAsync(Guid profileId);
     }
 
     public class SecuritySettingsService : ISecuritySettingService
@@ -23,7 +23,7 @@ namespace GhostNetwork.Profiles.SecuritySettings
             this.profileStorage = profileStorage;
         }
 
-        public async Task<DomainResult> UpdateAsync(Guid profileId, Access accessForPosts, Guid[] certainUsersForPosts, Access accessForFriends, Guid[] certainUsersForFriends)
+        public async Task<DomainResult> UpsertAsync(Guid profileId, Access accessForPosts, Guid[] certainUsersForPosts, Access accessForFriends, Guid[] certainUsersForFriends)
         {
             var profile = await profileStorage.FindByIdAsync(profileId);
             if (profile == null)
@@ -51,16 +51,16 @@ namespace GhostNetwork.Profiles.SecuritySettings
             return DomainResult.Success();
         }
 
-        public async Task<(DomainResult, SecuritySetting)> GetByUserIdAsync(Guid profileId)
+        public async Task<SecuritySetting> GetByUserIdAsync(Guid profileId)
         {
             var profile = await profileStorage.FindByIdAsync(profileId);
             if (profile == null)
             {
-                return (DomainResult.Error("Profile not found"), null);
+                return null;
             }
 
             var securitySettings = await securitySettingsStorage.FindByUserIdAsync(profileId);
-            return (DomainResult.Success(), securitySettings ?? DefaultSecuritySetting.GetDefaultSecuritySetting());
+            return securitySettings ?? DefaultSecuritySetting.GetDefaultSecuritySetting();
         }
     }
 }
