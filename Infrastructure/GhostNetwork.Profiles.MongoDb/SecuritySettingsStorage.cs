@@ -17,27 +17,12 @@ namespace GhostNetwork.Profiles.MongoDb
         public async Task UpdateAsync(SecuritySetting updatedSettings)
         {
             var filter = Builders<SecuritySettingsEntity>.Filter.Eq(x => x.UserId, updatedSettings.UserId);
-            var settings = await context.SecuritySettings.Find(filter).FirstOrDefaultAsync();
-            if (settings == null)
-            {
-                var settingsEntity = new SecuritySettingsEntity
-                {
-                    AccessToFriends = updatedSettings.AccessToFriends,
-                    AccessToPosts = updatedSettings.AccessToPosts,
-                    UserId = updatedSettings.UserId,
-                    CertainUsersForFriends = updatedSettings.CertainUsersForFriends,
-                    CertainUsersForPosts = updatedSettings.CertainUsersForPosts
-                };
-                await context.SecuritySettings.InsertOneAsync(settingsEntity);
-                return;
-            }
-
             var update = Builders<SecuritySettingsEntity>.Update.Set(s => s.AccessToPosts, updatedSettings.AccessToPosts)
                 .Set(s => s.CertainUsersForPosts, updatedSettings.CertainUsersForPosts)
                 .Set(s => s.AccessToFriends, updatedSettings.AccessToFriends)
                 .Set(s => s.CertainUsersForFriends, updatedSettings.CertainUsersForFriends);
             
-            await context.SecuritySettings.UpdateOneAsync(filter, update);
+            await context.SecuritySettings.UpdateOneAsync(filter, update, new UpdateOptions() {IsUpsert = true});
         }
 
         public async Task<SecuritySetting> FindByUserIdAsync(Guid userId)
