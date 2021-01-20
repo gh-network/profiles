@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using GhostNetwork.Profiles.Api.Helpers.OpenApi;
 using GhostNetwork.Profiles.MongoDb;
+using GhostNetwork.Profiles.SecuritySettings;
 using GhostNetwork.Profiles.WorkExperiences;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -53,6 +54,9 @@ namespace GhostNetwork.Profiles.Api
             services.AddScoped<IWorkExperienceStorage, MongoWorkExperienceStorage>();
             services.AddScoped<IWorkExperienceService, WorkExperienceService>();
             services.AddScoped<IValidator<WorkExperienceContext>, WorkExperienceValidator>();
+
+            services.AddScoped<ISecuritySettingStorage, SecuritySettingsStorage>();
+            services.AddScoped<ISecuritySettingService, SecuritySettingsService>();
 
             services.AddControllers()
                 .AddJsonOptions(options =>
