@@ -31,11 +31,10 @@ namespace GhostNetwork.Profiles.SecuritySettings
                 return DomainResult.Error("Profile not found");
             }
 
-            var security = await securitySettingsStorage.FindByUserIdAsync(profileId);
-            if (security == null)
+            var securitySettings = await securitySettingsStorage.FindByUserIdAsync(profileId);
+            if (securitySettings == null)
             {
-                security = new SecuritySetting(
-                    default,
+                securitySettings = new SecuritySetting(
                     profileId,
                     accessForPosts,
                     accessForFriends,
@@ -44,10 +43,10 @@ namespace GhostNetwork.Profiles.SecuritySettings
             }
             else
             {
-                security.Update(accessForPosts, accessForFriends, certainUsersForPosts.ToList(), certainUsersForFriends.ToList());
+                securitySettings.Update(accessForPosts, accessForFriends, certainUsersForPosts.ToList(), certainUsersForFriends.ToList());
             }
 
-            await securitySettingsStorage.UpdateAsync(profileId, security);
+            await securitySettingsStorage.UpdateAsync(securitySettings);
             return DomainResult.Success();
         }
 

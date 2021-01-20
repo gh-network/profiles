@@ -14,9 +14,9 @@ namespace GhostNetwork.Profiles.MongoDb
             this.context = context;
         }
 
-        public async Task UpdateAsync(Guid userId, SecuritySetting updatedSettings)
+        public async Task UpdateAsync(SecuritySetting updatedSettings)
         {
-            var filter = Builders<SecuritySettingsEntity>.Filter.Eq(x => x.UserId, userId);
+            var filter = Builders<SecuritySettingsEntity>.Filter.Eq(x => x.UserId, updatedSettings.UserId);
             var settings = await context.SecuritySettings.Find(filter).FirstOrDefaultAsync();
             if (settings == null)
             {
@@ -24,7 +24,7 @@ namespace GhostNetwork.Profiles.MongoDb
                 {
                     AccessToFriends = updatedSettings.AccessToFriends,
                     AccessToPosts = updatedSettings.AccessToPosts,
-                    UserId = userId,
+                    UserId = updatedSettings.UserId,
                     CertainUsersForFriends = updatedSettings.CertainUsersForFriends,
                     CertainUsersForPosts = updatedSettings.CertainUsersForPosts
                 };
