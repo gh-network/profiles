@@ -5,17 +5,14 @@ namespace GhostNetwork.Profiles.SecuritySettings
 {
     public class SecuritySetting
     {
-        public SecuritySetting(Guid id, Guid userId, Access accessToPosts, Access accessToFriends, List<Guid> certainUsersForPosts, List<Guid> certainUsersForFriends)
+        public SecuritySetting( Guid userId, Access accessToPosts, Access accessToFriends, List<Guid> certainUsersForPosts, List<Guid> certainUsersForFriends)
         {
-            Id = id;
             UserId = userId;
             AccessToPosts = accessToPosts;
             AccessToFriends = accessToFriends;
             CertainUsersForPosts = certainUsersForPosts;
             CertainUsersForFriends = certainUsersForFriends;
         }
-
-        public Guid Id { get; }
 
         public Guid UserId { get; }
 

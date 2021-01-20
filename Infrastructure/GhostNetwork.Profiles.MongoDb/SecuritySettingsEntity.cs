@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GhostNetwork.Profiles.SecuritySettings;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace GhostNetwork.Profiles.MongoDb
@@ -7,16 +8,13 @@ namespace GhostNetwork.Profiles.MongoDb
     public class SecuritySettingsEntity
     {
         [BsonId]
-        public Guid Id { get; set; }
-
-        [BsonElement("userId")]
         public Guid UserId { get; set; }
 
         [BsonElement("accessToPosts")]
-        public string AccessToPosts { get; set; }
+        public Access AccessToPosts { get; set; }
 
         [BsonElement("accessToFriends")]
-        public string AccessToFriends { get; set; }
+        public Access AccessToFriends { get; set; }
 
         [BsonElement("certainUsersForPosts")]
         public List<Guid> CertainUsersForPosts { get; set; }

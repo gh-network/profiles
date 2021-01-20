@@ -5,7 +5,7 @@ namespace GhostNetwork.Profiles.SecuritySettings
 {
     public static class DefaultSecuritySetting
     {
-        private static readonly SecuritySetting SecuritySetting = new SecuritySetting(default, default, Access.Everyone, Access.Everyone, new List<Guid>(), new List<Guid>());
+        private static readonly SecuritySetting SecuritySetting = new SecuritySetting(default, Access.Everyone, Access.Everyone, new List<Guid>(), new List<Guid>());
 
         public static SecuritySetting GetDefaultSecuritySetting()
         {

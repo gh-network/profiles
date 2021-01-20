@@ -22,8 +22,8 @@ namespace GhostNetwork.Profiles.MongoDb
             {
                 var settingsEntity = new SecuritySettingsEntity
                 {
-                    AccessToFriends = updatedSettings.AccessToFriends.ToString(),
-                    AccessToPosts = updatedSettings.AccessToPosts.ToString(),
+                    AccessToFriends = updatedSettings.AccessToFriends,
+                    AccessToPosts = updatedSettings.AccessToPosts,
                     UserId = userId,
                     CertainUsersForFriends = updatedSettings.CertainUsersForFriends,
                     CertainUsersForPosts = updatedSettings.CertainUsersForPosts
@@ -32,9 +32,9 @@ namespace GhostNetwork.Profiles.MongoDb
                 return;
             }
 
-            var update = Builders<SecuritySettingsEntity>.Update.Set(s => s.AccessToPosts, updatedSettings.AccessToPosts.ToString())
+            var update = Builders<SecuritySettingsEntity>.Update.Set(s => s.AccessToPosts, updatedSettings.AccessToPosts)
                 .Set(s => s.CertainUsersForPosts, updatedSettings.CertainUsersForPosts)
-                .Set(s => s.AccessToFriends, updatedSettings.AccessToFriends.ToString())
+                .Set(s => s.AccessToFriends, updatedSettings.AccessToFriends)
                 .Set(s => s.CertainUsersForFriends, updatedSettings.CertainUsersForFriends);
             
             await context.SecuritySettings.UpdateOneAsync(filter, update);
@@ -49,19 +49,12 @@ namespace GhostNetwork.Profiles.MongoDb
 
         public static SecuritySetting ToDomain(SecuritySettingsEntity entity)
         {
-            if (Enum.TryParse<Access>(entity.AccessToFriends, out var eAccessToFriends)
-                && Enum.TryParse<Access>(entity.AccessToPosts, out var eAccessToPosts))
-            {
-                return new SecuritySetting(
-                    entity.Id,
+            return new SecuritySetting(
                     entity.UserId,
-                    eAccessToPosts,
-                    eAccessToFriends,
+                    entity.AccessToPosts,
+                    entity.AccessToFriends,
                     entity.CertainUsersForPosts,
                     entity.CertainUsersForFriends);
-            }
-
-            throw new InvalidCastException();
         }
     }
 }
