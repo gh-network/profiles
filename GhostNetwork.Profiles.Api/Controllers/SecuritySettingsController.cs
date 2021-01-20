@@ -19,16 +19,16 @@ namespace GhostNetwork.Profiles.Api.Controllers
 
         [HttpGet("profiles/{profileId}/security-settings")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<SecuritySetting>> FindByProfileAsync([FromRoute] Guid profileId)
         {
-            var (result, settings) = await securitySettingsService.GetByUserIdAsync(profileId);
-            if (result.Successed)
+            var settings = await securitySettingsService.GetByUserIdAsync(profileId);
+            if (settings != null)
             {
                 return Ok(settings);
             }
 
-            return BadRequest(result.ToProblemDetails());
+            return NotFound();
         }
 
         [HttpPut("profiles/{profileId}/security-settings")]
@@ -36,7 +36,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> UpdateAsync([FromRoute] Guid profileId, [FromBody] SecuritySettingUpdateViewModel model)
         {
-            var result = await securitySettingsService.UpdateAsync(profileId, model.AccessToPosts, model.CertainUsersForPosts,
+            var result = await securitySettingsService.UpsertAsync(profileId, model.AccessToPosts, model.CertainUsersForPosts,
                     model.AccessToFriends, model.CertainUsersForFriends);
             if (result.Successed)
             {
