@@ -20,12 +20,12 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [HttpGet("profiles/{profileId}/security-settings")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<SecuritySetting>> FindByProfileAsync([FromRoute] Guid profileId)
+        public async Task<ActionResult<AccessProperties>> FindByProfileAsync([FromRoute] Guid profileId)
         {
-            var settings = await securitySettingsService.GetByUserIdAsync(profileId);
+            var (settings, accessProperties) = await securitySettingsService.GetByUserIdAsync(profileId);
             if (settings != null)
             {
-                return Ok(settings);
+                return Ok(accessProperties);
             }
 
             return NotFound();

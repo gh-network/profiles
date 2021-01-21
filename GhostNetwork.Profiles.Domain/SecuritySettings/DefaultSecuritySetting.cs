@@ -5,11 +5,15 @@ namespace GhostNetwork.Profiles.SecuritySettings
 {
     public static class DefaultSecuritySetting
     {
-        private static readonly SecuritySetting SecuritySetting = new SecuritySetting(default, Access.Everyone, Access.Everyone, new List<Guid>(), new List<Guid>());
+        private static readonly SecuritySetting SecuritySetting =
+            new SecuritySetting(default, new List<Guid>(), new List<Guid>());
 
-        public static SecuritySetting GetDefaultSecuritySetting()
+        private static readonly AccessProperties AccessProperties =
+            new AccessProperties(Access.Everyone, Access.Everyone);
+
+        public static (SecuritySetting, AccessProperties) GetDefaultSecuritySetting()
         {
-            return SecuritySetting;
+            return (SecuritySetting, AccessProperties);
         }
     }
 }
