@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Domain;
 
@@ -7,9 +6,12 @@ namespace GhostNetwork.Profiles.SecuritySettings
 {
     public interface ISecuritySettingService
     {
-        Task<DomainResult> UpsertAsync(Guid profileId, Access accessToPosts, Guid[] certainUsersForPosts, Access accessToFriends, Guid[] certainForFriends);
+        Task<SecuritySetting> GetByUserIdAsync(Guid userId);
 
-        Task<(SecuritySetting, AccessProperties)> GetByUserIdAsync(Guid profileId);
+        Task<DomainResult> UpsertAsync(
+            Guid userId,
+            SecuritySettingsSection publications,
+            SecuritySettingsSection friends);
     }
 
     public class SecuritySettingsService : ISecuritySettingService
@@ -23,43 +25,42 @@ namespace GhostNetwork.Profiles.SecuritySettings
             this.profileStorage = profileStorage;
         }
 
-        public async Task<DomainResult> UpsertAsync(Guid profileId, Access accessToPosts, Guid[] certainUsersForPosts, Access accessToFriends, Guid[] certainUsersForFriends)
+        public async Task<SecuritySetting> GetByUserIdAsync(Guid userId)
         {
-            var profile = await profileStorage.FindByIdAsync(profileId);
-            if (profile == null)
+            if (await profileStorage.FindByIdAsync(userId) == null)
             {
-                return DomainResult.Error("Profile not found");
+                return null;
             }
 
-            var (securitySettings, accessProperties) = await securitySettingsStorage.FindByUserIdAsync(profileId);
+            var securitySettings = await securitySettingsStorage.FindByUserIdAsync(userId);
+
+            return securitySettings ?? SecuritySetting.DefaultForUser(userId);
+        }
+
+        public async Task<DomainResult> UpsertAsync(
+            Guid userId,
+            SecuritySettingsSection publications,
+            SecuritySettingsSection friends)
+        {
+            var profile = await profileStorage.FindByIdAsync(userId);
+            if (profile == null)
+            {
+                return DomainResult.Error("User not found");
+            }
+
+            var securitySettings = await securitySettingsStorage.FindByUserIdAsync(userId);
             if (securitySettings == null)
             {
-                securitySettings = new SecuritySetting(
-                    profileId,
-                    certainUsersForPosts.ToList(),
-                    certainUsersForFriends.ToList());
-                accessProperties = new AccessProperties(accessToPosts, accessToFriends);
+                securitySettings = new SecuritySetting(userId, publications, friends);
             }
             else
             {
-                securitySettings.Update(certainUsersForPosts.ToList(), certainUsersForFriends.ToList());
-                accessProperties.Update(accessToPosts, accessToFriends);
+                securitySettings.Update(publications, friends);
             }
 
-            await securitySettingsStorage.UpsertAsync(securitySettings, accessProperties);
+            await securitySettingsStorage.UpsertAsync(securitySettings);
+
             return DomainResult.Success();
-        }
-
-        public async Task<(SecuritySetting, AccessProperties)> GetByUserIdAsync(Guid profileId)
-        {
-            var profile = await profileStorage.FindByIdAsync(profileId);
-            if (profile == null)
-            {
-                return (null, null);
-            }
-
-            var (securitySettings, accessProperties) = await securitySettingsStorage.FindByUserIdAsync(profileId);
-            return securitySettings == null ? DefaultSecuritySetting.GetDefaultSecuritySetting() : (securitySettings, accessProperties);
         }
     }
 }

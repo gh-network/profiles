@@ -1,28 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace GhostNetwork.Profiles.SecuritySettings
 {
     public class SecuritySetting
     {
-        public SecuritySetting(Guid userId, List<Guid> certainUsersForPosts, List<Guid> certainUsersForFriends)
+        public SecuritySetting(
+            Guid userId,
+            SecuritySettingsSection posts,
+            SecuritySettingsSection friends)
         {
             UserId = userId;
-            CertainUsersForPosts = certainUsersForPosts;
-            CertainUsersForFriends = certainUsersForFriends;
+            Posts = posts;
+            Friends = friends;
         }
 
         public Guid UserId { get; }
 
-        public List<Guid> CertainUsersForPosts { get; private set; }
+        public SecuritySettingsSection Posts { get; private set; }
 
-        public List<Guid> CertainUsersForFriends { get; private set; }
+        public SecuritySettingsSection Friends { get; private set; }
 
-        public SecuritySetting Update(List<Guid> certainUsersForPosts, List<Guid> certainUsersForFriends)
+        public static SecuritySetting DefaultForUser(Guid userId)
         {
-            CertainUsersForPosts = certainUsersForPosts;
-            CertainUsersForFriends = certainUsersForFriends;
-            return this;
+            return new SecuritySetting(
+                userId,
+                new SecuritySettingsSection(Access.Everyone, Enumerable.Empty<Guid>()),
+                new SecuritySettingsSection(Access.Everyone, Enumerable.Empty<Guid>()));
+        }
+
+        public void Update(SecuritySettingsSection posts, SecuritySettingsSection friends)
+        {
+            Posts = posts;
+            Friends = friends;
         }
     }
 }

@@ -5,8 +5,8 @@ namespace GhostNetwork.Profiles.SecuritySettings
 {
     public interface ISecuritySettingStorage
     {
-        Task UpsertAsync(SecuritySetting updatedSettings, AccessProperties accessProperties);
+        Task<SecuritySetting> FindByUserIdAsync(Guid userId);
 
-        Task<(SecuritySetting, AccessProperties)> FindByUserIdAsync(Guid userId);
+        Task UpsertAsync(SecuritySetting updatedSettings);
     }
 }
