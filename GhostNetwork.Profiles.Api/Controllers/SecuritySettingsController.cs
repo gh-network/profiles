@@ -37,6 +37,11 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> UpdateAsync([FromRoute] Guid userId, [FromBody] SecuritySettingUpdateViewModel model)
         {
+            if (model == null)
+            {
+                return BadRequest("Invalid access type");
+            }
+
             var result = await securitySettingsService.UpsertAsync(
                 userId,
                 new SecuritySettingsSection(model.Posts.Access, model.Posts.CertainUsers ?? Enumerable.Empty<Guid>()),
