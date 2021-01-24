@@ -12,7 +12,7 @@ namespace GhostNetwork.Profiles.FriendsFuntionality
 
         Task<(IEnumerable<Friend>, long)> FindManyFriends(int skip, int take, Guid userId);
 
-        Task<Friend> GetExistFriendRequestAsync(Guid fromUserId, Guid toUserId);
+        Task<(IEnumerable<Friend>, long)> FindManyFriendRequests(int skip, int take, Guid userId);
 
         Task<Guid> InsertOneAsync(Friend friends);
 

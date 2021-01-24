@@ -18,5 +18,11 @@ namespace GhostNetwork.Profiles.MongoDb
 
         [BsonElement("isFriends")]
         public bool IsFriends { get; set; }
+
+        [BsonElement("isFollowing")]
+        public bool IsFollowing { get; set; }
+
+        [BsonElement("isFollower")]
+        public bool IsFollower { get; set; }
     }
 }

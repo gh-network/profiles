@@ -13,7 +13,9 @@ namespace GhostNetwork.Profiles.FriendsFuntionality
 
         Task<(IEnumerable<Friend>, long)> SearchFriends(int skip, int take, Guid userId);
 
-        Task<(DomainResult, Guid)> SendFriendRequst(Guid userId, Guid friendId);
+        Task<(IEnumerable<Friend>, long)> SearchFriendRequests(int skip, int take, Guid userId);
+
+        Task<Guid> SendFriendRequst(Guid fromUser, Guid toUser);
 
         Task DeleteOneAsync(Guid id);
     }
@@ -42,17 +44,16 @@ namespace GhostNetwork.Profiles.FriendsFuntionality
             return await friendsStorage.FindManyFriends(skip, take, userId);
         }
 
-        public async Task<(DomainResult, Guid)> SendFriendRequst(Guid userId, Guid friendId)
+        public async Task<(IEnumerable<Friend>, long)> SearchFriendRequests(int skip, int take, Guid userId)
         {
-            var exist = await friendsStorage.GetExistFriendRequestAsync(userId, friendId);
-            if (exist != null)
-            {
-                return (DomainResult.Error("Allready sended request"), Guid.Empty);
-            }
+            return await friendsStorage.FindManyFriendRequests(skip, take, userId);
+        }
 
-            var friend = new Friend(Guid.NewGuid(), userId, friendId, false);
+        public async Task<Guid> SendFriendRequst(Guid fromUser, Guid toUser)
+        {
+            var friend = new Friend(Guid.NewGuid(), fromUser, toUser, false, true, false);
 
-            return (DomainResult.Success(), await friendsStorage.InsertOneAsync(friend));
+            return await friendsStorage.InsertOneAsync(friend);
         }
 
         public async Task DeleteOneAsync(Guid id)
