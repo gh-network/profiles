@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using GhostNetwork.Profiles.Api.Helpers;
@@ -37,9 +38,9 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> UpdateAsync([FromRoute] Guid userId, [FromBody] SecuritySettingUpdateViewModel model)
         {
-            if (model == null)
+            if (model == null || !Enum.IsDefined(typeof(Access), model.Posts.Access))
             {
-                return BadRequest("Invalid access type");
+                return BadRequest("Access type not found.");
             }
 
             var result = await securitySettingsService.UpsertAsync(
