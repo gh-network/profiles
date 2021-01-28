@@ -32,8 +32,7 @@ namespace GhostNetwork.Profiles.WorkExperiences
             this.validator = validator;
         }
 
-        public async Task<(DomainResult, Guid)> CreateAsync(string companyName,
-            string description, DateTimeOffset? startWork, DateTimeOffset? finishWork, Guid profileId)
+        public async Task<(DomainResult, Guid)> CreateAsync(string companyName, string description, DateTimeOffset? startWork, DateTimeOffset? finishWork, Guid profileId)
         {
             var result = validator.Validate(new WorkExperienceContext(companyName, description, startWork, finishWork));
             if (!result.Successed)
@@ -67,8 +66,7 @@ namespace GhostNetwork.Profiles.WorkExperiences
             return await experienceStorage.FindByIdAsync(id);
         }
 
-        public async Task<DomainResult> UpdateAsync(Guid id,
-            string companyName, string description, DateTimeOffset? startWork, DateTimeOffset? finishWork)
+        public async Task<DomainResult> UpdateAsync(Guid id, string companyName, string description, DateTimeOffset? startWork, DateTimeOffset? finishWork)
         {
             var result = validator.Validate(new WorkExperienceContext(companyName, description, startWork, finishWork));
             if (!result.Successed)
