@@ -22,7 +22,8 @@ namespace GhostNetwork.Profiles
         private readonly IValidator<ProfileContext> profileValidator;
         private readonly IWorkExperienceStorage workExperienceStorage;
 
-        public ProfileService(IProfileStorage profileStorage,
+        public ProfileService(
+            IProfileStorage profileStorage,
             IValidator<ProfileContext> profileValidator,
             IWorkExperienceStorage workExperienceStorage)
         {
@@ -31,8 +32,7 @@ namespace GhostNetwork.Profiles
             this.workExperienceStorage = workExperienceStorage;
         }
 
-        public async Task<(DomainResult, Guid)> CreateAsync(Guid? id, string firstName,
-            string lastName, string gender, DateTimeOffset? dateOfBirth, string city)
+        public async Task<(DomainResult, Guid)> CreateAsync(Guid? id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city)
         {
             var result = profileValidator.Validate(new ProfileContext(firstName, lastName, city, dateOfBirth, gender));
 
@@ -59,26 +59,25 @@ namespace GhostNetwork.Profiles
             return await profileStorage.FindByIdAsync(id);
         }
 
-        public async Task<DomainResult> UpdateAsync(Guid id, string firstName,
-            string lastName, string gender, DateTimeOffset? dateOfBirth, string city)
+        public async Task<DomainResult> UpdateAsync(Guid id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city)
         {
             var result = profileValidator.Validate(new ProfileContext(firstName, lastName, city, dateOfBirth, gender));
 
-            if (result.Successed)
+            if (!result.Successed)
             {
-                var profile = await profileStorage.FindByIdAsync(id);
-
-                if (profile == null)
-                {
-                    return DomainResult.Error("Profile not found.");
-                }
-
-                profile.Update(firstName, lastName, gender, dateOfBirth, city);
-                await profileStorage.UpdateAsync(id, profile);
-                return DomainResult.Success();
+                return result;
             }
 
-            return result;
+            var profile = await profileStorage.FindByIdAsync(id);
+            if (profile == null)
+            {
+                return DomainResult.Error("Profile not found.");
+            }
+
+            profile.Update(firstName, lastName, gender, dateOfBirth, city);
+            await profileStorage.UpdateAsync(id, profile);
+
+            return DomainResult.Success();
         }
     }
 }
