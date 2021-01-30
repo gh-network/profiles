@@ -36,7 +36,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [HttpPut("profiles/{userId:guid}/security-settings")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> UpdateAsync([FromRoute] Guid userId, [FromQuery] SecuritySettingUpdateViewModel model)
+        public async Task<ActionResult> UpdateAsync([FromRoute] Guid userId, [FromBody] SecuritySettingUpdateViewModel model)
         {
             var result = await securitySettingsService.UpsertAsync(
                 userId,
