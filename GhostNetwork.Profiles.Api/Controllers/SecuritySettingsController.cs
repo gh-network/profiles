@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GhostNetwork.Profiles.Api.Controllers
 {
+    [ApiController]
     public class SecuritySettingsController : ControllerBase
     {
         private readonly ISecuritySettingService securitySettingsService;
@@ -35,13 +36,8 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [HttpPut("profiles/{userId:guid}/security-settings")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> UpdateAsync([FromRoute] Guid userId, [FromBody] SecuritySettingUpdateViewModel model)
+        public async Task<ActionResult> UpdateAsync([FromRoute] Guid userId, [FromQuery] SecuritySettingUpdateViewModel model)
         {
-            if (model == null || !Enum.IsDefined(typeof(Access), model.Posts.Access))
-            {
-                return BadRequest("Access type not found.");
-            }
-
             var result = await securitySettingsService.UpsertAsync(
                 userId,
                 new SecuritySettingsSection(model.Posts.Access, model.Posts.CertainUsers ?? Enumerable.Empty<Guid>()),
