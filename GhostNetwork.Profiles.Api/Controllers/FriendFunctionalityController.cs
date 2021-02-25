@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using GhostNetwork.Profiles.Api.Helpers;
 using GhostNetwork.Profiles.FriendsFuntionality;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -74,12 +75,30 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<FriendRequest>> SendFriendRequest([FromRoute] Guid fromUser, [FromRoute] Guid toUser)
         {
-            if (await friendsService.SendFriendRequst(fromUser, toUser) != null)
+            await friendsService.SendFriendRequest(fromUser, toUser);
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Accept friend request
+        /// </summary>
+        /// <param name="id">Friend request id</param>
+        /// <response code="204">Request successfully accepted</response>
+        /// <response code="400">Smt went wrong</response>
+        [HttpPut("friendrequests/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> AcceptFriendRequest([FromRoute] Guid id)
+        {
+            var result = await friendsService.AcceptFriendRequest(id);
+
+            if (result.Successed)
             {
-                return Ok();
+                return NoContent();
             }
 
-            return BadRequest();
+            return BadRequest(result.ToProblemDetails());
         }
 
         /// <summary>

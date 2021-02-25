@@ -11,7 +11,9 @@ namespace GhostNetwork.Profiles.FriendsFuntionality
 
         Task<(IEnumerable<FriendRequest>, long)> SearchFriendRequests(int skip, int take, Guid userId);
 
-        Task<Guid> SendFriendRequst(Guid fromUser, Guid toUser);
+        Task SendFriendRequest(Guid fromUser, Guid toUser);
+
+        Task<DomainResult> AcceptFriendRequest(Guid id);
 
         Task DeleteFriendRequest(Guid id);
     }
@@ -35,11 +37,25 @@ namespace GhostNetwork.Profiles.FriendsFuntionality
             return await friendsStorage.FindManyFriendRequests(skip, take, userId);
         }
 
-        public async Task<Guid> SendFriendRequst(Guid fromUser, Guid toUser)
+        public async Task SendFriendRequest(Guid fromUser, Guid toUser)
         {
             var friend = new FriendRequest(Guid.NewGuid(), fromUser, toUser, RequestStatus.Sended);
 
-            return await friendsStorage.SendFriendRequest(friend);
+            await friendsStorage.SendFriendRequest(friend);
+        }
+
+        public async Task<DomainResult> AcceptFriendRequest(Guid id)
+        {
+            var friendRequest = await friendsStorage.FindRequestById(id);
+
+            if (friendRequest == null)
+            {
+                return DomainResult.Error("Friend request not found.");
+            }
+
+            friendRequest.Update(RequestStatus.Accepted);
+            await friendsStorage.AcceptFriendRequest(friendRequest);
+            return DomainResult.Success();
         }
 
         public async Task DeleteFriendRequest(Guid id)

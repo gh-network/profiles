@@ -50,28 +50,43 @@ namespace GhostNetwork.Profiles.MongoDb
             return (entitys.Select(ToDomain), totalCount);
         }
 
-        public async Task<Guid> SendFriendRequest(FriendRequest friend)
+        public async Task<FriendRequest> FindRequestById(Guid id)
         {
-            var filter = Builders<FriendRequestEntity>.Filter.Eq(p => p.FromUser, friend.FromUser)
-                & Builders<FriendRequestEntity>.Filter.Eq(p => p.ToUser, friend.ToUser);
+            var filter = Builders<FriendRequestEntity>.Filter.Eq(p => p.Id, id);
+            var entity = await context.FriendRequests.Find(filter).FirstOrDefaultAsync();
+
+            return entity == null ? null : ToDomain(entity);
+        }
+
+        public async Task SendFriendRequest(FriendRequest friendRequest)
+        {
+            var filter = Builders<FriendRequestEntity>.Filter.Eq(p => p.FromUser, friendRequest.FromUser)
+                & Builders<FriendRequestEntity>.Filter.Eq(p => p.ToUser, friendRequest.ToUser);
 
             var exist = await context.FriendRequests.Find(filter).FirstOrDefaultAsync();
 
             if (exist != null)
             {
-                return Guid.Empty;
+                return ;
             }
 
             var entity = new FriendRequestEntity
             {
-                FromUser = friend.FromUser,
-                ToUser = friend.ToUser,
-                Status = friend.Status
+                FromUser = friendRequest.FromUser,
+                ToUser = friendRequest.ToUser,
+                Status = friendRequest.Status
             };
 
             await context.FriendRequests.InsertOneAsync(entity);
+        }
 
-            return entity.Id;
+        public async Task AcceptFriendRequest(FriendRequest friendRequest)
+        {
+            var filter = Builders<FriendRequestEntity>.Filter.Eq(p => p.Id, friendRequest.Id);
+
+            var updateStatus = Builders<FriendRequestEntity>.Update.Set(s => s.Status, friendRequest.Status);
+
+            await context.FriendRequests.UpdateOneAsync(filter, updateStatus);
         }
 
         public async Task DeleteFriendRequest(Guid id)
