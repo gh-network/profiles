@@ -5,20 +5,22 @@ using Domain;
 
 namespace GhostNetwork.Profiles.FriendsFuntionality
 {
-    public interface IFriendsFuntionalityService
+    public interface IFriendsFunctionalityService
     {
         Task<(IEnumerable<FriendRequest>, long)> SearchFriends(int skip, int take, Guid userId);
 
         Task<(IEnumerable<FriendRequest>, long)> SearchFriendRequests(int skip, int take, Guid userId);
 
         Task<Guid> SendFriendRequst(Guid fromUser, Guid toUser);
+
+        Task DeleteFriendRequest(Guid id);
     }
 
-    public class FriendsFuntionalityService : IFriendsFuntionalityService
+    public class FriendsFuntionalityService : IFriendsFunctionalityService
     {
-        private readonly IFriendsFuntionalityStorage friendsStorage;
+        private readonly IFriendsFunctionalityStorage friendsStorage;
 
-        public FriendsFuntionalityService(IFriendsFuntionalityStorage friendsStorage)
+        public FriendsFuntionalityService(IFriendsFunctionalityStorage friendsStorage)
         {
             this.friendsStorage = friendsStorage;
         }
@@ -38,6 +40,11 @@ namespace GhostNetwork.Profiles.FriendsFuntionality
             var friend = new FriendRequest(Guid.NewGuid(), fromUser, toUser, RequestStatus.Sended);
 
             return await friendsStorage.SendFriendRequest(friend);
+        }
+
+        public async Task DeleteFriendRequest(Guid id)
+        {
+            await friendsStorage.DeleteFriendRequest(id);
         }
     }
 }

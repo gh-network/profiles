@@ -7,7 +7,7 @@ using MongoDB.Driver;
 
 namespace GhostNetwork.Profiles.MongoDb
 {
-    public class MongoFriendRequestStorage : IFriendsFuntionalityStorage
+    public class MongoFriendRequestStorage : IFriendsFunctionalityStorage
     {
         private readonly MongoDbContext context;
 
@@ -23,9 +23,9 @@ namespace GhostNetwork.Profiles.MongoDb
                 | Builders<FriendRequestEntity>.Filter.Eq(q => q.FromUser, userId)
                 & Builders<FriendRequestEntity>.Filter.Where(x => x.Status == RequestStatus.Accepted);
 
-            var totalCount = await context.Friends.Find(filter).CountDocumentsAsync();
+            var totalCount = await context.FriendRequests.Find(filter).CountDocumentsAsync();
 
-            var entitys = await context.Friends
+            var entitys = await context.FriendRequests
                 .Find(filter)
                 .Skip(skip)
                 .Limit(take)
@@ -39,9 +39,9 @@ namespace GhostNetwork.Profiles.MongoDb
             var filter = Builders<FriendRequestEntity>.Filter.Eq(p => p.ToUser, userId)
                 & Builders<FriendRequestEntity>.Filter.Where(x => x.Status == RequestStatus.Sended);
 
-            var totalCount = await context.Friends.Find(filter).CountDocumentsAsync();
+            var totalCount = await context.FriendRequests.Find(filter).CountDocumentsAsync();
 
-            var entitys = await context.Friends
+            var entitys = await context.FriendRequests
                 .Find(filter)
                 .Skip(skip)
                 .Limit(take)
@@ -55,7 +55,7 @@ namespace GhostNetwork.Profiles.MongoDb
             var filter = Builders<FriendRequestEntity>.Filter.Eq(p => p.FromUser, friend.FromUser)
                 & Builders<FriendRequestEntity>.Filter.Eq(p => p.ToUser, friend.ToUser);
 
-            var exist = await context.Friends.Find(filter).FirstOrDefaultAsync();
+            var exist = await context.FriendRequests.Find(filter).FirstOrDefaultAsync();
 
             if (exist != null)
             {
@@ -69,9 +69,23 @@ namespace GhostNetwork.Profiles.MongoDb
                 Status = friend.Status
             };
 
-            await context.Friends.InsertOneAsync(entity);
+            await context.FriendRequests.InsertOneAsync(entity);
 
             return entity.Id;
+        }
+
+        public async Task DeleteFriendRequest(Guid id)
+        {
+            var filter = Builders<FriendRequestEntity>.Filter.Eq(p => p.Id, id);
+
+            var friendRequest = await context.FriendRequests.Find(filter).FirstOrDefaultAsync();
+
+            if (friendRequest == null)
+            {
+                return;
+            }
+
+            await context.FriendRequests.DeleteOneAsync(filter);
         }
 
         private static FriendRequest ToDomain(FriendRequestEntity entity)

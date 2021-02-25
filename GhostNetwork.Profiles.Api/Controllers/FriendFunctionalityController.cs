@@ -11,11 +11,11 @@ namespace GhostNetwork.Profiles.Api.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class FriendsController : Controller
+    public class FriendFunctionalityController : Controller
     {
-        private readonly IFriendsFuntionalityService friendsService;
+        private readonly IFriendsFunctionalityService friendsService;
 
-        public FriendsController(IFriendsFuntionalityService friendsService)
+        public FriendFunctionalityController(IFriendsFunctionalityService friendsService)
         {
             this.friendsService = friendsService;
         }
@@ -80,6 +80,19 @@ namespace GhostNetwork.Profiles.Api.Controllers
             }
 
             return BadRequest();
+        }
+
+        /// <summary>
+        /// Delete one friend request
+        /// </summary>
+        /// <param name="id">Friend request id</param>
+        /// <response code="200">Friend request successfully deleted</response>
+        [HttpDelete("friendrequests/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult> DeleteFriendRequest([FromRoute] Guid id)
+        {
+            await friendsService.DeleteFriendRequest(id);
+            return Ok();
         }
     }
 }
