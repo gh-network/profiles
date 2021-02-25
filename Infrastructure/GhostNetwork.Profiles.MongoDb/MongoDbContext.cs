@@ -17,8 +17,8 @@ namespace GhostNetwork.Profiles.MongoDb
         public IMongoCollection<WorkExperienceEntity> WorkExperience =>
             database.GetCollection<WorkExperienceEntity>("workExperience");
 
-        public IMongoCollection<FriendEntity> Friends =>
-            database.GetCollection<FriendEntity>("friends");
+        public IMongoCollection<FriendRequestEntity> Friends =>
+            database.GetCollection<FriendRequestEntity>("friends");
 
         public IMongoCollection<SecuritySettingsEntity> SecuritySettings =>
             database.GetCollection<SecuritySettingsEntity>("securitySettings");

@@ -56,7 +56,7 @@ namespace GhostNetwork.Profiles.Api
             services.AddScoped<IWorkExperienceService, WorkExperienceService>();
             services.AddScoped<IValidator<WorkExperienceContext>, WorkExperienceValidator>();
 
-            services.AddScoped<IFriendsFuntionalityStorage, MongoFriendsFuntionalityStorage>();
+            services.AddScoped<IFriendsFuntionalityStorage, MongoFriendRequestStorage>();
             services.AddScoped<IFriendsFuntionalityService, FriendsFuntionalityService>();
 
             services.AddScoped<ISecuritySettingStorage, SecuritySettingsStorage>();

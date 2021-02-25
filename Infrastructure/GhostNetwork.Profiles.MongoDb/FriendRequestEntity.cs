@@ -1,11 +1,12 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using GhostNetwork.Profiles.FriendsFuntionality;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace GhostNetwork.Profiles.MongoDb
 {
-    public class FriendEntity
+    public class FriendRequestEntity
     {
         [BsonId]
         public Guid Id { get; set; }
@@ -16,13 +17,7 @@ namespace GhostNetwork.Profiles.MongoDb
         [BsonElement("toUser")]
         public Guid ToUser { get; set; }
 
-        [BsonElement("isFriends")]
-        public bool IsFriends { get; set; }
-
-        [BsonElement("isFollowing")]
-        public bool IsFollowing { get; set; }
-
-        [BsonElement("isFollower")]
-        public bool IsFollower { get; set; }
+        [BsonElement("requestStatus")]
+        public RequestStatus Status { get; set; }
     }
 }
