@@ -10,11 +10,13 @@ namespace GhostNetwork.Profiles.FriendsFuntionality
 
         Task<(IEnumerable<FriendRequest>, long)> FindManyFriendRequests(int skip, int take, Guid userId);
 
+        Task<(IEnumerable<FriendRequest>, long)> FindManySendedFriendRequests(int skip, int take, Guid userId);
+
         Task<FriendRequest> FindRequestById(Guid id);
 
         Task SendFriendRequest(FriendRequest friendRequest);
 
-        Task AcceptFriendRequest(FriendRequest friendRequest);
+        Task UpdateFriendRequest(FriendRequest friendRequest);
 
         Task DeleteFriendRequest(Guid id);
     }

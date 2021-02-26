@@ -11,9 +11,11 @@ namespace GhostNetwork.Profiles.FriendsFuntionality
 
         Task<(IEnumerable<FriendRequest>, long)> SearchFriendRequests(int skip, int take, Guid userId);
 
+        Task<(IEnumerable<FriendRequest>, long)> SearchSendedFriendRequests(int skip, int take, Guid userId);
+
         Task SendFriendRequest(Guid fromUser, Guid toUser);
 
-        Task<DomainResult> AcceptFriendRequest(Guid id);
+        Task<DomainResult> UpdateFriendRequest(Guid id, RequestStatus status);
 
         Task DeleteFriendRequest(Guid id);
     }
@@ -37,6 +39,11 @@ namespace GhostNetwork.Profiles.FriendsFuntionality
             return await friendsStorage.FindManyFriendRequests(skip, take, userId);
         }
 
+        public async Task<(IEnumerable<FriendRequest>, long)> SearchSendedFriendRequests(int skip, int take, Guid userId)
+        {
+            return await friendsStorage.FindManySendedFriendRequests(skip, take, userId);
+        }
+
         public async Task SendFriendRequest(Guid fromUser, Guid toUser)
         {
             var friend = new FriendRequest(Guid.NewGuid(), fromUser, toUser, RequestStatus.Sended);
@@ -44,17 +51,17 @@ namespace GhostNetwork.Profiles.FriendsFuntionality
             await friendsStorage.SendFriendRequest(friend);
         }
 
-        public async Task<DomainResult> AcceptFriendRequest(Guid id)
+        public async Task<DomainResult> UpdateFriendRequest(Guid id, RequestStatus status)
         {
-            var friendRequest = await friendsStorage.FindRequestById(id);
+            var request = await friendsStorage.FindRequestById(id);
 
-            if (friendRequest == null)
+            if (request == null)
             {
                 return DomainResult.Error("Friend request not found.");
             }
 
-            friendRequest.Update(RequestStatus.Accepted);
-            await friendsStorage.AcceptFriendRequest(friendRequest);
+            request.Update(status);
+            await friendsStorage.UpdateFriendRequest(request);
             return DomainResult.Success();
         }
 
