@@ -101,7 +101,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         }
 
         /// <summary>
-        /// Upsert friend request
+        /// Update friend request
         /// </summary>
         /// <param name="id">Friend request id</param>
         /// <param name="status">Friend request status</param>

@@ -14,7 +14,7 @@ namespace GhostNetwork.Profiles.FriendsFuntionality
 
         Task<FriendRequest> FindRequestById(Guid id);
 
-        Task SendFriendRequest(FriendRequest friendRequest);
+        Task InsertFriendRequest(FriendRequest friendRequest);
 
         Task UpdateFriendRequest(FriendRequest friendRequest);
 
