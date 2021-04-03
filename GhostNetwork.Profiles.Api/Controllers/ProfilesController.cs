@@ -50,11 +50,11 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> CreateAsync([FromBody] ProfileCreateViewModel createModel)
         {
-            var (result, id) = await profileService.CreateAsync(createModel.Id, createModel.FirstName, createModel.LastName, createModel.Gender, createModel.DateOfBirth, createModel.City);
+            var (result, profile) = await profileService.CreateAsync(createModel.Id, createModel.FirstName, createModel.LastName, createModel.Gender, createModel.DateOfBirth, createModel.City);
 
             if (result.Successed)
             {
-                return Created(Url.Action("GetById", new { id }), await profileService.GetByIdAsync(id));
+                return Created(Url.Action("GetById", new { profile.Id }), profile);
             }
 
             return BadRequest(result.ToProblemDetails());

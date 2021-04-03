@@ -5,6 +5,7 @@ on:
     branches: [ master ]
 env:
   SERVICE_NAME: profiles
+  GRPC_SERVICE_NAME: grpcprofiles
 
 jobs:
   unit-test:
@@ -41,8 +42,29 @@ jobs:
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           docker tag $SERVICE_NAME $IMAGE_ID
           docker push $IMAGE_ID
+
+  push-grpc-image:
+    needs: unit-test
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        run: docker build . --file grpc.Dockerfile --tag $GRPC_SERVICE_NAME
+
+      - name: Login into github container regestry
+        run: echo "${{ secrets.CR_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Push image to github container regestry
+        run: |
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$GRPC_SERVICE_NAME
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          docker tag $GRPC_SERVICE_NAME $IMAGE_ID
+          docker push $IMAGE_ID
+
   deploy:
-    needs: push-image
+    needs: [push-image, push-grpc-image]
     runs-on: ubuntu-20.04
 
     steps:
