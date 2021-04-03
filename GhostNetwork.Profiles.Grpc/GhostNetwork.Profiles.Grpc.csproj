@@ -2,6 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
+        <CodeAnalysisRuleSet>../GhostNetwork.ruleset</CodeAnalysisRuleSet>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
     <ItemGroup>
@@ -13,8 +15,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\GhostNetwork.Profiles.Domain\GhostNetwork.Profiles.Domain.csproj" />
-      <ProjectReference Include="..\Infrastructure\GhostNetwork.Profiles.MongoDb\GhostNetwork.Profiles.MongoDb.csproj" />
+        <ProjectReference Include="..\GhostNetwork.Profiles.Domain\GhostNetwork.Profiles.Domain.csproj" />
+        <ProjectReference Include="..\Infrastructure\GhostNetwork.Profiles.MongoDb\GhostNetwork.Profiles.MongoDb.csproj" />
     </ItemGroup>
 
 </Project>
