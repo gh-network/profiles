@@ -1,7 +1,4 @@
 ﻿using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GhostNetwork.Profiles.MongoDb
 {
@@ -19,5 +16,8 @@ namespace GhostNetwork.Profiles.MongoDb
 
         public IMongoCollection<WorkExperienceEntity> WorkExperience =>
             database.GetCollection<WorkExperienceEntity>("workExperience");
+
+        public IMongoCollection<SecuritySettingsEntity> SecuritySettings =>
+            database.GetCollection<SecuritySettingsEntity>("securitySettings");
     }
 }
