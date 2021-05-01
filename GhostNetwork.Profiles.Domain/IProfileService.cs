@@ -9,7 +9,7 @@ namespace GhostNetwork.Profiles
     {
         Task<Profile> GetByIdAsync(Guid id);
 
-        Task<(DomainResult, Guid)> CreateAsync(Guid? id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city);
+        Task<(DomainResult, Profile)> CreateAsync(Guid? id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city);
 
         Task<DomainResult> UpdateAsync(Guid id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city);
 
@@ -32,7 +32,7 @@ namespace GhostNetwork.Profiles
             this.workExperienceStorage = workExperienceStorage;
         }
 
-        public async Task<(DomainResult, Guid)> CreateAsync(Guid? id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city)
+        public async Task<(DomainResult, Profile)> CreateAsync(Guid? id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city)
         {
             var result = profileValidator.Validate(new ProfileContext(firstName, lastName, city, dateOfBirth, gender));
 
@@ -43,9 +43,9 @@ namespace GhostNetwork.Profiles
 
             var profile = new Profile(id ?? Guid.NewGuid(), firstName, lastName, gender, dateOfBirth, city);
 
-            var profileId = await profileStorage.InsertAsync(profile);
+            await profileStorage.InsertAsync(profile);
 
-            return (DomainResult.Success(), profileId);
+            return (DomainResult.Success(), profile);
         }
 
         public async Task DeleteAsync(Guid id)
