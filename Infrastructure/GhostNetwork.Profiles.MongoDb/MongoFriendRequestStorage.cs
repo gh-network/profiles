@@ -108,8 +108,7 @@ namespace GhostNetwork.Profiles.MongoDb
 
         public async Task DeleteFriendRequestAsync(Guid id)
         {
-            var filter = Builders<FriendRequestEntity>.Filter.Eq(p => p.Id, id)
-                & Builders<FriendRequestEntity>.Filter.Eq(p => p.Status, RequestStatus.Sended);
+            var filter = Builders<FriendRequestEntity>.Filter.Eq(p => p.Id, id);
 
             var friendRequest = await context.FriendRequests.Find(filter).FirstOrDefaultAsync();
 
