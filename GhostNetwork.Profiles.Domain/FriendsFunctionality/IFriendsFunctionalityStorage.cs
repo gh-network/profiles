@@ -6,18 +6,20 @@ namespace GhostNetwork.Profiles.FriendsFuntionality
 {
     public interface IFriendsFunctionalityStorage
     {
-        Task<(IEnumerable<FriendRequest>, long)> FindManyFriendsAsync(int skip, int take, Guid userId);
+        Task<(IEnumerable<Friend>, long)> FindManyFriendsAsync(int skip, int take, Guid userId);
 
-        Task<(IEnumerable<FriendRequest>, long)> FindManyFriendRequestsAsync(int skip, int take, Guid userId);
+        Task<(IEnumerable<Friend>, long)> FindManyFriendRequestsAsync(int skip, int take, Guid userId);
 
-        Task<(IEnumerable<FriendRequest>, long)> FindManySentFriendRequestsAsync(int skip, int take, Guid userId);
+        Task<(IEnumerable<Friend>, long)> FindManySentFriendRequestsAsync(int skip, int take, Guid userId);
 
-        Task<FriendRequest> FindFriendRequestByIdAsync(Guid id);
+        Task<Friend> FindFriendRequestByIdAsync(string id);
 
-        Task InsertFriendRequestAsync(FriendRequest friendRequest);
+        Task InsertFriendRequestAsync(Friend friendRequest);
 
-        Task UpdateFriendRequestAsync(FriendRequest friendRequest);
+        Task AcceptRequestAsync(string requestId);
 
-        Task DeleteFriendRequestAsync(Guid id);
+        Task DeclineRequestAsync(string requestId);
+
+        Task DeleteFriendAsync(string id);
     }
 }

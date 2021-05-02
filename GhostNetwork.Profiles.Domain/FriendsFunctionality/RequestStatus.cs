@@ -7,7 +7,6 @@ namespace GhostNetwork.Profiles.FriendsFuntionality
     public enum RequestStatus
     {
         Sended,
-        Accepted,
-        Declined
+        Accepted
     }
 }

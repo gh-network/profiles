@@ -6,10 +6,10 @@ using System.Text;
 
 namespace GhostNetwork.Profiles.MongoDb
 {
-    public class FriendRequestEntity
+    public class FriendEntity
     {
         [BsonId]
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         [BsonElement("fromUser")]
         public Guid FromUser { get; set; }

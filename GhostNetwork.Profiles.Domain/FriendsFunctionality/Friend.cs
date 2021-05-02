@@ -2,9 +2,9 @@
 
 namespace GhostNetwork.Profiles.FriendsFuntionality
 {
-    public class FriendRequest
+    public class Friend
     {
-        public FriendRequest(Guid id, Guid fromUser, Guid toUser, RequestStatus status)
+        public Friend(string id, Guid fromUser, Guid toUser, RequestStatus status)
         {
             Id = id;
             FromUser = fromUser;
@@ -12,7 +12,7 @@ namespace GhostNetwork.Profiles.FriendsFuntionality
             Status = status;
         }
 
-        public Guid Id { get; }
+        public string Id { get; }
 
         public Guid FromUser { get; private set; }
 

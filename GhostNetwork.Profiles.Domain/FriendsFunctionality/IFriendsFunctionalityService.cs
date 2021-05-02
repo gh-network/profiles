@@ -7,17 +7,19 @@ namespace GhostNetwork.Profiles.FriendsFuntionality
 {
     public interface IFriendsFunctionalityService
     {
-        Task<(IEnumerable<FriendRequest>, long)> SearchFriendsAsync(int skip, int take, Guid userId);
+        Task<(IEnumerable<Friend>, long)> SearchFriendsAsync(int skip, int take, Guid userId);
 
-        Task<(IEnumerable<FriendRequest>, long)> SearchFriendRequestsAsync(int skip, int take, Guid userId);
+        Task<(IEnumerable<Friend>, long)> SearchFriendRequestsAsync(int skip, int take, Guid userId);
 
-        Task<(IEnumerable<FriendRequest>, long)> SearchSentFriendRequestsAsync(int skip, int take, Guid userId);
+        Task<(IEnumerable<Friend>, long)> SearchSentFriendRequestsAsync(int skip, int take, Guid userId);
 
         Task SendFriendRequestAsync(Guid fromUser, Guid toUser);
 
-        Task<DomainResult> UpdateFriendRequestAsync(Guid id, RequestStatus status);
+        Task AcceptFriendRequestAsync(string requestId);
 
-        Task DeleteFriendRequestAsync(Guid id);
+        Task DeclineFriendRequestAsync(string requestId);
+
+        Task DeleteFriendAsync(string id);
     }
 
     public class FriendsFunctionalityService : IFriendsFunctionalityService
@@ -29,45 +31,41 @@ namespace GhostNetwork.Profiles.FriendsFuntionality
             this.friendsStorage = friendsStorage;
         }
 
-        public async Task<(IEnumerable<FriendRequest>, long)> SearchFriendsAsync(int skip, int take, Guid userId)
+        public async Task<(IEnumerable<Friend>, long)> SearchFriendsAsync(int skip, int take, Guid userId)
         {
             return await friendsStorage.FindManyFriendsAsync(skip, take, userId);
         }
 
-        public async Task<(IEnumerable<FriendRequest>, long)> SearchFriendRequestsAsync(int skip, int take, Guid userId)
+        public async Task<(IEnumerable<Friend>, long)> SearchFriendRequestsAsync(int skip, int take, Guid userId)
         {
             return await friendsStorage.FindManyFriendRequestsAsync(skip, take, userId);
         }
 
-        public async Task<(IEnumerable<FriendRequest>, long)> SearchSentFriendRequestsAsync(int skip, int take, Guid userId)
+        public async Task<(IEnumerable<Friend>, long)> SearchSentFriendRequestsAsync(int skip, int take, Guid userId)
         {
             return await friendsStorage.FindManySentFriendRequestsAsync(skip, take, userId);
         }
 
         public async Task SendFriendRequestAsync(Guid fromUser, Guid toUser)
         {
-            var friend = new FriendRequest(Guid.NewGuid(), fromUser, toUser, RequestStatus.Sended);
+            var friend = new Friend(fromUser.ToString() + toUser.ToString(), fromUser, toUser, RequestStatus.Sended);
 
             await friendsStorage.InsertFriendRequestAsync(friend);
         }
 
-        public async Task<DomainResult> UpdateFriendRequestAsync(Guid id, RequestStatus status)
+        public async Task AcceptFriendRequestAsync(string requestId)
         {
-            var request = await friendsStorage.FindFriendRequestByIdAsync(id);
-
-            if (request == null)
-            {
-                return DomainResult.Error("Friend request not found.");
-            }
-
-            request.Update(status);
-            await friendsStorage.UpdateFriendRequestAsync(request);
-            return DomainResult.Success();
+            await friendsStorage.AcceptRequestAsync(requestId);
         }
 
-        public async Task DeleteFriendRequestAsync(Guid id)
+        public async Task DeclineFriendRequestAsync(string requestId)
         {
-            await friendsStorage.DeleteFriendRequestAsync(id);
+            await friendsStorage.DeclineRequestAsync(requestId);
+        }
+
+        public async Task DeleteFriendAsync(string id)
+        {
+            await friendsStorage.DeleteFriendAsync(id);
         }
     }
 }
