@@ -48,7 +48,7 @@ namespace GhostNetwork.Profiles.FriendsFuntionality
 
         public async Task SendFriendRequestAsync(Guid fromUser, Guid toUser)
         {
-            var friend = new Friend(fromUser.ToString() + toUser.ToString(), fromUser, toUser, RequestStatus.Sended);
+            var friend = new Friend(fromUser.ToString() + toUser.ToString(), fromUser, toUser);
 
             await friendsStorage.InsertFriendRequestAsync(friend);
         }

@@ -19,7 +19,9 @@ namespace GhostNetwork.Profiles.MongoDb
         public async Task<(IEnumerable<Friend>, long)> FindManyFriendsAsync(int skip, int take, Guid userId)
         {
             var filter = Builders<FriendEntity>.Filter.Eq(p => p.Status, RequestStatus.Accepted)
-                & Builders<FriendEntity>.Filter.Where(x => x.FromUser == userId || x.ToUser == userId);
+                         & Builders<FriendEntity>.Filter.Eq(x => x.FromUser, userId)
+                         | Builders<FriendEntity>.Filter.Eq(p => p.Status, RequestStatus.Accepted)
+                         & Builders<FriendEntity>.Filter.Eq(x => x.ToUser, userId);
 
             var totalCount = await context.FriendRequests.Find(filter).CountDocumentsAsync();
 
@@ -76,8 +78,10 @@ namespace GhostNetwork.Profiles.MongoDb
 
         public async Task InsertFriendRequestAsync(Friend friendRequest)
         {
-            var filter = Builders<FriendEntity>.Filter.Where(x => x.FromUser == friendRequest.FromUser && x.ToUser == friendRequest.ToUser)
-                | Builders<FriendEntity>.Filter.Where(x => x.FromUser == friendRequest.ToUser && x.ToUser == friendRequest.FromUser);
+            var filter = Builders<FriendEntity>.Filter.Eq(x => x.FromUser, friendRequest.FromUser)
+                         & Builders<FriendEntity>.Filter.Eq(x => x.ToUser, friendRequest.ToUser)
+                         | Builders<FriendEntity>.Filter.Eq(x => x.FromUser, friendRequest.ToUser)
+                         & Builders<FriendEntity>.Filter.Eq(x => x.ToUser, friendRequest.FromUser);
 
             var exist = await context.FriendRequests.Find(filter).FirstOrDefaultAsync();
 
@@ -88,9 +92,10 @@ namespace GhostNetwork.Profiles.MongoDb
 
             var entity = new FriendEntity
             {
+                Id = friendRequest.Id,
                 FromUser = friendRequest.FromUser,
                 ToUser = friendRequest.ToUser,
-                Status = friendRequest.Status
+                Status = RequestStatus.Sended
             };
 
             await context.FriendRequests.InsertOneAsync(entity);
@@ -100,6 +105,13 @@ namespace GhostNetwork.Profiles.MongoDb
         {
             var filter = Builders<FriendEntity>.Filter.Eq(p => p.Id, requestId)
                          & Builders<FriendEntity>.Filter.Eq(p => p.Status, RequestStatus.Sended);
+            
+            var friendRequest = await context.FriendRequests.Find(filter).FirstOrDefaultAsync();
+
+            if (friendRequest == null)
+            {
+                return;
+            }
 
             var acceptRequest = Builders<FriendEntity>.Update.Set(s => s.Status, RequestStatus.Accepted);
 
@@ -120,7 +132,8 @@ namespace GhostNetwork.Profiles.MongoDb
             
             await context.FriendRequests.DeleteOneAsync(filter);
         }
-
+        
+        
         public async Task DeleteFriendAsync(string id)
         {
             var filter = Builders<FriendEntity>.Filter.Eq(p => p.Id, id)
@@ -141,8 +154,7 @@ namespace GhostNetwork.Profiles.MongoDb
             return new Friend(
                 entity.Id,
                 entity.FromUser,
-                entity.ToUser,
-                entity.Status);
+                entity.ToUser);
         }
     }
 }
