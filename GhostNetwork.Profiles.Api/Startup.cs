@@ -2,7 +2,7 @@ using System;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using GhostNetwork.Profiles.Api.Helpers.OpenApi;
-using GhostNetwork.Profiles.FriendsFuntionality;
+using GhostNetwork.Profiles.FriendsFunctionality;
 using GhostNetwork.Profiles.MongoDb;
 using GhostNetwork.Profiles.SecuritySettings;
 using GhostNetwork.Profiles.WorkExperiences;
@@ -56,8 +56,8 @@ namespace GhostNetwork.Profiles.Api
             services.AddScoped<IWorkExperienceService, WorkExperienceService>();
             services.AddScoped<IValidator<WorkExperienceContext>, WorkExperienceValidator>();
 
-            services.AddScoped<IFriendsFunctionalityStorage, MongoFriendRequestStorage>();
-            services.AddScoped<IFriendsFunctionalityService, FriendsFunctionalityService>();
+            services.AddScoped<IFriendsStorage, MongoFriendsStorage>();
+            services.AddScoped<IFriendsService, FriendsService>();
 
             services.AddScoped<ISecuritySettingStorage, SecuritySettingsStorage>();
             services.AddScoped<ISecuritySettingService, SecuritySettingsService>();

@@ -1,17 +1,14 @@
 ﻿using System;
 
-namespace GhostNetwork.Profiles.FriendsFuntionality
+namespace GhostNetwork.Profiles.FriendsFunctionality
 {
-    public class Friend
+    public class Friends
     {
-        public Friend(string id, Guid fromUser, Guid toUser)
+        public Friends(Guid fromUser, Guid toUser)
         {
-            Id = id;
             FromUser = fromUser;
             ToUser = toUser;
         }
-
-        public string Id { get; }
 
         public Guid FromUser { get; private set; }
 

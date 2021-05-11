@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GhostNetwork.Profiles.FriendsFuntionality
+﻿namespace GhostNetwork.Profiles.FriendsFunctionality
 {
     public enum RequestStatus
     {
-        Sended,
+        Sent,
         Accepted
     }
 }

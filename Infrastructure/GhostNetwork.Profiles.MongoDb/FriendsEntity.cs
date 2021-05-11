@@ -1,16 +1,14 @@
-﻿using GhostNetwork.Profiles.FriendsFuntionality;
+﻿using GhostNetwork.Profiles.FriendsFunctionality;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using MongoDB.Bson;
 
 namespace GhostNetwork.Profiles.MongoDb
 {
-    public class FriendEntity
+    public class FriendsEntity
     {
-        [BsonId]
-        public string Id { get; set; }
-
+        public ObjectId Id { get; set; }
+        
         [BsonElement("fromUser")]
         public Guid FromUser { get; set; }
 
