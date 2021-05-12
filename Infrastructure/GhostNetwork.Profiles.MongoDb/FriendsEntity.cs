@@ -11,9 +11,15 @@ namespace GhostNetwork.Profiles.MongoDb
         
         [BsonElement("fromUser")]
         public Guid FromUser { get; set; }
+        
+        [BsonElement("fromUserName")]
+        public string FromUserName { get; set; }
 
         [BsonElement("toUser")]
         public Guid ToUser { get; set; }
+        
+        [BsonElement("toUserName")]
+        public string ToUserName { get; set; }
 
         [BsonElement("requestStatus")]
         public RequestStatus Status { get; set; }

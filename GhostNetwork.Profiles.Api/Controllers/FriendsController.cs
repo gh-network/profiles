@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using GhostNetwork.Profiles.Api.Models;
 using GhostNetwork.Profiles.FriendsFunctionality;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -51,12 +52,12 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [HttpGet("{id}/followers")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [SwaggerResponseHeader(StatusCodes.Status200OK, "X-TotalCount", "Number", "Total number of friend requests")]
-        public async Task<ActionResult<IEnumerable<Friends>>> SearchFriendRequestsAsync(
+        public async Task<ActionResult<IEnumerable<Followers>>> SearchFriendRequestsAsync(
             [FromQuery, Range(0, int.MaxValue)] int skip,
             [FromQuery, Range(1, 100)] int take,
             [FromRoute] Guid id)
         {
-            var (friends, totalCount) = await friendService.SearchFriendRequestsAsync(skip, take, id);
+            var (friends, totalCount) = await friendService.SearchFollowersAsync(skip, take, id);
             Response.Headers.Add("X-TotalCount", totalCount.ToString());
 
             return Ok(friends);
@@ -72,12 +73,12 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [HttpGet("{id}/followed")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [SwaggerResponseHeader(StatusCodes.Status200OK, "X-TotalCount", "Number", "Total number of friend requests")]
-        public async Task<ActionResult<IEnumerable<Friends>>> SearchSentFriendRequestsAsync(
+        public async Task<ActionResult<IEnumerable<Followed>>> SearchSentFriendRequestsAsync(
             [FromQuery, Range(0, int.MaxValue)] int skip,
             [FromQuery, Range(1, 100)] int take,
             [FromRoute] Guid id)
         {
-            var (friends, totalCount) = await friendService.SearchSentFriendRequestsAsync(skip, take, id);
+            var (friends, totalCount) = await friendService.SearchFollowedAsync(skip, take, id);
             Response.Headers.Add("X-TotalCount", totalCount.ToString());
 
             return Ok(friends);
@@ -86,14 +87,13 @@ namespace GhostNetwork.Profiles.Api.Controllers
         /// <summary>
         /// Send friend request
         /// </summary>
-        /// <param name="fromUser">Filters friend request by fromUser</param>
-        /// <param name="toUser">Filters friend request by toUser</param>
+        /// <param name="friendRequest">Filters friend request by fromUser</param>
         /// <response code="200">Friend request successfully created</response>
-        [HttpPost("{fromUser}/{toUser}")]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<Friends>> SendFriendRequestAsync([FromRoute] Guid fromUser, [FromRoute] Guid toUser)
+        public async Task<ActionResult<Friends>> SendFriendRequestAsync([FromBody, Required] FriendRequestCreateViewModel friendRequest)
         {
-            await friendService.SendFriendRequestAsync(fromUser, toUser);
+            await friendService.SendFriendRequestAsync(friendRequest.FromUser, friendRequest.FromUserName, friendRequest.ToUser, friendRequest.ToUserName);
 
             return Ok();
         }
@@ -101,14 +101,14 @@ namespace GhostNetwork.Profiles.Api.Controllers
         /// <summary>
         /// Accept friend request
         /// </summary>
-        /// <param name="fromUser">Filters friend request by fromUser</param>
-        /// <param name="toUser">Filters friend request by toUser</param>
+        /// <param name="user1">Filters friend request by fromUser</param>
+        /// <param name="user2">Filters friend request by toUser</param>
         /// <response code="200">Friend request successfully created</response>
-        [HttpPut("{fromUser}/{toUser}")]
+        [HttpPut("{user1}/{user2}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<Friends>> AcceptFriendRequestAsync([FromRoute] Guid fromUser, [FromRoute] Guid toUser)
+        public async Task<ActionResult<Friends>> AcceptFriendRequestAsync([FromRoute] Guid user1, [FromRoute] Guid user2)
         {
-            await friendService.AcceptFriendRequestAsync(fromUser, toUser);
+            await friendService.AcceptFriendRequestAsync(user1, user2);
 
             return Ok();
         }
@@ -116,14 +116,14 @@ namespace GhostNetwork.Profiles.Api.Controllers
         /// <summary>
         /// Delete one friend
         /// </summary>
-        /// <param name="fromUser">User1</param>
-        /// <param name="toUser">User2</param>
+        /// <param name="user1">User1</param>
+        /// <param name="user2">User2</param>
         /// <response code="200">Friend successfully deleted =(</response>
-        [HttpDelete("{fromUser}/{toUser}")]
+        [HttpDelete("{user1}/{user2}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> DeleteFriendAsync([FromRoute] Guid fromUser, [FromRoute] Guid toUser)
+        public async Task<ActionResult> DeleteFriendAsync([FromRoute] Guid user1, [FromRoute] Guid user2)
         {
-            await friendService.DeleteFriendAsync(fromUser, toUser);
+            await friendService.DeleteFriendAsync(user1, user2);
             return Ok();
         }
     }
