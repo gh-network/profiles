@@ -6,11 +6,11 @@ namespace GhostNetwork.Profiles.FriendsFunctionality
 {
     public interface IFriendsStorage
     {
-        Task<(IEnumerable<Response>, long)> GetFriendsAsync(int skip, int take, Guid id);
+        Task<(IEnumerable<FriendsResponseModel>, long)> GetFriendsAsync(int skip, int take, Guid id);
 
-        Task<(IEnumerable<Response>, long)> GetFollowersAsync(int skip, int take, Guid id);
+        Task<(IEnumerable<FriendsResponseModel>, long)> GetFollowersAsync(int skip, int take, Guid id);
 
-        Task<(IEnumerable<Response>, long)> GetFollowedAsync(int skip, int take, Guid id);
+        Task<(IEnumerable<FriendsResponseModel>, long)> GetFollowedAsync(int skip, int take, Guid id);
 
         Task UpsertAsync(Friends friends);
 

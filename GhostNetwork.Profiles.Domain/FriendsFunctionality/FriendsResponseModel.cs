@@ -2,9 +2,9 @@
 
 namespace GhostNetwork.Profiles.FriendsFunctionality
 {
-    public class Response
+    public class FriendsResponseModel
     {
-        public Response(Guid id)
+        public FriendsResponseModel(Guid id)
         {
             Id = id;
         }

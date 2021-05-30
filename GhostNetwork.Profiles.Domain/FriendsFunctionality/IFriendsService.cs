@@ -6,11 +6,11 @@ namespace GhostNetwork.Profiles.FriendsFunctionality
 {
     public interface IFriendsService
     {
-        Task<(IEnumerable<Response>, long)> SearchFriendsAsync(int skip, int take, Guid id);
+        Task<(IEnumerable<FriendsResponseModel>, long)> SearchFriendsAsync(int skip, int take, Guid id);
 
-        Task<(IEnumerable<Response>, long)> SearchFollowersAsync(int skip, int take, Guid id);
+        Task<(IEnumerable<FriendsResponseModel>, long)> SearchFollowersAsync(int skip, int take, Guid id);
 
-        Task<(IEnumerable<Response>, long)> SearchFollowedAsync(int skip, int take, Guid id);
+        Task<(IEnumerable<FriendsResponseModel>, long)> SearchFollowedAsync(int skip, int take, Guid id);
 
         Task UpsertFriendRequestAsync(Guid userOne, Guid userTwo);
 
@@ -26,17 +26,17 @@ namespace GhostNetwork.Profiles.FriendsFunctionality
             this.friendsStorage = friendsStorage;
         }
 
-        public async Task<(IEnumerable<Response>, long)> SearchFriendsAsync(int skip, int take, Guid id)
+        public async Task<(IEnumerable<FriendsResponseModel>, long)> SearchFriendsAsync(int skip, int take, Guid id)
         {
             return await friendsStorage.GetFriendsAsync(skip, take, id);
         }
 
-        public async Task<(IEnumerable<Response>, long)> SearchFollowersAsync(int skip, int take, Guid id)
+        public async Task<(IEnumerable<FriendsResponseModel>, long)> SearchFollowersAsync(int skip, int take, Guid id)
         {
             return await friendsStorage.GetFollowersAsync(skip, take, id);
         }
 
-        public async Task<(IEnumerable<Response>, long)> SearchFollowedAsync(int skip, int take, Guid id)
+        public async Task<(IEnumerable<FriendsResponseModel>, long)> SearchFollowedAsync(int skip, int take, Guid id)
         {
             return await friendsStorage.GetFollowedAsync(skip, take, id);
         }

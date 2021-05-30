@@ -30,7 +30,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [HttpGet("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [SwaggerResponseHeader(StatusCodes.Status200OK, "X-TotalCount", "Number", "Total number of user friends")]
-        public async Task<ActionResult<IEnumerable<Friends>>> SearchFriendsAsync(
+        public async Task<ActionResult<IEnumerable<FriendsResponseModel>>> SearchFriendsAsync(
             [FromQuery, Range(0, int.MaxValue)] int skip,
             [FromQuery, Range(1, 100)] int take,
             [FromRoute] Guid id)
@@ -51,7 +51,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [HttpGet("{id:guid}/followers")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [SwaggerResponseHeader(StatusCodes.Status200OK, "X-TotalCount", "Number", "Total number of friend requests")]
-        public async Task<ActionResult<IEnumerable<Response>>> SearchFollowersAsync(
+        public async Task<ActionResult<IEnumerable<FriendsResponseModel>>> SearchFollowersAsync(
             [FromQuery, Range(0, int.MaxValue)] int skip,
             [FromQuery, Range(1, 100)] int take,
             [FromRoute] Guid id)
@@ -72,7 +72,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [HttpGet("{id:guid}/followed")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [SwaggerResponseHeader(StatusCodes.Status200OK, "X-TotalCount", "Number", "Total number of friend requests")]
-        public async Task<ActionResult<IEnumerable<Response>>> SearchSentFriendRequestsAsync(
+        public async Task<ActionResult<IEnumerable<FriendsResponseModel>>> SearchSentFriendRequestsAsync(
             [FromQuery, Range(0, int.MaxValue)] int skip,
             [FromQuery, Range(1, 100)] int take,
             [FromRoute] Guid id)

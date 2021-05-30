@@ -16,13 +16,13 @@ namespace GhostNetwork.Profiles.MongoDb
             this.context = context;
         }
 
-        public async Task<(IEnumerable<Response>, long)> GetFriendsAsync(int skip, int take, Guid id)
+        public async Task<(IEnumerable<FriendsResponseModel>, long)> GetFriendsAsync(int skip, int take, Guid id)
         {
             var filter = Builders<FriendsEntity>.Filter.Eq(p => p.UserOne, id)
                          & Builders<FriendsEntity>.Filter.Eq(p => p.Status, RequestStatus.Accepted);
 
-            var totalCountFromSent = await context.Sent.Find(filter).CountDocumentsAsync();
-            var totalCountFromReceived = await context.Received.Find(filter).CountDocumentsAsync();
+            var countFromSent = await context.Sent.Find(filter).CountDocumentsAsync();
+            var countFromReceived = await context.Received.Find(filter).CountDocumentsAsync();
 
             var fromSent = await context.Sent
                 .Find(filter)
@@ -36,12 +36,12 @@ namespace GhostNetwork.Profiles.MongoDb
                 .Limit(take)
                 .ToListAsync();
 
-            var entity = fromSent.Concat(fromReceived).ToList();
+            var friends = fromSent.Concat(fromReceived).ToList();
 
-            return (entity.Select(ToDomain), totalCountFromSent + totalCountFromReceived);
+            return (friends.Select(ToDomain), countFromSent + countFromReceived);
         }
 
-        public async Task<(IEnumerable<Response>, long)> GetFollowersAsync(int skip, int take, Guid id)
+        public async Task<(IEnumerable<FriendsResponseModel>, long)> GetFollowersAsync(int skip, int take, Guid id)
         {
             var filter = Builders<FriendsEntity>.Filter.Eq(p => p.UserOne, id)
                          & Builders<FriendsEntity>.Filter.Eq(p => p.Status, RequestStatus.Received);
@@ -57,7 +57,7 @@ namespace GhostNetwork.Profiles.MongoDb
             return (entities.Select(ToDomain), totalCount);
         }
 
-        public async Task<(IEnumerable<Response>, long)> GetFollowedAsync(int skip, int take, Guid id)
+        public async Task<(IEnumerable<FriendsResponseModel>, long)> GetFollowedAsync(int skip, int take, Guid id)
         {
             var filter = Builders<FriendsEntity>.Filter.Eq(p => p.UserOne, id)
                          & Builders<FriendsEntity>.Filter.Eq(p => p.Status, RequestStatus.Sent);
@@ -137,9 +137,9 @@ namespace GhostNetwork.Profiles.MongoDb
             await context.Received.DeleteOneAsync(filter);
         }
 
-        private static Response ToDomain(FriendsEntity entity)
+        private static FriendsResponseModel ToDomain(FriendsEntity entity)
         {
-            return new Response(
+            return new FriendsResponseModel(
                 entity.UserTwo);
         }
     }
