@@ -23,12 +23,12 @@ namespace GhostNetwork.Profiles.Api.Controllers
         }
 
         /// <summary>
-        /// Get all profile experiences
+        /// Get experiences by id
         /// </summary>
         /// <param name="id">Work experience id</param>
-        /// <response code="200">Work experience find</response>
+        /// <response code="200">Work experience</response>
         /// <response code="404">Work experience not found</response>
-        [HttpGet("{id}")]
+        [HttpGet("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<WorkExperience>> GetByIdAsync([FromRoute] Guid id)
