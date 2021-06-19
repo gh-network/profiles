@@ -1,5 +1,4 @@
 ﻿using System;
-using GhostNetwork.Profiles.FriendsFunctionality;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -9,11 +8,11 @@ namespace GhostNetwork.Profiles.MongoDb
     {
         public ObjectId Id { get; set; }
         
-        [BsonElement("userOne")]
-        public Guid UserOne { get; set; }
+        [BsonElement("fromUser")]
+        public Guid FromUser { get; set; }
         
-        [BsonElement("userTwo")]
-        public Guid UserTwo { get; set; }
+        [BsonElement("toUser")]
+        public Guid ToUser { get; set; }
         
         [BsonElement("status")]
         public RequestStatus Status { get; set; }

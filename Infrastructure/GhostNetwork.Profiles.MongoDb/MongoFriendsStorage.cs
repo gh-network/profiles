@@ -2,145 +2,156 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GhostNetwork.Profiles.FriendsFunctionality;
+using GhostNetwork.Profiles.Friends;
 using MongoDB.Driver;
 
 namespace GhostNetwork.Profiles.MongoDb
 {
-    public class MongoFriendsStorage : IFriendsStorage
+    public class MongoFriendsStorage : IRelationsService
     {
         private readonly MongoDbContext context;
-        
+        private static FilterDefinitionBuilder<FriendsEntity> Filter => Builders<FriendsEntity>.Filter;
+        private static UpdateDefinitionBuilder<FriendsEntity> Update => Builders<FriendsEntity>.Update;
+
         public MongoFriendsStorage(MongoDbContext context)
         {
             this.context = context;
         }
 
-        public async Task<(IEnumerable<FriendsResponseModel>, long)> GetFriendsAsync(int skip, int take, Guid id)
+        public async Task<(IEnumerable<Guid>, long)> SearchFriendsAsync(int skip, int take, Guid userId)
         {
-            var filter = Builders<FriendsEntity>.Filter.Eq(p => p.UserOne, id)
-                         & Builders<FriendsEntity>.Filter.Eq(p => p.Status, RequestStatus.Accepted);
+            var filter = Filter.Eq(p => p.ToUser, userId) & Filter.Eq(p => p.Status, RequestStatus.Accepted);
 
-            var countFromSent = await context.Sent.Find(filter).CountDocumentsAsync();
-            var countFromReceived = await context.Received.Find(filter).CountDocumentsAsync();
+            var requestCount = await context.FriendRequests
+                .Find(filter)
+                .CountDocumentsAsync();
 
-            var fromSent = await context.Sent
+            var requests = await context.FriendRequests
                 .Find(filter)
                 .Skip(skip)
                 .Limit(take)
                 .ToListAsync();
 
-            var fromReceived = await context.Received
-                .Find(filter)
-                .Skip(skip)
-                .Limit(take)
-                .ToListAsync();
-
-            var friends = fromSent.Concat(fromReceived).ToList();
-
-            return (friends.Select(ToDomain), countFromSent + countFromReceived);
+            return (requests.Select(r => r.FromUser).ToList(), requestCount);
         }
 
-        public async Task<(IEnumerable<FriendsResponseModel>, long)> GetFollowersAsync(int skip, int take, Guid id)
+        public async Task<(IEnumerable<Guid>, long)> SearchFollowersAsync(int skip, int take, Guid userId)
         {
-            var filter = Builders<FriendsEntity>.Filter.Eq(p => p.UserOne, id)
-                         & Builders<FriendsEntity>.Filter.Eq(p => p.Status, RequestStatus.Received);
+            var filter = Filter.Eq(p => p.ToUser, userId) & Filter.Eq(p => p.Status, RequestStatus.Declined);
 
-            var totalCount = await context.Received.Find(filter).CountDocumentsAsync();
+            var requestCount = await context.FriendRequests
+                .Find(filter)
+                .CountDocumentsAsync();
 
-            var entities = await context.Received
+            var requests = await context.FriendRequests
                 .Find(filter)
                 .Skip(skip)
                 .Limit(take)
                 .ToListAsync();
 
-            return (entities.Select(ToDomain), totalCount);
+            return (requests.Select(r => r.FromUser).ToList(), requestCount);
         }
 
-        public async Task<(IEnumerable<FriendsResponseModel>, long)> GetFollowedAsync(int skip, int take, Guid id)
+        public async Task<(IEnumerable<Guid>, long)> SearchIncomingRequestsAsync(int skip, int take, Guid userId)
         {
-            var filter = Builders<FriendsEntity>.Filter.Eq(p => p.UserOne, id)
-                         & Builders<FriendsEntity>.Filter.Eq(p => p.Status, RequestStatus.Sent);
+            var filter = Filter.Eq(p => p.ToUser, userId) & Filter.Eq(p => p.Status, RequestStatus.Incoming);
 
-            var totalCount = await context.Sent.Find(filter).CountDocumentsAsync();
+            var requestCount = await context.FriendRequests
+                .Find(filter)
+                .CountDocumentsAsync();
 
-            var entities = await context.Sent
+            var requests = await context.FriendRequests
                 .Find(filter)
                 .Skip(skip)
                 .Limit(take)
                 .ToListAsync();
 
-            return (entities.Select(ToDomain), totalCount);
+            return (requests.Select(r => r.FromUser).ToList(), requestCount);
         }
 
-        public async Task UpsertAsync(Friends friends)
+        public async Task<(IEnumerable<Guid>, long)> SearchOutgoingRequestsAsync(int skip, int take, Guid userId)
         {
-            var filter = Builders<FriendsEntity>.Filter.Eq(p => p.UserOne, friends.UserOne)
-                         & Builders<FriendsEntity>.Filter.Eq(p => p.UserTwo, friends.UserTwo)
-                         | Builders<FriendsEntity>.Filter.Eq(p => p.UserOne, friends.UserTwo)
-                         & Builders<FriendsEntity>.Filter.Eq(p => p.UserTwo, friends.UserOne);
+            var filter = Filter.Eq(p => p.ToUser, userId) & Filter.Eq(p => p.Status, RequestStatus.Outgoing);
 
-            var sentRequest = await context.Sent.Find(filter).FirstOrDefaultAsync();
-            var receivedRequest = await context.Received.Find(filter).FirstOrDefaultAsync();
-            
-            if (sentRequest != null && sentRequest.Status == RequestStatus.Accepted )
+            var requestCount = await context.FriendRequests
+                .Find(filter)
+                .CountDocumentsAsync();
+
+            var requests = await context.FriendRequests
+                .Find(filter)
+                .Skip(skip)
+                .Limit(take)
+                .ToListAsync();
+
+            return (requests.Select(r => r.FromUser).ToList(), requestCount);
+        }
+
+        public async Task SendRequestAsync(Guid fromUser, Guid toUser)
+        {
+            var filter = Filter.Eq(p => p.FromUser, fromUser) & Filter.Eq(p => p.ToUser, toUser);
+
+            var request = await context.FriendRequests
+                .Find(filter)
+                .FirstOrDefaultAsync();
+
+            if (request == null)
             {
-                return;
-            }
-            
-            if (sentRequest == null && receivedRequest == null)
-            {
-                var sentEntity = new FriendsEntity
+                await context.FriendRequests.InsertManyAsync(new[]
                 {
-                    UserOne = friends.UserOne,
-                    UserTwo = friends.UserTwo,
-                    Status = RequestStatus.Sent
-                };
-
-                await context.Sent.InsertOneAsync(sentEntity);
-
-                var receivedEntity = new FriendsEntity
-                {
-                    UserOne = friends.UserTwo,
-                    UserTwo = friends.UserOne,
-                    Status = RequestStatus.Received
-                };
-
-                await context.Received.InsertOneAsync(receivedEntity);
-            }
-
-            if (receivedRequest != null && friends.UserOne == receivedRequest.UserOne)
-            {
-                var update = Builders<FriendsEntity>.Update.Set(p => p.Status, RequestStatus.Accepted);
-
-                await context.Sent.UpdateOneAsync(filter, update);
-
-                await context.Received.UpdateOneAsync(filter, update);
+                    new FriendsEntity { FromUser = fromUser, ToUser = toUser, Status = RequestStatus.Outgoing },
+                    new FriendsEntity { FromUser = toUser, ToUser = fromUser, Status = RequestStatus.Incoming }
+                });
             }
         }
 
-        public async Task DeleteAsync(Guid userOne, Guid userTwo)
+        public async Task ApproveRequestAsync(Guid user, Guid requester)
         {
-            var filter = Builders<FriendsEntity>.Filter.Eq(p => p.UserOne, userOne)
-                         & Builders<FriendsEntity>.Filter.Eq(p => p.UserTwo, userTwo)
-                         | Builders<FriendsEntity>.Filter.Eq(p => p.UserOne, userTwo)
-                         & Builders<FriendsEntity>.Filter.Eq(p => p.UserTwo, userOne);
+            var filter = Filter.Eq(p => p.ToUser, user)
+                & Filter.Eq(p => p.FromUser, requester)
+                & Filter.Eq(p => p.Status, RequestStatus.Incoming)
+                | Filter.Eq(p => p.ToUser, requester)
+                & Filter.Eq(p => p.FromUser, user)
+                & Filter.Eq(p => p.Status, RequestStatus.Outgoing);
 
-            var exist = context.Sent.Find(filter).FirstOrDefaultAsync();
-            
-            if (exist == null)
+            var requestExists = await context.FriendRequests
+                .Find(filter)
+                .AnyAsync();
+
+            if (requestExists)
             {
-                return;
-            }
+                var update = Update
+                    .Set(s => s.Status, RequestStatus.Accepted);
 
-            await context.Sent.DeleteOneAsync(filter);
-            await context.Received.DeleteOneAsync(filter);
+                await context.FriendRequests.UpdateManyAsync(filter, update);
+            }
         }
 
-        private static FriendsResponseModel ToDomain(FriendsEntity entity)
+        public async Task DeleteRequestAsync(Guid fromUser, Guid toUser)
         {
-            return new FriendsResponseModel(
-                entity.UserTwo);
+            var filter = Filter.Eq(p => p.FromUser, fromUser)
+                         & Filter.Eq(p => p.ToUser, toUser)
+                         & Filter.Eq(p => p.Status, RequestStatus.Outgoing)
+                         | Filter.Eq(p => p.FromUser, toUser)
+                         & Filter.Eq(p => p.ToUser, fromUser)
+                         & Filter.Eq(p => p.Status, RequestStatus.Incoming);
+
+            await context.FriendRequests.DeleteManyAsync(filter);
+        }
+
+        public async Task DeclineRequestAsync(Guid user, Guid requester)
+        {
+            var incomingFilter = Filter.Eq(p => p.ToUser, user)
+                                 & Filter.Eq(p => p.FromUser, requester)
+                                 & Filter.Eq(p => p.Status, RequestStatus.Incoming);
+
+            var outgoingFilter = Filter.Eq(p => p.ToUser, requester)
+                                 & Filter.Eq(p => p.FromUser, user)
+                                 & Filter.Eq(p => p.Status, RequestStatus.Outgoing);
+            var declineOutgoing = Update
+                .Set(s => s.Status, RequestStatus.Declined);
+
+            await context.FriendRequests.DeleteOneAsync(incomingFilter);
+            await context.FriendRequests.UpdateOneAsync(outgoingFilter, declineOutgoing);
         }
     }
 }

@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace GhostNetwork.Profiles.Friends
+{
+    public interface IRelationsService
+    {
+        Task<(IEnumerable<Guid>, long)> SearchFriendsAsync(int skip, int take, Guid userId);
+
+        Task<(IEnumerable<Guid>, long)> SearchFollowersAsync(int skip, int take, Guid userId);
+
+        Task<(IEnumerable<Guid>, long)> SearchIncomingRequestsAsync(int skip, int take, Guid userId);
+
+        Task<(IEnumerable<Guid>, long)> SearchOutgoingRequestsAsync(int skip, int take, Guid userId);
+
+        Task SendRequestAsync(Guid fromUser, Guid toUser);
+        Task ApproveRequestAsync(Guid user, Guid requester);
+        Task DeleteRequestAsync(Guid fromUser, Guid toUser);
+        Task DeclineRequestAsync(Guid user, Guid requester);
+    }
+}
