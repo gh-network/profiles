@@ -2,6 +2,7 @@ using System;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using GhostNetwork.Profiles.Api.Helpers.OpenApi;
+using GhostNetwork.Profiles.Friends;
 using GhostNetwork.Profiles.MongoDb;
 using GhostNetwork.Profiles.SecuritySettings;
 using GhostNetwork.Profiles.WorkExperiences;
@@ -57,6 +58,8 @@ namespace GhostNetwork.Profiles.Api
 
             services.AddScoped<ISecuritySettingStorage, SecuritySettingsStorage>();
             services.AddScoped<ISecuritySettingService, SecuritySettingsService>();
+
+            services.AddScoped<IRelationsService, MongoRelationsStorage>();
 
             services.AddControllers()
                 .AddJsonOptions(options =>
