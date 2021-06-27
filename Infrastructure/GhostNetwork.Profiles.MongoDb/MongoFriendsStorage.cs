@@ -37,7 +37,9 @@ namespace GhostNetwork.Profiles.MongoDb
 
         public async Task<(IEnumerable<Guid>, long)> SearchFollowersAsync(int skip, int take, Guid userId)
         {
-            var filter = Filter.Eq(p => p.ToUser, userId) & Filter.Eq(p => p.Status, RequestStatus.Declined);
+            var filter = Filter.Eq(p => p.ToUser, userId)
+                         & (Filter.Eq(p => p.Status, RequestStatus.Declined) |
+                            Filter.Eq(p => p.Status, RequestStatus.Incoming));
 
             var requestCount = await context.FriendRequests
                 .Find(filter)
