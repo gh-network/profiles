@@ -59,7 +59,7 @@ namespace GhostNetwork.Profiles.Api
             services.AddScoped<ISecuritySettingStorage, SecuritySettingsStorage>();
             services.AddScoped<ISecuritySettingService, SecuritySettingsService>();
 
-            services.AddScoped<IRelationsService, MongoFriendsStorage>();
+            services.AddScoped<IRelationsService, MongoRelationsStorage>();
 
             services.AddControllers()
                 .AddJsonOptions(options =>

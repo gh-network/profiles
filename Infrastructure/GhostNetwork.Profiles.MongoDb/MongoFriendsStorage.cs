@@ -7,13 +7,13 @@ using MongoDB.Driver;
 
 namespace GhostNetwork.Profiles.MongoDb
 {
-    public class MongoFriendsStorage : IRelationsService
+    public class MongoRelationsStorage : IRelationsService
     {
         private readonly MongoDbContext context;
         private static FilterDefinitionBuilder<FriendsEntity> Filter => Builders<FriendsEntity>.Filter;
         private static UpdateDefinitionBuilder<FriendsEntity> Update => Builders<FriendsEntity>.Update;
 
-        public MongoFriendsStorage(MongoDbContext context)
+        public MongoRelationsStorage(MongoDbContext context)
         {
             this.context = context;
         }
@@ -98,60 +98,59 @@ namespace GhostNetwork.Profiles.MongoDb
             {
                 await context.FriendRequests.InsertManyAsync(new[]
                 {
-                    new FriendsEntity { FromUser = fromUser, ToUser = toUser, Status = RequestStatus.Outgoing },
-                    new FriendsEntity { FromUser = toUser, ToUser = fromUser, Status = RequestStatus.Incoming }
+                    new FriendsEntity { FromUser = fromUser, ToUser = toUser, Status = RequestStatus.Incoming },
+                    new FriendsEntity { FromUser = toUser, ToUser = fromUser, Status = RequestStatus.Outgoing }
                 });
             }
         }
 
         public async Task ApproveRequestAsync(Guid user, Guid requester)
         {
-            var filter = Filter.Eq(p => p.ToUser, user)
-                & Filter.Eq(p => p.FromUser, requester)
-                & Filter.Eq(p => p.Status, RequestStatus.Incoming)
-                | Filter.Eq(p => p.ToUser, requester)
-                & Filter.Eq(p => p.FromUser, user)
-                & Filter.Eq(p => p.Status, RequestStatus.Outgoing);
+            var filter = (Filter.Eq(p => p.FromUser, requester)
+                         & Filter.Eq(p => p.ToUser, user)
+                         & Filter.Eq(p => p.Status, RequestStatus.Incoming))
+                         | (Filter.Eq(p => p.FromUser, user)
+                         & Filter.Eq(p => p.ToUser, requester)
+                         & Filter.Eq(p => p.Status, RequestStatus.Outgoing));
 
-            var requestExists = await context.FriendRequests
-                .Find(filter)
-                .AnyAsync();
+            var update = Update
+                .Set(s => s.Status, RequestStatus.Accepted);
 
-            if (requestExists)
-            {
-                var update = Update
-                    .Set(s => s.Status, RequestStatus.Accepted);
-
-                await context.FriendRequests.UpdateManyAsync(filter, update);
-            }
+            await context.FriendRequests
+                .UpdateManyAsync(filter, update);
         }
 
-        public async Task DeleteRequestAsync(Guid fromUser, Guid toUser)
+        public async Task DeleteFriendAsync(Guid user, Guid friend)
         {
-            var filter = Filter.Eq(p => p.FromUser, fromUser)
-                         & Filter.Eq(p => p.ToUser, toUser)
-                         & Filter.Eq(p => p.Status, RequestStatus.Outgoing)
-                         | Filter.Eq(p => p.FromUser, toUser)
-                         & Filter.Eq(p => p.ToUser, fromUser)
-                         & Filter.Eq(p => p.Status, RequestStatus.Incoming);
+            var deleteFilter = Filter.Eq(p => p.FromUser, user)
+                               & Filter.Eq(p => p.ToUser, friend)
+                               & (Filter.Eq(p => p.Status, RequestStatus.Declined)
+                                  | Filter.Eq(p => p.Status, RequestStatus.Accepted));
 
-            await context.FriendRequests.DeleteManyAsync(filter);
+            var updateFilter = Filter.Eq(p => p.FromUser, friend)
+                               & Filter.Eq(p => p.ToUser, user)
+                               & Filter.Eq(p => p.Status, RequestStatus.Accepted);
+            var updateToFollowers = Update.Set(p => p.Status, RequestStatus.Declined);
+
+            await context.FriendRequests.DeleteOneAsync(deleteFilter);
+            await context.FriendRequests.UpdateOneAsync(updateFilter, updateToFollowers);
         }
 
         public async Task DeclineRequestAsync(Guid user, Guid requester)
         {
-            var incomingFilter = Filter.Eq(p => p.ToUser, user)
-                                 & Filter.Eq(p => p.FromUser, requester)
+            var outgoingFilter = Filter.Eq(p => p.FromUser, user)
+                                 & Filter.Eq(p => p.ToUser, requester)
+                                 & Filter.Eq(p => p.Status, RequestStatus.Outgoing);
+
+            var incomingFilter = Filter.Eq(p => p.FromUser, requester)
+                                 & Filter.Eq(p => p.ToUser, user)
                                  & Filter.Eq(p => p.Status, RequestStatus.Incoming);
 
-            var outgoingFilter = Filter.Eq(p => p.ToUser, requester)
-                                 & Filter.Eq(p => p.FromUser, user)
-                                 & Filter.Eq(p => p.Status, RequestStatus.Outgoing);
-            var declineOutgoing = Update
+            var declineIncoming = Update
                 .Set(s => s.Status, RequestStatus.Declined);
 
-            await context.FriendRequests.DeleteOneAsync(incomingFilter);
-            await context.FriendRequests.UpdateOneAsync(outgoingFilter, declineOutgoing);
+            await context.FriendRequests.DeleteOneAsync(outgoingFilter);
+            await context.FriendRequests.UpdateOneAsync(incomingFilter, declineIncoming);
         }
     }
 }
