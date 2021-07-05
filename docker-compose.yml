@@ -6,7 +6,7 @@ services:
     ports:
       - "5300:80"    
     environment:
-      - MONGO_ADDRESS=db:27017
+      - MONGO_CONNECTION=mongodb://db:27017/gprofiles
       - ASPNETCORE_ENVIRONMENT=Development
   db:
     image: mvertes/alpine-mongo
