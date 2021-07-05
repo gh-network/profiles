@@ -10,7 +10,8 @@ compile images from the sources - `docker-compose build && docker-compose up -d`
 
 | Environment                    | Description                                               |
 |--------------------------------|-----------------------------------------------------------|
-| MONGO_ADDRESS                  | Address of MongoDb instance                               |
+| MONGO_CONNECTION               | Connection string to MongoDb instance                     |
+| ~~MONGO_ADDRESS~~              | Address of MongoDb instance (OBSOLETE)                    |
 
 ## Development
 

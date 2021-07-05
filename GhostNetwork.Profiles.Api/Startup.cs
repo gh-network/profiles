@@ -19,6 +19,8 @@ namespace GhostNetwork.Profiles.Api
 {
     public class Startup
     {
+        private const string DefaultDbName = "profiles";
+        
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -42,10 +44,14 @@ namespace GhostNetwork.Profiles.Api
                 options.IncludeXmlComments(XmlPathProvider.XmlPath);
             });
 
-            services.AddScoped(provider =>
+            services.AddScoped(_ =>
             {
-                var client = new MongoClient($"mongodb://{Configuration["MONGO_ADDRESS"]}/gprofiles");
-                return new MongoDbContext(client.GetDatabase("gprofiles"));
+                // TODO: Remove MONGO_ADDRESS usage after update of all compose files
+                var connectionString = Configuration["MONGO_CONNECTION"] ??
+                                       $"mongodb://{Configuration["MONGO_ADDRESS"]}/gprofiles";
+                var mongoUrl = MongoUrl.Create(connectionString);
+                var client = new MongoClient(mongoUrl);
+                return new MongoDbContext(client.GetDatabase(mongoUrl.DatabaseName ?? DefaultDbName));
             });
 
             services.AddScoped<IProfileStorage, MongoProfileStorage>();
