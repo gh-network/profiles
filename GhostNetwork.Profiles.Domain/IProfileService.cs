@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Domain;
 using GhostNetwork.Profiles.WorkExperiences;
@@ -7,6 +8,8 @@ namespace GhostNetwork.Profiles
 {
     public interface IProfileService
     {
+        Task<IEnumerable<Profile>> SearchByIdsAsync(IEnumerable<Guid> ids);
+
         Task<Profile> GetByIdAsync(Guid id);
 
         Task<(DomainResult, Profile)> CreateAsync(Guid? id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city);
@@ -52,6 +55,11 @@ namespace GhostNetwork.Profiles
         {
             await workExperienceStorage.DeleteAllExperienceInProfileAsync(id);
             await profileStorage.DeleteAsync(id);
+        }
+
+        public async Task<IEnumerable<Profile>> SearchByIdsAsync(IEnumerable<Guid> ids)
+        {
+            return await profileStorage.SearchByIdsAsync(ids);
         }
 
         public async Task<Profile> GetByIdAsync(Guid id)

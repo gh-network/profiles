@@ -63,7 +63,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         }
 
         /// <summary>
-        /// Search user's incoming friend requests 
+        /// Search user's incoming friend requests
         /// </summary>
         /// <param name="skip">Skip incoming requests up to a specified position</param>
         /// <param name="take">Take incoming requests up to a specified position</param>
