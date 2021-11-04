@@ -19,8 +19,8 @@ namespace GhostNetwork.Profiles.MongoDb
         {
             var filter = Builders<ProfileEntity>.Filter.In(x => x.Id, ids);
             
-            var profiles = await context.Profiles.Aggregate()
-                .Match(filter)
+            var profiles = await context.Profiles
+                .Find(filter)
                 .ToListAsync();
 
             return profiles.Select(ToDomain);
