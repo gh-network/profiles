@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 
@@ -11,6 +13,17 @@ namespace GhostNetwork.Profiles.MongoDb
         public MongoProfileStorage(MongoDbContext context)
         {
             this.context = context;
+        }
+
+        public async Task<IEnumerable<Profile>> SearchByIdsAsync(IEnumerable<Guid> ids)
+        {
+            var filter = Builders<ProfileEntity>.Filter.In(x => x.Id, ids);
+            
+            var profiles = await context.Profiles
+                .Find(filter)
+                .ToListAsync();
+
+            return profiles.Select(ToDomain);
         }
 
         public async Task<Profile> FindByIdAsync(Guid id)
