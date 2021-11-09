@@ -13,5 +13,7 @@ namespace GhostNetwork.Profiles.Api.Models
         public DateTimeOffset? DateOfBirth { get; set; }
 
         public string City { get; set; }
+        
+        public string ProfilePicture { get; set; }
     }
 }

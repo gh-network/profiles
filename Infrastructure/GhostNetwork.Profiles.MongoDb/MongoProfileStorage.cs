@@ -47,7 +47,8 @@ namespace GhostNetwork.Profiles.MongoDb
                 .Set(s => s.LastName, updatedProfile.LastName)
                 .Set(s => s.Gender, updatedProfile.Gender)
                 .Set(s => s.DateOfBirth, updatedProfile.DateOfBirth?.ToUnixTimeMilliseconds())
-                .Set(s => s.City, updatedProfile.City);
+                .Set(s => s.City, updatedProfile.City)
+                .Set(s => s.ProfilePicture, updatedProfile.ProfilePicture);
 
             await context.Profiles.UpdateOneAsync(filter, update);
         }
@@ -73,7 +74,8 @@ namespace GhostNetwork.Profiles.MongoDb
                 entity.LastName,
                 entity.Gender,
                 dateOfBirth,
-                entity.City);
+                entity.City,
+                entity.ProfilePicture);
         }
     }
 }

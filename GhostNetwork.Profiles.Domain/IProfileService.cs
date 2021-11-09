@@ -11,7 +11,13 @@ namespace GhostNetwork.Profiles
 
         Task<(DomainResult, Profile)> CreateAsync(Guid? id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city);
 
-        Task<DomainResult> UpdateAsync(Guid id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city);
+        Task<DomainResult> UpdateAsync(Guid id,
+            string firstName,
+            string lastName,
+            string gender,
+            DateTimeOffset? dateOfBirth,
+            string city,
+            string profilePicture);
 
         Task DeleteAsync(Guid id);
     }
@@ -41,7 +47,7 @@ namespace GhostNetwork.Profiles
                 return (result, default);
             }
 
-            var profile = new Profile(id ?? Guid.NewGuid(), firstName, lastName, gender, dateOfBirth, city);
+            var profile = new Profile(id ?? Guid.NewGuid(), firstName, lastName, gender, dateOfBirth, city, string.Empty);
 
             await profileStorage.InsertAsync(profile);
 
@@ -59,7 +65,13 @@ namespace GhostNetwork.Profiles
             return await profileStorage.FindByIdAsync(id);
         }
 
-        public async Task<DomainResult> UpdateAsync(Guid id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city)
+        public async Task<DomainResult> UpdateAsync(Guid id,
+            string firstName,
+            string lastName,
+            string gender,
+            DateTimeOffset? dateOfBirth,
+            string city,
+            string profilePicture)
         {
             var result = profileValidator.Validate(new ProfileContext(firstName, lastName, city, dateOfBirth, gender));
 
@@ -74,7 +86,7 @@ namespace GhostNetwork.Profiles
                 return DomainResult.Error("Profile not found.");
             }
 
-            profile.Update(firstName, lastName, gender, dateOfBirth, city);
+            profile.Update(firstName, lastName, gender, dateOfBirth, city, profilePicture);
             await profileStorage.UpdateAsync(id, profile);
 
             return DomainResult.Success();

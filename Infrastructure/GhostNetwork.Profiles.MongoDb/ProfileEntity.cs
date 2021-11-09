@@ -23,5 +23,8 @@ namespace GhostNetwork.Profiles.MongoDb
 
         [BsonElement("city")]
         public string City { get; set; }
+        
+        [BsonElement("profilePicture")]
+        public string ProfilePicture { get; set; }
     }
 }

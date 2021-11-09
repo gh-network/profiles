@@ -103,13 +103,13 @@ namespace GhostNetwork.Profiles.Api
             var alice = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66af76");
             if (await profileStorage.FindByIdAsync(alice) == null)
             {
-                await profileStorage.InsertAsync(new Profile(alice, "Alice", "Alice", "Female", null, null));
+                await profileStorage.InsertAsync(new Profile(alice, "Alice", "Alice", "Female", null, null, null));
             }
 
             var bob = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66af77");
             if (await profileStorage.FindByIdAsync(bob) == null)
             {
-                await profileStorage.InsertAsync(new Profile(bob, "Bob", "Bob", "Male", null, null));
+                await profileStorage.InsertAsync(new Profile(bob, "Bob", "Bob", "Male", null, null, null));
             }
         }
     }

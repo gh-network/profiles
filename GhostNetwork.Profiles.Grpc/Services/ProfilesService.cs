@@ -60,7 +60,7 @@ namespace GhostNetwork.Profiles.Grpc.Services
                 id = Guid.NewGuid();
             }
 
-            var result = await profileService.UpdateAsync(id, request.FirstName, request.LastName, request.Gender, request.DateOfBirth?.ToDateTime(), request.City);
+            var result = await profileService.UpdateAsync(id, request.FirstName, request.LastName, request.Gender, request.DateOfBirth?.ToDateTime(), request.City, null);
 
             if (!result.Successed)
             {

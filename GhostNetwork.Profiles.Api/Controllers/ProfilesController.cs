@@ -72,7 +72,13 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Profile>> UpdateAsync([FromRoute] Guid id, [FromBody] ProfileUpdateViewModel updateModel)
         {
-            var result = await profileService.UpdateAsync(id, updateModel.FirstName, updateModel.LastName, updateModel.Gender, updateModel.DateOfBirth, updateModel.City);
+            var result = await profileService.UpdateAsync(id,
+                updateModel.FirstName,
+                updateModel.LastName,
+                updateModel.Gender,
+                updateModel.DateOfBirth,
+                updateModel.City,
+                updateModel.ProfilePicture);
 
             if (result.Successed)
             {
