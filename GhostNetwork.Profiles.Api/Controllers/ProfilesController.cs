@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GhostNetwork.Profiles.Api.Helpers;
 using GhostNetwork.Profiles.Api.Models;
@@ -16,6 +17,20 @@ namespace GhostNetwork.Profiles.Api.Controllers
         public ProfilesController(IProfileService profileService)
         {
             this.profileService = profileService;
+        }
+
+        /// <summary>
+        /// Search profiles by ids
+        /// </summary>
+        /// <param name="model">Profile ids</param>
+        /// <response code="200">Returns profile</response>
+        [HttpPost("search")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<Profile>>> SearchByIdsAsync([FromBody] ProfilesQueryModel model)
+        {
+            var profiles = await profileService.SearchByIdsAsync(model.Ids);
+
+            return Ok(profiles);
         }
 
         /// <summary>

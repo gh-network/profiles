@@ -20,7 +20,7 @@ namespace GhostNetwork.Profiles.Api
     public class Startup
     {
         private const string DefaultDbName = "profiles";
-        
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
