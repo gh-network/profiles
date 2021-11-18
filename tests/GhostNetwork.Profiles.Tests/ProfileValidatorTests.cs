@@ -19,13 +19,14 @@ namespace GhostNetwork.Profiles.Tests
             Assert.IsFalse(result.Successed && result.Errors.Count() == 1);
         }
 
+        [Test]
         public void LastName_Null_Argument()
         {
             // Setup
             var validator = new ProfileValidator();
 
             // Act
-            var result = validator.Validate(new ProfileContext("FirstName", "", "London", DateTime.Now, "man"));
+            var result = validator.Validate(new ProfileContext("FirstName", null, "London", DateTime.Now, "man"));
 
             // Assert
             Assert.IsFalse(result.Successed && result.Errors.Count() == 1);
