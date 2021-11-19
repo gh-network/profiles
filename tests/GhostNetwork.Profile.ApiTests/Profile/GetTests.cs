@@ -19,7 +19,7 @@ namespace GhostNetwork.Profile.ApiTests.Profile
             //Setup
             var id = Guid.NewGuid();
 
-            var profile = new Profiles.Profile(id, "firstName", "lastName", "Male", DateTimeOffset.Now, "City");
+            var profile = new Profiles.Profile(id, "firstName", "lastName", "Male", DateTimeOffset.Now, "City", string.Empty);
 
             var serviceMock = new Mock<IProfileService>();
 

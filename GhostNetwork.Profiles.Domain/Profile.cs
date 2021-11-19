@@ -4,7 +4,8 @@ namespace GhostNetwork.Profiles
 {
     public class Profile
     {
-        public Profile(Guid id,
+        public Profile(
+            Guid id,
             string firstName,
             string lastName,
             string gender,
@@ -32,10 +33,13 @@ namespace GhostNetwork.Profiles
         public DateTimeOffset? DateOfBirth { get; private set; }
 
         public string City { get; private set; }
-        
+
         public string ProfilePicture { get; private set; }
 
-        public void Update(string firstName,
+        public string FullName => $"{FirstName} {LastName}";
+
+        public void Update(
+            string firstName,
             string lastName,
             string gender,
             DateTimeOffset? dateOfBirth,

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Domain;
+using GhostNetwork.EventBus;
 using GhostNetwork.Profiles.WorkExperiences;
 
 namespace GhostNetwork.Profiles
@@ -14,7 +15,8 @@ namespace GhostNetwork.Profiles
 
         Task<(DomainResult, Profile)> CreateAsync(Guid? id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city);
 
-        Task<DomainResult> UpdateAsync(Guid id,
+        Task<DomainResult> UpdateAsync(
+            Guid id,
             string firstName,
             string lastName,
             string gender,
@@ -30,15 +32,18 @@ namespace GhostNetwork.Profiles
         private readonly IProfileStorage profileStorage;
         private readonly IValidator<ProfileContext> profileValidator;
         private readonly IWorkExperienceStorage workExperienceStorage;
+        private readonly IEventBus eventBus;
 
         public ProfileService(
             IProfileStorage profileStorage,
             IValidator<ProfileContext> profileValidator,
-            IWorkExperienceStorage workExperienceStorage)
+            IWorkExperienceStorage workExperienceStorage,
+            IEventBus eventBus)
         {
             this.profileStorage = profileStorage;
             this.profileValidator = profileValidator;
             this.workExperienceStorage = workExperienceStorage;
+            this.eventBus = eventBus;
         }
 
         public async Task<(DomainResult, Profile)> CreateAsync(Guid? id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city)
@@ -73,7 +78,8 @@ namespace GhostNetwork.Profiles
             return await profileStorage.FindByIdAsync(id);
         }
 
-        public async Task<DomainResult> UpdateAsync(Guid id,
+        public async Task<DomainResult> UpdateAsync(
+            Guid id,
             string firstName,
             string lastName,
             string gender,
@@ -96,6 +102,8 @@ namespace GhostNetwork.Profiles
 
             profile.Update(firstName, lastName, gender, dateOfBirth, city, profilePicture);
             await profileStorage.UpdateAsync(id, profile);
+
+            await eventBus.PublishAsync(new UpdatedEvent(profile.Id, profile.FullName, profile.ProfilePicture));
 
             return DomainResult.Success();
         }

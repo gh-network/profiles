@@ -31,8 +31,7 @@ namespace GhostNetwork.Profile.ApiTests.Profile
             var serviceMock = new Mock<IProfileService>();
 
             serviceMock
-                .Setup(x => x.UpdateAsync(id, input.FirstName, input.LastName, input.Gender, input.DateOfBirth,
-                    input.City))
+                .Setup(x => x.UpdateAsync(id, input.FirstName, input.LastName, input.Gender, input.DateOfBirth, input.City, string.Empty))
                 .ReturnsAsync(DomainResult.Success);
 
             var client = TestServerHelper.New(collection =>
@@ -65,8 +64,7 @@ namespace GhostNetwork.Profile.ApiTests.Profile
             var serviceMock = new Mock<IProfileService>();
 
             serviceMock
-                .Setup(x => x.UpdateAsync(id, input.FirstName, input.LastName, input.Gender, input.DateOfBirth,
-                    input.City))
+                .Setup(x => x.UpdateAsync(id, input.FirstName, input.LastName, input.Gender, input.DateOfBirth, input.City, string.Empty))
                 .ReturnsAsync(DomainResult.Error("NotFound"));
 
             var client = TestServerHelper.New(collection =>
