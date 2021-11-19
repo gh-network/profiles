@@ -1,6 +1,8 @@
 using System;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using GhostNetwork.EventBus;
+using GhostNetwork.EventBus.RabbitMq;
 using GhostNetwork.Profiles.Api.Helpers.OpenApi;
 using GhostNetwork.Profiles.Friends;
 using GhostNetwork.Profiles.MongoDb;
@@ -13,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
+using RabbitMQ.Client;
 using Swashbuckle.AspNetCore.Filters;
 
 namespace GhostNetwork.Profiles.Api
@@ -26,7 +29,7 @@ namespace GhostNetwork.Profiles.Api
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -43,6 +46,19 @@ namespace GhostNetwork.Profiles.Api
 
                 options.IncludeXmlComments(XmlPathProvider.XmlPath);
             });
+
+            if (Configuration["EVENTHUB_TYPE"]?.ToLower() == "rabbit")
+            {
+                services.AddSingleton<IEventBus>(provider => new RabbitMqEventBus(
+                    new ConnectionFactory
+                    {
+                        Uri = new Uri(Configuration["RABBIT_CONNECTION"])
+                    }, new HandlerProvider(provider)));
+            }
+            else
+            {
+                services.AddSingleton<IEventBus, NullEventBus>();
+            }
 
             services.AddScoped(_ =>
             {
