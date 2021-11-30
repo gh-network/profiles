@@ -18,7 +18,7 @@ namespace GhostNetwork.Profiles.MongoDb
         public async Task<IEnumerable<Profile>> SearchByIdsAsync(IEnumerable<Guid> ids)
         {
             var filter = Builders<ProfileEntity>.Filter.In(x => x.Id, ids);
-            
+
             var profiles = await context.Profiles
                 .Find(filter)
                 .ToListAsync();

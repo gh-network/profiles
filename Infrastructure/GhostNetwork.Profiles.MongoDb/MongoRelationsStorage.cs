@@ -10,13 +10,15 @@ namespace GhostNetwork.Profiles.MongoDb
     public class MongoRelationsStorage : IRelationsService
     {
         private readonly MongoDbContext context;
-        private static FilterDefinitionBuilder<FriendsEntity> Filter => Builders<FriendsEntity>.Filter;
-        private static UpdateDefinitionBuilder<FriendsEntity> Update => Builders<FriendsEntity>.Update;
 
         public MongoRelationsStorage(MongoDbContext context)
         {
             this.context = context;
         }
+
+        private static FilterDefinitionBuilder<FriendsEntity> Filter => Builders<FriendsEntity>.Filter;
+
+        private static UpdateDefinitionBuilder<FriendsEntity> Update => Builders<FriendsEntity>.Update;
 
         public async Task<(IEnumerable<Guid>, long)> SearchFriendsAsync(int skip, int take, Guid userId)
         {

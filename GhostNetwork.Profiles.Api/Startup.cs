@@ -50,10 +50,8 @@ namespace GhostNetwork.Profiles.Api
             if (Configuration["EVENTHUB_TYPE"]?.ToLower() == "rabbit")
             {
                 services.AddSingleton<IEventBus>(provider => new RabbitMqEventBus(
-                    new ConnectionFactory
-                    {
-                        Uri = new Uri(Configuration["RABBIT_CONNECTION"])
-                    }, new HandlerProvider(provider)));
+                    new ConnectionFactory { Uri = new Uri(Configuration["RABBIT_CONNECTION"]) },
+                    new HandlerProvider(provider)));
             }
             else
             {

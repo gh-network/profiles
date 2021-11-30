@@ -32,7 +32,7 @@ namespace GhostNetwork.Profiles.MongoDb
                 .Set(s => s.Friends, (SecuritySettingsSectionEntity)updatedSettings.Friends);
 
             await context.SecuritySettings
-                .UpdateOneAsync(filter, update, new UpdateOptions {IsUpsert = true});
+                .UpdateOneAsync(filter, update, new UpdateOptions { IsUpsert = true });
         }
 
         private static SecuritySetting ToDomain(SecuritySettingsEntity entity)

@@ -1,9 +1,9 @@
-﻿using GhostNetwork.Profiles.WorkExperiences;
-using MongoDB.Driver;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GhostNetwork.Profiles.WorkExperiences;
+using MongoDB.Driver;
 
 namespace GhostNetwork.Profiles.MongoDb
 {
@@ -30,7 +30,7 @@ namespace GhostNetwork.Profiles.MongoDb
 
             var entities = await context.WorkExperience.Find(filter).ToListAsync();
 
-            return (entities.Select(ToDomain).ToList());
+            return entities.Select(ToDomain).ToList();
         }
 
         public async Task<Guid> InsertAsync(WorkExperience workExperience)
@@ -92,8 +92,7 @@ namespace GhostNetwork.Profiles.MongoDb
                 entity.Description,
                 startWork,
                 finishWork,
-                entity.ProfileId
-                );
+                entity.ProfileId);
         }
     }
 }

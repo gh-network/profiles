@@ -1,7 +1,6 @@
 ﻿using System;
 using MongoDB.Bson.Serialization.Attributes;
 
-
 namespace GhostNetwork.Profiles.MongoDb
 {
     public class WorkExperienceEntity

@@ -1,7 +1,6 @@
 ﻿using System;
 using MongoDB.Bson.Serialization.Attributes;
 
-
 namespace GhostNetwork.Profiles.MongoDb
 {
     public class ProfileEntity
@@ -23,7 +22,7 @@ namespace GhostNetwork.Profiles.MongoDb
 
         [BsonElement("city")]
         public string City { get; set; }
-        
+
         [BsonElement("profilePicture")]
         public string ProfilePicture { get; set; }
     }
