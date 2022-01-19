@@ -191,5 +191,27 @@ namespace GhostNetwork.Profiles.Api.Controllers
 
             return NoContent();
         }
+
+        /// <summary>
+        /// Cancel a sent friend request
+        /// </summary>
+        /// <param name="user">User who sent a request</param>
+        /// <param name="requester">User who receive a request</param>
+        /// <response code="204">Friend request canceled</response>
+        /// <response code="400"></response>
+        [HttpDelete("{user:guid}/friends/{requester:guid}/outgoing-request")]
+        public async Task<ActionResult> CancelOutgoingFriendRequestAsync(
+            [FromRoute] Guid user,
+            [FromRoute] Guid requester)
+        {
+            if (user == requester)
+            {
+                return BadRequest();
+            }
+
+            await relationsService.CancelOutgoingRequestAsync(user, requester);
+
+            return NoContent();
+        }
     }
 }

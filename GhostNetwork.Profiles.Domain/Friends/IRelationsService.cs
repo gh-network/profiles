@@ -21,5 +21,7 @@ namespace GhostNetwork.Profiles.Friends
         Task DeleteFriendAsync(Guid fromUser, Guid toUser);
 
         Task DeclineRequestAsync(Guid user, Guid requester);
+
+        Task CancelOutgoingRequestAsync(Guid user, Guid requester);
     }
 }

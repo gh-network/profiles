@@ -156,5 +156,19 @@ namespace GhostNetwork.Profiles.MongoDb
             await context.FriendRequests.DeleteOneAsync(outgoingFilter);
             await context.FriendRequests.UpdateOneAsync(incomingFilter, declineIncoming);
         }
+
+        public async Task CancelOutgoingRequestAsync(Guid user, Guid requester)
+        {
+            var outgoingFilter = Filter.Eq(p => p.FromUser, requester)
+                                 & Filter.Eq(p => p.ToUser, user)
+                                 & Filter.Eq(p => p.Status, RequestStatus.Outgoing);
+
+            var incomingFilter = Filter.Eq(p => p.FromUser, user)
+                                 & Filter.Eq(p => p.ToUser, requester)
+                                 & Filter.Eq(p => p.Status, RequestStatus.Incoming);
+
+            await context.FriendRequests.DeleteOneAsync(outgoingFilter);
+            await context.FriendRequests.DeleteOneAsync(incomingFilter);
+        }
     }
 }
