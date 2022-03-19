@@ -140,6 +140,23 @@ namespace GhostNetwork.Profiles.MongoDb
             await context.FriendRequests.UpdateOneAsync(updateFilter, updateToFollowers);
         }
 
+        public async Task DeleteOutgoingRequestAsync(Guid from, Guid to)
+        {
+            var outgoingFilter = Filter.Eq(p => p.FromUser, from)
+                                 & Filter.Eq(p => p.ToUser, to)
+                                 & Filter.Eq(p => p.Status, RequestStatus.Incoming);
+
+            _ = await context.FriendRequests.Find(outgoingFilter)
+                    .FirstOrDefaultAsync() ?? throw new InvalidOperationException("Current user can't remove incoming request");
+
+            var deleteFilter = Filter.Eq(p => p.FromUser, from) &
+                                   Filter.Eq(p => p.ToUser, to) |
+                                   Filter.Eq(p => p.FromUser, to) &
+                                   Filter.Eq(p => p.ToUser, from);
+
+            await context.FriendRequests.DeleteManyAsync(deleteFilter);
+        }
+
         public async Task DeclineRequestAsync(Guid user, Guid requester)
         {
             var outgoingFilter = Filter.Eq(p => p.FromUser, user)
