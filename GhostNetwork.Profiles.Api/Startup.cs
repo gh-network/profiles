@@ -2,6 +2,7 @@ using System;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using GhostNetwork.EventBus;
+using GhostNetwork.EventBus.AzureServiceBus;
 using GhostNetwork.EventBus.RabbitMq;
 using GhostNetwork.Profiles.Api.Helpers.OpenApi;
 using GhostNetwork.Profiles.Friends;
@@ -47,15 +48,21 @@ namespace GhostNetwork.Profiles.Api
                 options.IncludeXmlComments(XmlPathProvider.XmlPath);
             });
 
-            if (Configuration["EVENTHUB_TYPE"]?.ToLower() == "rabbit")
+            switch (Configuration["EVENTHUB_TYPE"]?.ToLower())
             {
-                services.AddSingleton<IEventBus>(provider => new RabbitMqEventBus(
-                    new ConnectionFactory { Uri = new Uri(Configuration["RABBIT_CONNECTION"]) },
-                    new HandlerProvider(provider)));
-            }
-            else
-            {
-                services.AddSingleton<IEventBus, NullEventBus>();
+                case "rabbit":
+                    services.AddSingleton<IEventBus>(provider => new RabbitMqEventBus(
+                        new ConnectionFactory { Uri = new Uri(Configuration["RABBIT_CONNECTION"]) },
+                        new EventBus.RabbitMq.HandlerProvider(provider)));
+                    break;
+                case "servicebus":
+                    services.AddSingleton<IEventBus>(provider => new AzureServiceEventBus(
+                        Configuration["SERVICEBUS_CONNECTION"],
+                        new EventBus.AzureServiceBus.HandlerProvider(provider)));
+                    break;
+                default:
+                    services.AddSingleton<IEventBus, NullEventBus>();
+                    break;
             }
 
             services.AddScoped(_ =>
