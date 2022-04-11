@@ -155,24 +155,17 @@ namespace GhostNetwork.Profiles.Api.Controllers
         /// <param name="to">User who will be removed from outgoing requests</param>
         /// <response code="204">User was removed from outgoing requests list</response>
         /// <response code="400"></response>
-        [HttpDelete("{from:guid}/outgoing/{to:guid}")]
+        [HttpDelete("{from:guid}/outgoing-requests/{to:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> DeleteOutgoingRequestAsync([FromRoute] Guid from, [FromRoute] Guid to)
+        public async Task<ActionResult> CancelOutgoingRequestAsync([FromRoute] Guid from, [FromRoute] Guid to)
         {
             if (from == to)
             {
                 return BadRequest();
             }
 
-            try
-            {
-                await relationsService.DeleteOutgoingRequestAsync(from, to);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await relationsService.CancelOutgoingRequestAsync(from, to);
 
             return NoContent();
         }
