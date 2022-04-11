@@ -140,6 +140,19 @@ namespace GhostNetwork.Profiles.MongoDb
             await context.FriendRequests.UpdateOneAsync(updateFilter, updateToFollowers);
         }
 
+        public async Task CancelOutgoingRequestAsync(Guid from, Guid to)
+        {
+            var outgoingFilter = Filter.Eq(p => p.FromUser, from)
+                                 & Filter.Eq(p => p.ToUser, to)
+                                 & Filter.Eq(p => p.Status, RequestStatus.Incoming);
+
+            var incomingFilter = Filter.Eq(p => p.FromUser, to)
+                                 & Filter.Eq(p => p.ToUser, from)
+                                 & Filter.Eq(p => p.Status, RequestStatus.Outgoing);
+
+            await context.FriendRequests.DeleteManyAsync(outgoingFilter | incomingFilter);
+        }
+
         public async Task DeclineRequestAsync(Guid user, Guid requester)
         {
             var outgoingFilter = Filter.Eq(p => p.FromUser, user)

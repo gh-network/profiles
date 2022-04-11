@@ -149,6 +149,28 @@ namespace GhostNetwork.Profiles.Api.Controllers
         }
 
         /// <summary>
+        /// Remove outgoing request
+        /// </summary>
+        /// <param name="from">User who is removing outgoing request</param>
+        /// <param name="to">User who will be removed from outgoing requests</param>
+        /// <response code="204">User was removed from outgoing requests list</response>
+        /// <response code="400"></response>
+        [HttpDelete("{from:guid}/outgoing-requests/{to:guid}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> CancelOutgoingRequestAsync([FromRoute] Guid from, [FromRoute] Guid to)
+        {
+            if (from == to)
+            {
+                return BadRequest();
+            }
+
+            await relationsService.CancelOutgoingRequestAsync(from, to);
+
+            return NoContent();
+        }
+
+        /// <summary>
         /// Approve friend request
         /// </summary>
         /// <param name="user">User who received request</param>
