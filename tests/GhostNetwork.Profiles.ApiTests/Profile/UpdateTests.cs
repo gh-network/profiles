@@ -19,19 +19,12 @@ namespace GhostNetwork.Profile.ApiTests.Profile
             //Setup
             var id = Guid.NewGuid();
 
-            var input = new ProfileUpdateViewModel()
-            {
-                FirstName = "Upd",
-                LastName = "Upd",
-                Gender = "Upd",
-                DateOfBirth = DateTimeOffset.Now.AddDays(1),
-                City = "Ct"
-            };
+            var input = new ProfileUpdateViewModel("Upd", "Upd", "Upd", DateTimeOffset.Now.AddDays(1), "Ct");
 
             var serviceMock = new Mock<IProfileService>();
 
             serviceMock
-                .Setup(x => x.UpdateAsync(id, input.FirstName, input.LastName, input.Gender, input.DateOfBirth, input.City, input.ProfilePicture))
+                .Setup(x => x.UpdateAsync(id, input.FirstName, input.LastName, input.Gender, input.DateOfBirth, input.City))
                 .ReturnsAsync(DomainResult.Success);
 
             var client = TestServerHelper.New(collection =>
@@ -52,19 +45,12 @@ namespace GhostNetwork.Profile.ApiTests.Profile
             //Setup
             var id = Guid.NewGuid();
 
-            var input = new ProfileUpdateViewModel()
-            {
-                FirstName = "Upd",
-                LastName = "Upd",
-                Gender = "Upd",
-                DateOfBirth = DateTimeOffset.Now.AddDays(1),
-                City = "Ct"
-            };
+            var input = new ProfileUpdateViewModel("Upd", "Upd", "Upd", DateTimeOffset.Now.AddDays(1), "Ct");
 
             var serviceMock = new Mock<IProfileService>();
 
             serviceMock
-                .Setup(x => x.UpdateAsync(id, input.FirstName, input.LastName, input.Gender, input.DateOfBirth, input.City, input.ProfilePicture))
+                .Setup(x => x.UpdateAsync(id, input.FirstName, input.LastName, input.Gender, input.DateOfBirth, input.City))
                 .ReturnsAsync(DomainResult.Error("NotFound"));
 
             var client = TestServerHelper.New(collection =>
