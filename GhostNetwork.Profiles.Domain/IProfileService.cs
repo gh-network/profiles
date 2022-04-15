@@ -21,8 +21,9 @@ namespace GhostNetwork.Profiles
             string lastName,
             string gender,
             DateTimeOffset? dateOfBirth,
-            string city,
-            string profilePicture);
+            string city);
+
+        Task UpdateAvatarAsync(Guid id, string avatarUrl);
 
         Task DeleteAsync(Guid id);
     }
@@ -62,6 +63,14 @@ namespace GhostNetwork.Profiles
             return (DomainResult.Success(), profile);
         }
 
+        public async Task UpdateAvatarAsync(Guid id, string avatarUrl)
+        {
+            await profileStorage.UpdateAvatarAsync(id, avatarUrl);
+            var profile = await profileStorage.FindByIdAsync(id);
+
+            await eventBus.PublishAsync(new UpdatedEvent(profile.Id, profile.FullName, profile.ProfilePicture));
+        }
+
         public async Task DeleteAsync(Guid id)
         {
             await workExperienceStorage.DeleteAllExperienceInProfileAsync(id);
@@ -84,8 +93,7 @@ namespace GhostNetwork.Profiles
             string lastName,
             string gender,
             DateTimeOffset? dateOfBirth,
-            string city,
-            string profilePicture)
+            string city)
         {
             var result = profileValidator.Validate(new ProfileContext(firstName, lastName, city, dateOfBirth, gender));
 
@@ -100,8 +108,8 @@ namespace GhostNetwork.Profiles
                 return DomainResult.Error("Profile not found.");
             }
 
-            profile.Update(firstName, lastName, gender, dateOfBirth, city, profilePicture);
-            await profileStorage.UpdateAsync(id, profile);
+            profile.Update(firstName, lastName, gender, dateOfBirth, city);
+            await profileStorage.UpdateAsync(profile);
 
             await eventBus.PublishAsync(new UpdatedEvent(profile.Id, profile.FullName, profile.ProfilePicture));
 

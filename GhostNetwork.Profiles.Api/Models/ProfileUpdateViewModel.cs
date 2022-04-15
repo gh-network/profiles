@@ -1,19 +1,14 @@
 ﻿using System;
 
-namespace GhostNetwork.Profiles.Api.Models
+namespace GhostNetwork.Profiles.Api.Models;
+
+public record ProfileUpdateViewModel(
+    string FirstName,
+    string LastName,
+    string Gender,
+    DateTimeOffset? DateOfBirth,
+    string City)
 {
-    public class ProfileUpdateViewModel
-    {
-        public string FirstName { get; set; }
-
-        public string LastName { get; set; }
-
-        public string Gender { get; set; }
-
-        public DateTimeOffset? DateOfBirth { get; set; }
-
-        public string City { get; set; }
-
-        public string ProfilePicture { get; set; }
-    }
+    [Obsolete("Use PUT /users/{id}/avatar instead")]
+    public string ProfilePicture { get; set; }
 }

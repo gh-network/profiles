@@ -12,7 +12,9 @@ namespace GhostNetwork.Profiles
 
         Task<Guid> InsertAsync(Profile profile);
 
-        Task UpdateAsync(Guid id, Profile updatedProfile);
+        Task UpdateAsync(Profile updatedProfile);
+
+        Task UpdateAvatarAsync(Guid id, string avatarUrl);
 
         Task DeleteAsync(Guid id);
     }

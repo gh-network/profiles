@@ -34,7 +34,7 @@ namespace GhostNetwork.Profiles
 
         public string City { get; private set; }
 
-        public string ProfilePicture { get; private set; }
+        public string ProfilePicture { get; }
 
         public string FullName => $"{FirstName} {LastName}";
 
@@ -43,15 +43,13 @@ namespace GhostNetwork.Profiles
             string lastName,
             string gender,
             DateTimeOffset? dateOfBirth,
-            string city,
-            string profilePicture)
+            string city)
         {
             FirstName = firstName;
             LastName = lastName;
             Gender = gender;
             DateOfBirth = dateOfBirth;
             City = city;
-            ProfilePicture = profilePicture;
         }
     }
 }

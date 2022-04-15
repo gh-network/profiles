@@ -93,8 +93,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
                 updateModel.LastName,
                 updateModel.Gender,
                 updateModel.DateOfBirth,
-                updateModel.City,
-                updateModel.ProfilePicture);
+                updateModel.City);
 
             if (result.Successed)
             {
@@ -102,6 +101,22 @@ namespace GhostNetwork.Profiles.Api.Controllers
             }
 
             return BadRequest(result.ToProblemDetails());
+        }
+
+        /// <summary>
+        /// Update profile avatar
+        /// </summary>
+        /// <param name="id">Profile id</param>
+        /// <param name="body">Update model</param>
+        /// <response code="204">Profile avatar successfully updated</response>
+        [HttpPut("{id}/avatar")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> UpdateAvatarAsync([FromRoute] Guid id, [FromBody] AvatarUpdateViewModel body)
+        {
+            await profileService.UpdateAvatarAsync(id, body.ProfilePicture);
+
+            return NoContent();
         }
 
         /// <summary>

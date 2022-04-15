@@ -51,7 +51,7 @@ namespace GhostNetwork.Profiles.MongoDb
             return entity.Id;
         }
 
-        public async Task UpdateAsync(Guid id, Profile updatedProfile)
+        public async Task UpdateAsync(Profile updatedProfile)
         {
             var filter = Builders<ProfileEntity>.Filter.Eq(p => p.Id, updatedProfile.Id);
 
@@ -60,8 +60,17 @@ namespace GhostNetwork.Profiles.MongoDb
                 .Set(s => s.LastName, updatedProfile.LastName)
                 .Set(s => s.Gender, updatedProfile.Gender)
                 .Set(s => s.DateOfBirth, updatedProfile.DateOfBirth?.ToUnixTimeMilliseconds())
-                .Set(s => s.City, updatedProfile.City)
-                .Set(s => s.ProfilePicture, updatedProfile.ProfilePicture);
+                .Set(s => s.City, updatedProfile.City);
+
+            await context.Profiles.UpdateOneAsync(filter, update);
+        }
+
+        public async Task UpdateAvatarAsync(Guid id, string avatarUrl)
+        {
+            var filter = Builders<ProfileEntity>.Filter.Eq(p => p.Id, id);
+
+            var update = Builders<ProfileEntity>.Update
+                .Set(s => s.ProfilePicture, avatarUrl);
 
             await context.Profiles.UpdateOneAsync(filter, update);
         }
