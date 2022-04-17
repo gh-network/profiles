@@ -144,7 +144,8 @@ namespace GhostNetwork.Profiles.MongoDb
         {
             var outgoingFilter = Filter.Eq(p => p.FromUser, from)
                                  & Filter.Eq(p => p.ToUser, to)
-                                 & Filter.Eq(p => p.Status, RequestStatus.Incoming);
+                                 & (Filter.Eq(p => p.Status, RequestStatus.Incoming)
+                                 | Filter.Eq(p => p.Status, RequestStatus.Declined));
 
             var incomingFilter = Filter.Eq(p => p.FromUser, to)
                                  & Filter.Eq(p => p.ToUser, from)
