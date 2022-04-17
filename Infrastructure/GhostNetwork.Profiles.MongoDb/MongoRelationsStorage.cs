@@ -144,7 +144,8 @@ namespace GhostNetwork.Profiles.MongoDb
         {
             var outgoingFilter = Filter.Eq(p => p.FromUser, from)
                                  & Filter.Eq(p => p.ToUser, to)
-                                 & Filter.Eq(p => p.Status, RequestStatus.Incoming);
+                                 & (Filter.Eq(p => p.Status, RequestStatus.Incoming)
+                                 | Filter.Eq(p => p.Status, RequestStatus.Declined));
 
             var incomingFilter = Filter.Eq(p => p.FromUser, to)
                                  & Filter.Eq(p => p.ToUser, from)
@@ -155,10 +156,6 @@ namespace GhostNetwork.Profiles.MongoDb
 
         public async Task DeclineRequestAsync(Guid user, Guid requester)
         {
-            var outgoingFilter = Filter.Eq(p => p.FromUser, user)
-                                 & Filter.Eq(p => p.ToUser, requester)
-                                 & Filter.Eq(p => p.Status, RequestStatus.Outgoing);
-
             var incomingFilter = Filter.Eq(p => p.FromUser, requester)
                                  & Filter.Eq(p => p.ToUser, user)
                                  & Filter.Eq(p => p.Status, RequestStatus.Incoming);
@@ -166,7 +163,6 @@ namespace GhostNetwork.Profiles.MongoDb
             var declineIncoming = Update
                 .Set(s => s.Status, RequestStatus.Declined);
 
-            await context.FriendRequests.DeleteOneAsync(outgoingFilter);
             await context.FriendRequests.UpdateOneAsync(incomingFilter, declineIncoming);
         }
     }
