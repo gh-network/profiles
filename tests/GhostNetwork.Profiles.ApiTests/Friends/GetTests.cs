@@ -107,5 +107,51 @@ namespace GhostNetwork.Profile.ApiTests.Friends
             //Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
+
+        [Test]
+        public async Task IsFriend_OK()
+        {
+            //Setup
+            var userId = Guid.NewGuid();
+            var ofUserId = Guid.NewGuid();
+
+            var reletionServiceMock = new Mock<IRelationsService>();
+
+            reletionServiceMock.Setup(x => x.IsFriendAsync(userId, ofUserId)).ReturnsAsync(true);
+
+            var client = TestServerHelper.New(collection =>
+            {
+                collection.AddScoped(_ => reletionServiceMock.Object);
+            });
+
+            //Act
+            var response = await client.GetAsync($"/Relations/{userId}/isFriend/{ofUserId}");
+
+            //Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Test]
+        public async Task IsFriend_BadRequest()
+        {
+            //Setup
+            var userId = Guid.NewGuid();
+            var ofUserId = userId;
+
+            var reletionServiceMock = new Mock<IRelationsService>();
+
+            reletionServiceMock.Setup(x => x.IsFriendAsync(userId, ofUserId)).ReturnsAsync(false);
+
+            var client = TestServerHelper.New(collection =>
+            {
+                collection.AddScoped(_ => reletionServiceMock.Object);
+            });
+
+            //Act
+            var response = await client.GetAsync($"/Relations/{userId}/isFriend/{ofUserId}");
+
+            //Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+        }
     }
 }
