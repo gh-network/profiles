@@ -14,6 +14,8 @@ namespace GhostNetwork.Profiles.Friends
 
         Task<(IEnumerable<Guid>, long)> SearchOutgoingRequestsAsync(int skip, int take, Guid userId);
 
+        Task<bool> IsFriendAsync(Guid userId, Guid ofUserId);
+
         Task SendRequestAsync(Guid fromUser, Guid toUser);
 
         Task ApproveRequestAsync(Guid user, Guid requester);
