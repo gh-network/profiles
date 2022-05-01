@@ -111,7 +111,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         /// <param name="ofUserId">User b</param>
         /// <response code="200"></response>
         /// <response code="400"></response>
-        [HttpGet("{userId:guid}/isFriend/{ofUserId:guid}")]
+        [HttpGet("{userId:guid}/friends/{friend:guid}/exists")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [SwaggerResponseHeader(StatusCodes.Status200OK, "X-TotalCount", "Boolean", "Boolean value that indicates that the user is a friend of another user.")]
