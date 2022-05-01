@@ -90,6 +90,17 @@ namespace GhostNetwork.Profiles.MongoDb
             return (requests.Select(r => r.FromUser).ToList(), requestCount);
         }
 
+        public async Task<bool> IsFriendAsync(Guid userId, Guid ofUserId)
+        {
+            var filter = Filter.Eq(p => p.ToUser, ofUserId)
+                       & Filter.Eq(p => p.FromUser, userId)
+                       & Filter.Eq(p => p.Status, RequestStatus.Accepted);
+
+            return await context.FriendRequests
+                .Find(filter)
+                .AnyAsync();
+        }
+
         public async Task SendRequestAsync(Guid fromUser, Guid toUser)
         {
             var filter = Filter.Eq(p => p.FromUser, fromUser) & Filter.Eq(p => p.ToUser, toUser);

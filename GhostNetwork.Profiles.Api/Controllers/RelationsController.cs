@@ -105,6 +105,27 @@ namespace GhostNetwork.Profiles.Api.Controllers
         }
 
         /// <summary>
+        /// Returned boolean value that indicates that the user is a friend of another user
+        /// </summary>
+        /// <param name="userId">User a</param>
+        /// <param name="friend">User b</param>
+        /// <response code="200"></response>
+        /// <response code="400"></response>
+        [HttpGet("{userId:guid}/friends/{friend:guid}/exists")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [SwaggerResponseHeader(StatusCodes.Status200OK, "X-TotalCount", "Boolean", "Boolean value that indicates that the user is a friend of another user.")]
+        public async Task<ActionResult<bool>> IsFriendAsync([FromRoute] Guid userId, [FromRoute] Guid friend)
+        {
+            if (userId == friend)
+            {
+                return BadRequest();
+            }
+
+            return Ok(await relationsService.IsFriendAsync(userId, friend));
+        }
+
+        /// <summary>
         /// Sent friend request
         /// </summary>
         /// <param name="fromUser">User who is sending request</param>
