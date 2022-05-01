@@ -113,11 +113,11 @@ namespace GhostNetwork.Profile.ApiTests.Friends
         {
             //Setup
             var userId = Guid.NewGuid();
-            var ofUserId = Guid.NewGuid();
+            var friendId = Guid.NewGuid();
 
             var reletionServiceMock = new Mock<IRelationsService>();
 
-            reletionServiceMock.Setup(x => x.IsFriendAsync(userId, ofUserId)).ReturnsAsync(true);
+            reletionServiceMock.Setup(x => x.IsFriendAsync(userId, friendId)).ReturnsAsync(true);
 
             var client = TestServerHelper.New(collection =>
             {
@@ -125,7 +125,7 @@ namespace GhostNetwork.Profile.ApiTests.Friends
             });
 
             //Act
-            var response = await client.GetAsync($"/Relations/{userId}/isFriend/{ofUserId}");
+            var response = await client.GetAsync($"/Relations/{userId}/friends/{friendId}/exists");
 
             //Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -136,11 +136,11 @@ namespace GhostNetwork.Profile.ApiTests.Friends
         {
             //Setup
             var userId = Guid.NewGuid();
-            var ofUserId = userId;
+            var friendId = userId;
 
             var reletionServiceMock = new Mock<IRelationsService>();
 
-            reletionServiceMock.Setup(x => x.IsFriendAsync(userId, ofUserId)).ReturnsAsync(false);
+            reletionServiceMock.Setup(x => x.IsFriendAsync(userId, friendId)).ReturnsAsync(false);
 
             var client = TestServerHelper.New(collection =>
             {
@@ -148,7 +148,7 @@ namespace GhostNetwork.Profile.ApiTests.Friends
             });
 
             //Act
-            var response = await client.GetAsync($"/Relations/{userId}/isFriend/{ofUserId}");
+            var response = await client.GetAsync($"/Relations/{userId}/friends/{friendId}/exists");
 
             //Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
