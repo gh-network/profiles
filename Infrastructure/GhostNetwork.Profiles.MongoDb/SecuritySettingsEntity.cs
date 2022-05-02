@@ -13,5 +13,14 @@ namespace GhostNetwork.Profiles.MongoDb
 
         [BsonElement("friends")]
         public SecuritySettingsSectionEntity Friends { get; set; }
+
+        [BsonElement("comments")]
+        public SecuritySettingsSectionEntity Comments { get; set; }
+
+        [BsonElement("reactions")]
+        public SecuritySettingsSectionEntity Reactions { get; set; }
+
+        [BsonElement("followers")]
+        public SecuritySettingsSectionEntity Followers { get; set; }
     }
 }
