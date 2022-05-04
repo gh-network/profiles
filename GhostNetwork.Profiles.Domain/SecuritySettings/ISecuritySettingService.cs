@@ -11,7 +11,10 @@ namespace GhostNetwork.Profiles.SecuritySettings
         Task<DomainResult> UpsertAsync(
             Guid userId,
             SecuritySettingsSection publications,
-            SecuritySettingsSection friends);
+            SecuritySettingsSection friends,
+            SecuritySettingsSection comments,
+            SecuritySettingsSection reactions,
+            SecuritySettingsSection followers);
     }
 
     public class SecuritySettingsService : ISecuritySettingService
@@ -40,7 +43,10 @@ namespace GhostNetwork.Profiles.SecuritySettings
         public async Task<DomainResult> UpsertAsync(
             Guid userId,
             SecuritySettingsSection publications,
-            SecuritySettingsSection friends)
+            SecuritySettingsSection friends,
+            SecuritySettingsSection comments,
+            SecuritySettingsSection reactions,
+            SecuritySettingsSection followers)
         {
             var profile = await profileStorage.FindByIdAsync(userId);
             if (profile == null)
@@ -51,11 +57,11 @@ namespace GhostNetwork.Profiles.SecuritySettings
             var securitySettings = await securitySettingsStorage.FindByUserIdAsync(userId);
             if (securitySettings == null)
             {
-                securitySettings = new SecuritySetting(userId, publications, friends);
+                securitySettings = new SecuritySetting(userId, publications, friends, comments, reactions, followers);
             }
             else
             {
-                securitySettings.Update(publications, friends);
+                securitySettings.Update(publications, friends, comments, reactions, followers);
             }
 
             await securitySettingsStorage.UpsertAsync(securitySettings);
