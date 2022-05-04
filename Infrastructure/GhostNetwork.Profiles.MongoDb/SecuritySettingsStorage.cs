@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using GhostNetwork.Profiles.SecuritySettings;
 using MongoDB.Driver;
@@ -44,11 +45,11 @@ namespace GhostNetwork.Profiles.MongoDb
                 ? null
                 : new SecuritySetting(
                     entity.UserId,
-                    (SecuritySettingsSection)entity.Posts,
-                    (SecuritySettingsSection)entity.Friends,
-                    (SecuritySettingsSection)entity.Comments,
-                    (SecuritySettingsSection)entity.Reactions,
-                    (SecuritySettingsSection)entity.Followers);
+                    (SecuritySettingsSection)entity.Posts ?? new SecuritySettingsSection(Access.Everyone, Enumerable.Empty<Guid>()),
+                    (SecuritySettingsSection)entity.Friends ?? new SecuritySettingsSection(Access.Everyone, Enumerable.Empty<Guid>()),
+                    (SecuritySettingsSection)entity.Comments ?? new SecuritySettingsSection(Access.Everyone, Enumerable.Empty<Guid>()),
+                    (SecuritySettingsSection)entity.Reactions ?? new SecuritySettingsSection(Access.Everyone, Enumerable.Empty<Guid>()),
+                    (SecuritySettingsSection)entity.Followers ?? new SecuritySettingsSection(Access.Everyone, Enumerable.Empty<Guid>()));
         }
     }
 }
