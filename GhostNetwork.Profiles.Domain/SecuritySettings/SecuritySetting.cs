@@ -7,31 +7,31 @@ namespace GhostNetwork.Profiles.SecuritySettings
     {
         public SecuritySetting(
             Guid userId,
-            SecuritySettingsSection posts,
             SecuritySettingsSection friends,
+            SecuritySettingsSection followers,
+            SecuritySettingsSection posts,
             SecuritySettingsSection comments,
-            SecuritySettingsSection reactions,
-            SecuritySettingsSection followers)
+            SecuritySettingsSection profilePhoto)
         {
             UserId = userId;
-            Posts = posts;
             Friends = friends;
-            Comments = comments;
-            Reactions = reactions;
             Followers = followers;
+            Posts = posts;
+            Comments = comments;
+            ProfilePhoto = profilePhoto;
         }
 
         public Guid UserId { get; }
 
-        public SecuritySettingsSection Posts { get; private set; }
-
         public SecuritySettingsSection Friends { get; private set; }
+
+        public SecuritySettingsSection Followers { get; private set; }
+
+        public SecuritySettingsSection Posts { get; private set; }
 
         public SecuritySettingsSection Comments { get; private set; }
 
-        public SecuritySettingsSection Reactions { get; private set; }
-
-        public SecuritySettingsSection Followers { get; private set; }
+        public SecuritySettingsSection ProfilePhoto { get; private set; }
 
         public static SecuritySetting DefaultForUser(Guid userId)
         {
@@ -45,17 +45,17 @@ namespace GhostNetwork.Profiles.SecuritySettings
         }
 
         public void Update(
-            SecuritySettingsSection posts,
             SecuritySettingsSection friends,
+            SecuritySettingsSection followers,
+            SecuritySettingsSection posts,
             SecuritySettingsSection comments,
-            SecuritySettingsSection reactions,
-            SecuritySettingsSection followers)
+            SecuritySettingsSection profilePhoto)
         {
-            Posts = posts;
             Friends = friends;
-            Comments = comments;
-            Reactions = reactions;
             Followers = followers;
+            Posts = posts;
+            Comments = comments;
+            ProfilePhoto = profilePhoto;
         }
     }
 }
