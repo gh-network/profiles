@@ -25,11 +25,11 @@ namespace GhostNetwork.Profile.ApiTests.SecuritySetting
 
             var model = new SecuritySettingUpdateViewModel
             {
-                Posts = new SecuritySettingsSectionInputModel { Access = Access.Everyone, CertainUsers = Enumerable.Empty<Guid>() },
                 Friends = new SecuritySettingsSectionInputModel { Access = Access.Everyone, CertainUsers = Enumerable.Empty<Guid>() },
+                Followers = new SecuritySettingsSectionInputModel { Access = Access.Everyone, CertainUsers = Enumerable.Empty<Guid>() },
+                Posts = new SecuritySettingsSectionInputModel { Access = Access.Everyone, CertainUsers = Enumerable.Empty<Guid>() },
                 Comments = new SecuritySettingsSectionInputModel { Access = Access.Everyone, CertainUsers = Enumerable.Empty<Guid>() },
-                Reactions = new SecuritySettingsSectionInputModel { Access = Access.Everyone, CertainUsers = Enumerable.Empty<Guid>() },
-                Followers = new SecuritySettingsSectionInputModel { Access = Access.Everyone, CertainUsers = Enumerable.Empty<Guid>() }
+                ProfilePhoto = new SecuritySettingsSectionInputModel { Access = Access.Everyone, CertainUsers = Enumerable.Empty<Guid>() },
             };
             
 
@@ -65,11 +65,11 @@ namespace GhostNetwork.Profile.ApiTests.SecuritySetting
 
             var model = new SecuritySettingUpdateViewModel
             {
-                Posts = new SecuritySettingsSectionInputModel { Access = Access.Everyone, CertainUsers = Enumerable.Empty<Guid>() },
                 Friends = new SecuritySettingsSectionInputModel { Access = Access.Everyone, CertainUsers = Enumerable.Empty<Guid>() },
+                Followers = new SecuritySettingsSectionInputModel { Access = Access.Everyone, CertainUsers = Enumerable.Empty<Guid>() },
+                Posts = new SecuritySettingsSectionInputModel { Access = Access.Everyone, CertainUsers = Enumerable.Empty<Guid>() },
                 Comments = new SecuritySettingsSectionInputModel { Access = Access.Everyone, CertainUsers = Enumerable.Empty<Guid>() },
-                Reactions = new SecuritySettingsSectionInputModel { Access = Access.Everyone, CertainUsers = Enumerable.Empty<Guid>() },
-                Followers = new SecuritySettingsSectionInputModel { Access = Access.Everyone, CertainUsers = Enumerable.Empty<Guid>() }
+                ProfilePhoto = new SecuritySettingsSectionInputModel { Access = Access.Everyone, CertainUsers = Enumerable.Empty<Guid>() },
             };
 
 
