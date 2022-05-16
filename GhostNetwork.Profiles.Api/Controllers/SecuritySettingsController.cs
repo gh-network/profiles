@@ -40,11 +40,11 @@ namespace GhostNetwork.Profiles.Api.Controllers
         {
             var result = await securitySettingsService.UpsertAsync(
                 userId,
-                new SecuritySettingsSection(model.Posts.Access, model.Posts.CertainUsers ?? Enumerable.Empty<Guid>()),
                 new SecuritySettingsSection(model.Friends.Access, model.Friends.CertainUsers ?? Enumerable.Empty<Guid>()),
+                new SecuritySettingsSection(model.Followers.Access, model.Followers.CertainUsers ?? Enumerable.Empty<Guid>()),
+                new SecuritySettingsSection(model.Posts.Access, model.Posts.CertainUsers ?? Enumerable.Empty<Guid>()),
                 new SecuritySettingsSection(model.Comments.Access, model.Comments.CertainUsers ?? Enumerable.Empty<Guid>()),
-                new SecuritySettingsSection(model.Reactions.Access, model.Reactions.CertainUsers ?? Enumerable.Empty<Guid>()),
-                new SecuritySettingsSection(model.Followers.Access, model.Followers.CertainUsers ?? Enumerable.Empty<Guid>()));
+                new SecuritySettingsSection(model.ProfilePhoto.Access, model.ProfilePhoto.CertainUsers ?? Enumerable.Empty<Guid>()));
 
             if (result.Successed)
             {
