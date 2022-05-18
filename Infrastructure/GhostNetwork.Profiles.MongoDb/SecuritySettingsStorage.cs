@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GhostNetwork.Profiles.SecuritySettings;
 using MongoDB.Driver;
@@ -14,7 +16,7 @@ namespace GhostNetwork.Profiles.MongoDb
             this.context = context;
         }
 
-        public async Task<SecuritySetting> FindByUserIdAsync(Guid userId)
+        public async Task<SecuritySetting?> FindByUserIdAsync(Guid userId)
         {
             var filter = Builders<SecuritySettingsEntity>.Filter.Eq(x => x.UserId, userId);
             var settings = await context.SecuritySettings.Find(filter).FirstOrDefaultAsync();
@@ -22,6 +24,17 @@ namespace GhostNetwork.Profiles.MongoDb
             return settings == null
                 ? null
                 : ToDomain(settings);
+        }
+
+        public async Task<IEnumerable<SecuritySetting>> FindManyByUserIdsAsync(IEnumerable<Guid> userIds)
+        {
+            var filter = Builders<SecuritySettingsEntity>.Filter.In(x => x.UserId, userIds);
+            var settings = await context.SecuritySettings.Find(filter).ToListAsync();
+
+            return userIds.Select(id =>
+            {
+                return ToDomain(settings.FirstOrDefault(x => x.UserId == id)) ?? SecuritySetting.DefaultForUser(id);
+            });
         }
 
         public async Task UpsertAsync(SecuritySetting updatedSettings)
