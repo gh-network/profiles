@@ -28,6 +28,11 @@ namespace GhostNetwork.Profiles.MongoDb
 
         public async Task<IEnumerable<SecuritySetting>> FindManyByUserIdsAsync(IEnumerable<Guid> userIds)
         {
+            if (!userIds.Any())
+            {
+                return Enumerable.Empty<SecuritySetting>();
+            }
+
             var filter = Builders<SecuritySettingsEntity>.Filter.In(x => x.UserId, userIds);
             var settings = await context.SecuritySettings.Find(filter).ToListAsync();
 
