@@ -33,6 +33,21 @@ namespace GhostNetwork.Profiles.Api.Controllers
             return NotFound();
         }
 
+        [HttpPut("profiles/security-settings/")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<SecuritySetting>> FindManyByUserIdsAsync([FromBody] SecuritySettingsByManyIdsViewModel model)
+        {
+            var settings = await securitySettingsService.FindManyByUserIdsAsync(model.UserIds);
+
+            if (settings.Any())
+            {
+                return Ok(settings);
+            }
+
+            return NotFound();
+        }
+
         [HttpPut("profiles/{userId:guid}/security-settings")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
