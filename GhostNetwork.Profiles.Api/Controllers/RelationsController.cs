@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 using GhostNetwork.Profiles.Friends;
 using Microsoft.AspNetCore.Http;
@@ -123,6 +124,25 @@ namespace GhostNetwork.Profiles.Api.Controllers
             }
 
             return Ok(await relationsService.IsFriendAsync(userId, friend));
+        }
+
+        /// <summary>
+        /// Returned dictionary of user id and boolean value that indicates that the user is a friend of another user
+        /// </summary>
+        /// <param name="userId">User a</param>
+        /// <param name="userIds">Others users</param>
+        /// <response code="200"></response>
+        [HttpPut("{userId:guid}/friends/many-exists")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [SwaggerResponseHeader(StatusCodes.Status200OK, "X-TotalCount", "Boolean", "Boolean value that indicates that the user is a friend of another user.")]
+        public async Task<ActionResult<IDictionary<Guid, bool>>> IsFriendsByManyIdsAsync([FromRoute] Guid userId, [FromBody] IEnumerable<Guid> userIds)
+        {
+            if (!userIds.Any())
+            {
+                return Ok(new Dictionary<Guid, bool>());
+            }
+
+            return Ok(await relationsService.IsFriendsByManyIdsAsync(userId, userIds));
         }
 
         /// <summary>
