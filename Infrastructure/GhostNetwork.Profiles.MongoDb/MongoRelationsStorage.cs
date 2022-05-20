@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GhostNetwork.Profiles.Friends;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace GhostNetwork.Profiles.MongoDb
@@ -99,6 +100,25 @@ namespace GhostNetwork.Profiles.MongoDb
             return await context.FriendRequests
                 .Find(filter)
                 .AnyAsync();
+        }
+
+        public async Task<IDictionary<Guid, bool>> IsFriendsByManyIdsAsync(Guid userId, IEnumerable<Guid> userIds)
+        {
+            var filter = Filter.In(p => p.ToUser, userIds)
+                       & Filter.Eq(p => p.FromUser, userId)
+                       & Filter.Eq(p => p.Status, RequestStatus.Accepted);
+
+            var friends = await context.FriendRequests.Find(filter).Project(x => x.ToUser).ToListAsync();
+
+            return userIds.Distinct().Select(id =>
+            {
+                if (id == userId)
+                {
+                    return new { Id = id, IsFriend = true };
+                }
+
+                return new { Id = id, IsFriend = friends.Contains(id) };
+            }).ToDictionary(x => x.Id, x => x.IsFriend);
         }
 
         public async Task SendRequestAsync(Guid fromUser, Guid toUser)
