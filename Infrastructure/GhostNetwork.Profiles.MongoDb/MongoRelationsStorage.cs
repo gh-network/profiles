@@ -108,7 +108,7 @@ namespace GhostNetwork.Profiles.MongoDb
                        & Filter.Eq(p => p.FromUser, userId)
                        & Filter.Eq(p => p.Status, RequestStatus.Accepted);
 
-            var friends = await context.FriendRequests.Find(filter).Project(x => x.ToUser).ToListAsync();
+            var friendIds = await context.FriendRequests.Find(filter).Project(x => x.ToUser).ToListAsync();
 
             return userIds.Distinct().Select(id =>
             {
@@ -117,7 +117,7 @@ namespace GhostNetwork.Profiles.MongoDb
                     return new { Id = id, IsFriend = true };
                 }
 
-                return new { Id = id, IsFriend = friends.Contains(id) };
+                return new { Id = id, IsFriend = friendIds.Contains(id) };
             }).ToDictionary(x => x.Id, x => x.IsFriend);
         }
 
