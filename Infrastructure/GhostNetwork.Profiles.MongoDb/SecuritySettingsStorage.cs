@@ -53,7 +53,7 @@ namespace GhostNetwork.Profiles.MongoDb
                 .UpdateOneAsync(filter, update, new UpdateOptions { IsUpsert = true });
         }
 
-        private static SecuritySetting ToDomain(SecuritySettingsEntity entity)
+        private static SecuritySetting? ToDomain(SecuritySettingsEntity? entity)
         {
             return entity == null
                 ? null
