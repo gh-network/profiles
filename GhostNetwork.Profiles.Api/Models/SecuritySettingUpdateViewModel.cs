@@ -9,5 +9,14 @@ namespace GhostNetwork.Profiles.Api.Models
 
         [Required]
         public SecuritySettingsSectionInputModel Friends { get;  set; }
+
+        [Required]
+        public SecuritySettingsSectionInputModel Comments { get; set; }
+
+        [Required]
+        public SecuritySettingsSectionInputModel ProfilePhoto { get; set; }
+
+        [Required]
+        public SecuritySettingsSectionInputModel Followers { get; set; }
     }
 }

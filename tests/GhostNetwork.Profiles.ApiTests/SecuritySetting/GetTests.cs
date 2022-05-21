@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using GhostNetwork.Profiles.SecuritySettings;
@@ -20,8 +21,11 @@ namespace GhostNetwork.Profile.ApiTests.SecuritySetting
 
             var securitySetting = new Profiles.SecuritySettings.SecuritySetting(
                 userId,
-                new SecuritySettingsSection(Access.Everyone, new List<Guid>()),
-                new SecuritySettingsSection(Access.Everyone, new List<Guid>()));
+                new SecuritySettingsSection(Access.Everyone, Enumerable.Empty<Guid>()),
+                new SecuritySettingsSection(Access.Everyone, Enumerable.Empty<Guid>()),
+                new SecuritySettingsSection(Access.Everyone, Enumerable.Empty<Guid>()),
+                new SecuritySettingsSection(Access.Everyone, Enumerable.Empty<Guid>()),
+                new SecuritySettingsSection(Access.Everyone, Enumerable.Empty<Guid>()));
 
             var serviceMock = new Mock<ISecuritySettingService>();
 
