@@ -16,7 +16,7 @@ namespace GhostNetwork.Profiles.MongoDb
             this.context = context;
         }
 
-        public async Task<WorkExperience> FindByIdAsync(Guid id)
+        public async Task<WorkExperience?> FindByIdAsync(Guid id)
         {
             var filter = Builders<WorkExperienceEntity>.Filter.Eq(p => p.Id, id);
             var entity = await context.WorkExperience.Find(filter).FirstOrDefaultAsync();

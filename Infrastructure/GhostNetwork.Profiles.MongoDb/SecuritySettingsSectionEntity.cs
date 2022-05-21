@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using GhostNetwork.Profiles.SecuritySettings;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -11,7 +12,7 @@ namespace GhostNetwork.Profiles.MongoDb
         public Access Access { get; set; }
 
         [BsonElement("certainUsers")]
-        public IEnumerable<Guid> CertainUsers { get; set; }
+        public IEnumerable<Guid> CertainUsers { get; set; } = Enumerable.Empty<Guid>();
 
         public static explicit operator SecuritySettingsSection(SecuritySettingsSectionEntity entity)
         {

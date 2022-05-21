@@ -3,6 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace GhostNetwork.Profiles.MongoDb
 {
+    #nullable disable
     public class ProfileEntity
     {
         [BsonId]

@@ -11,9 +11,9 @@ namespace GhostNetwork.Profiles
     {
         Task<IEnumerable<Profile>> SearchByIdsAsync(IEnumerable<Guid> ids);
 
-        Task<Profile> GetByIdAsync(Guid id);
+        Task<Profile?> GetByIdAsync(Guid id);
 
-        Task<(DomainResult, Profile)> CreateAsync(Guid? id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city);
+        Task<(DomainResult, Profile?)> CreateAsync(Guid? id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city);
 
         Task<DomainResult> UpdateAsync(
             Guid id,
@@ -47,7 +47,7 @@ namespace GhostNetwork.Profiles
             this.eventBus = eventBus;
         }
 
-        public async Task<(DomainResult, Profile)> CreateAsync(Guid? id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city)
+        public async Task<(DomainResult, Profile?)> CreateAsync(Guid? id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city)
         {
             var result = profileValidator.Validate(new ProfileContext(firstName, lastName, city, dateOfBirth, gender));
 
@@ -68,6 +68,11 @@ namespace GhostNetwork.Profiles
             await profileStorage.UpdateAvatarAsync(id, avatarUrl);
             var profile = await profileStorage.FindByIdAsync(id);
 
+            if (profile == null)
+            {
+                return;
+            }
+
             await eventBus.PublishAsync(new UpdatedEvent(profile.Id, profile.FullName, profile.ProfilePicture));
         }
 
@@ -82,9 +87,9 @@ namespace GhostNetwork.Profiles
             return await profileStorage.SearchByIdsAsync(ids);
         }
 
-        public async Task<Profile> GetByIdAsync(Guid id)
+        public Task<Profile?> GetByIdAsync(Guid id)
         {
-            return await profileStorage.FindByIdAsync(id);
+            return profileStorage.FindByIdAsync(id);
         }
 
         public async Task<DomainResult> UpdateAsync(

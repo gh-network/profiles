@@ -26,7 +26,7 @@ namespace GhostNetwork.Profiles.MongoDb
             return profiles.Select(ToDomain);
         }
 
-        public async Task<Profile> FindByIdAsync(Guid id)
+        public async Task<Profile?> FindByIdAsync(Guid id)
         {
             var filter = Builders<ProfileEntity>.Filter.Eq(p => p.Id, id);
             var entity = await context.Profiles.Find(filter).FirstOrDefaultAsync();

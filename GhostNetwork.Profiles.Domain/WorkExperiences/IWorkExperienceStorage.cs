@@ -6,7 +6,7 @@ namespace GhostNetwork.Profiles.WorkExperiences
 {
     public interface IWorkExperienceStorage
     {
-        Task<WorkExperience> FindByIdAsync(Guid id);
+        Task<WorkExperience?> FindByIdAsync(Guid id);
 
         Task<Guid> InsertAsync(WorkExperience workExperience);
 

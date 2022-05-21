@@ -8,7 +8,7 @@ namespace GhostNetwork.Profiles.WorkExperiences
 {
     public interface IWorkExperienceService
     {
-        Task<WorkExperience> GetByIdAsync(Guid id);
+        Task<WorkExperience?> GetByIdAsync(Guid id);
 
         Task<(DomainResult, Guid)> CreateAsync(string companyName, string description, DateTimeOffset? startWork, DateTimeOffset? finishWork, Guid profileId);
 
@@ -61,9 +61,9 @@ namespace GhostNetwork.Profiles.WorkExperiences
             return workExperiences.OrderByDescending(x => x.StartWork.HasValue).ThenBy(x => x.StartWork).ToList();
         }
 
-        public async Task<WorkExperience> GetByIdAsync(Guid id)
+        public Task<WorkExperience?> GetByIdAsync(Guid id)
         {
-            return await experienceStorage.FindByIdAsync(id);
+            return experienceStorage.FindByIdAsync(id);
         }
 
         public async Task<DomainResult> UpdateAsync(Guid id, string companyName, string description, DateTimeOffset? startWork, DateTimeOffset? finishWork)
