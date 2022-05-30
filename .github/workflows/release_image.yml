@@ -42,4 +42,4 @@ jobs:
 
           docker buildx build --push \
             --platform linux/amd64,linux/arm64 \
-            --tag ghcr.io/ghosts-network/profiles .
+            --tag ghcr.io/ghosts-network/profiles:${GITHUB_SHA::7} --tag ghcr.io/ghosts-network/profiles:latest .
