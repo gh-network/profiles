@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GhostNetwork.EventBus;
 using GhostNetwork.Profiles.Friends;
 using MongoDB.Driver;
 
@@ -10,10 +11,12 @@ namespace GhostNetwork.Profiles.MongoDb
     public class MongoRelationsStorage : IRelationsService
     {
         private readonly MongoDbContext context;
+        private readonly IEventBus eventBus;
 
-        public MongoRelationsStorage(MongoDbContext context)
+        public MongoRelationsStorage(MongoDbContext context, IEventBus eventBus)
         {
             this.context = context;
+            this.eventBus = eventBus;
         }
 
         private static FilterDefinitionBuilder<FriendsEntity> Filter => Builders<FriendsEntity>.Filter;
@@ -116,6 +119,7 @@ namespace GhostNetwork.Profiles.MongoDb
                     new FriendsEntity { FromUser = fromUser, ToUser = toUser, Status = RequestStatus.Incoming },
                     new FriendsEntity { FromUser = toUser, ToUser = fromUser, Status = RequestStatus.Outgoing }
                 });
+                await eventBus.PublishAsync(new RequestSent(fromUser, toUser));
             }
         }
 
@@ -133,6 +137,7 @@ namespace GhostNetwork.Profiles.MongoDb
 
             await context.FriendRequests
                 .UpdateManyAsync(filter, update);
+            await eventBus.PublishAsync(new RequestApproved(user, requester));
         }
 
         public async Task DeleteFriendAsync(Guid user, Guid friend)
@@ -149,6 +154,7 @@ namespace GhostNetwork.Profiles.MongoDb
 
             await context.FriendRequests.DeleteOneAsync(deleteFilter);
             await context.FriendRequests.UpdateOneAsync(updateFilter, updateToFollowers);
+            await eventBus.PublishAsync(new Deleted(user, friend));
         }
 
         public async Task CancelOutgoingRequestAsync(Guid from, Guid to)
@@ -163,6 +169,7 @@ namespace GhostNetwork.Profiles.MongoDb
                                  & Filter.Eq(p => p.Status, RequestStatus.Outgoing);
 
             await context.FriendRequests.DeleteManyAsync(outgoingFilter | incomingFilter);
+            await eventBus.PublishAsync(new RequestCancelled(from, to));
         }
 
         public async Task DeclineRequestAsync(Guid user, Guid requester)
@@ -175,6 +182,7 @@ namespace GhostNetwork.Profiles.MongoDb
                 .Set(s => s.Status, RequestStatus.Declined);
 
             await context.FriendRequests.UpdateOneAsync(incomingFilter, declineIncoming);
+            await eventBus.PublishAsync(new RequestDeclined(user, requester));
         }
     }
 }
