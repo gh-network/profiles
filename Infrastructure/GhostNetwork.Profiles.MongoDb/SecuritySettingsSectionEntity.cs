@@ -15,11 +15,21 @@ namespace GhostNetwork.Profiles.MongoDb
 
         public static explicit operator SecuritySettingsSection(SecuritySettingsSectionEntity entity)
         {
+            if (entity == null)
+            {
+                return null;
+            }
+
             return new SecuritySettingsSection(entity.Access, entity.CertainUsers);
         }
 
         public static explicit operator SecuritySettingsSectionEntity(SecuritySettingsSection settings)
         {
+            if (settings == null)
+            {
+                return null;
+            }
+
             return new SecuritySettingsSectionEntity
             {
                 Access = settings.Access,
