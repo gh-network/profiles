@@ -67,9 +67,7 @@ namespace GhostNetwork.Profiles.Api
 
             services.AddScoped(_ =>
             {
-                // TODO: Remove MONGO_ADDRESS usage after update of all compose files
-                var connectionString = Configuration["MONGO_CONNECTION"] ??
-                                       $"mongodb://{Configuration["MONGO_ADDRESS"]}/gprofiles";
+                var connectionString = Configuration["MONGO_CONNECTION"];
                 var mongoUrl = MongoUrl.Create(connectionString);
                 var client = new MongoClient(mongoUrl);
                 return new MongoDbContext(client.GetDatabase(mongoUrl.DatabaseName ?? DefaultDbName));
