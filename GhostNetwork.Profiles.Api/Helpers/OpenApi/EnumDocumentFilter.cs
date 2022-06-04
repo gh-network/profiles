@@ -24,6 +24,7 @@ namespace GhostNetwork.Profiles.Api.Helpers.OpenApi
 
             var propertyEnums = property.Enum;
             var enumNames = new OpenApiArray();
+
             if (propertyEnums.Any())
             {
                 property.Enum = new List<IOpenApiAny>();
@@ -54,17 +55,17 @@ namespace GhostNetwork.Profiles.Api.Helpers.OpenApi
             return value.ToString();
         }
 
-        private string DescribeEnum(IList<IOpenApiAny> enums)
+        private string DescribeEnum(IEnumerable<IOpenApiAny> enums)
         {
             var enumDescriptions = new List<string>();
 
-            foreach (IOpenApiAny enumOption in enums)
+            foreach (var enumOption in enums)
             {
                 if (enumOption is OpenApiInteger integer)
                 {
                     int enumInt = integer.Value;
 
-                    enumDescriptions.Add(string.Format("{0} - {1}", enumInt, Enum.GetName(typeof(Access), enumInt)));
+                    enumDescriptions.Add(string.Format("{1} - {0}", enumInt, Enum.GetName(typeof(Access), enumInt)));
                 }
             }
 
