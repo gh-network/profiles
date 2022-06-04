@@ -20,7 +20,7 @@ namespace GhostNetwork.Profiles.Api.Helpers.OpenApi
                 throw new ArgumentException($"{typeof(TEnum)} is not an enum");
             }
 
-            var property = swaggerDoc.Components.Schemas["Access"];
+            var property = swaggerDoc.Components.Schemas[typeof(TEnum).Name];
 
             var propertyEnums = property.Enum;
             var enumNames = new OpenApiArray();
