@@ -33,11 +33,11 @@ namespace GhostNetwork.Profiles.Api.Helpers.OpenApi
                     property.Enum.Add(new OpenApiInteger(enumValue.ToInt32(default)));
                     enumNames.Add(new OpenApiString(GetEnumDescription(enumValue as Enum)));
                 }
-            }
 
-            property.Type = "int";
-            property.Description = DescribeEnum(property.Enum);
-            property.Extensions.Add("x-enum-varnames", enumNames);
+                property.Type = "int";
+                property.Description = DescribeEnum(property.Enum);
+                property.Extensions.Add("x-enum-varnames", enumNames);
+            }
         }
 
         private static string GetEnumDescription(Enum value)
