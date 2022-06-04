@@ -1,12 +1,12 @@
-﻿using GhostNetwork.Profiles.SecuritySettings;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using GhostNetwork.Profiles.SecuritySettings;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace GhostNetwork.Profiles.Api.Helpers.OpenApi
 {
