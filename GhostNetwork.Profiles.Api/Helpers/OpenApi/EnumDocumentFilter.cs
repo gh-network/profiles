@@ -40,6 +40,20 @@ namespace GhostNetwork.Profiles.Api.Helpers.OpenApi
             property.Extensions.Add("x-enum-varnames", enumNames);
         }
 
+        private static string GetEnumDescription(Enum value)
+        {
+            FieldInfo fi = value.GetType().GetField(value.ToString());
+
+            DescriptionAttribute[] attributes = fi.GetCustomAttributes(typeof(DescriptionAttribute), false) as DescriptionAttribute[];
+
+            if (attributes != null && attributes.Any())
+            {
+                return attributes.First().Description;
+            }
+
+            return value.ToString();
+        }
+
         private string DescribeEnum(IList<IOpenApiAny> enums)
         {
             var enumDescriptions = new List<string>();
@@ -55,20 +69,6 @@ namespace GhostNetwork.Profiles.Api.Helpers.OpenApi
             }
 
             return string.Join(", ", enumDescriptions.ToArray());
-        }
-
-        private static string GetEnumDescription(Enum value)
-        {
-            FieldInfo fi = value.GetType().GetField(value.ToString());
-
-            DescriptionAttribute[] attributes = fi.GetCustomAttributes(typeof(DescriptionAttribute), false) as DescriptionAttribute[];
-
-            if (attributes != null && attributes.Any())
-            {
-                return attributes.First().Description;
-            }
-
-            return value.ToString();
         }
     }
 }
