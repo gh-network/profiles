@@ -44,6 +44,7 @@ namespace GhostNetwork.Profiles.Api
 
                 options.OperationFilter<OperationIdFilter>();
                 options.OperationFilter<AddResponseHeadersFilter>();
+                options.DocumentFilter<EnumDocumentFilter<Access>>();
 
                 options.IncludeXmlComments(XmlPathProvider.XmlPath);
             });
