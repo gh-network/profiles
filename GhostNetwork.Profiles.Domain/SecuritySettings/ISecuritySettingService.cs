@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Domain;
+using GhostNetwork.Profiles.Friends;
 
 namespace GhostNetwork.Profiles.SecuritySettings
 {
@@ -15,16 +16,20 @@ namespace GhostNetwork.Profiles.SecuritySettings
             SecuritySettingsSection publications,
             SecuritySettingsSection comments,
             SecuritySettingsSection profilePhoto);
+
+        ValueTask<bool> ResolveAccess(Guid userId, Guid toUserId, string sectionName);
     }
 
     public class SecuritySettingsService : ISecuritySettingService
     {
         private readonly ISecuritySettingStorage securitySettingsStorage;
+        private readonly IRelationsService relationService;
         private readonly IProfileStorage profileStorage;
 
-        public SecuritySettingsService(ISecuritySettingStorage securitySettingsStorage, IProfileStorage profileStorage)
+        public SecuritySettingsService(ISecuritySettingStorage securitySettingsStorage, IRelationsService relationService, IProfileStorage profileStorage)
         {
             this.securitySettingsStorage = securitySettingsStorage;
+            this.relationService = relationService;
             this.profileStorage = profileStorage;
         }
 
@@ -67,6 +72,47 @@ namespace GhostNetwork.Profiles.SecuritySettings
             await securitySettingsStorage.UpsertAsync(securitySettings);
 
             return DomainResult.Success();
+        }
+
+        public async ValueTask<bool> ResolveAccess(Guid userId, Guid toUserId, string sectionName)
+        {
+            if (userId == toUserId)
+            {
+                return true;
+            }
+
+            var section = await securitySettingsStorage.FindSectionByUserIdAsync(toUserId, sectionName);
+
+            if (section.Access == Access.NoOne)
+            {
+                return false;
+            }
+
+            if (section.Access == Access.OnlyFriends)
+            {
+                if (!await relationService.IsFriendAsync(userId, toUserId))
+                {
+                    return false;
+                }
+            }
+
+            if (section.Access == Access.OnlyCertainUsers)
+            {
+                if (!await securitySettingsStorage.ContainsInCertainUsers(userId, toUserId, sectionName))
+                {
+                    return false;
+                }
+            }
+
+            if (section.Access == Access.EveryoneExceptCertainUsers)
+            {
+                if (await securitySettingsStorage.ContainsInCertainUsers(userId, toUserId, sectionName))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
