@@ -47,25 +47,11 @@ namespace GhostNetwork.Profiles.MongoDb
 
         public async ValueTask<bool> ContainsInCertainUsers(Guid userId, Guid ofUserId, string sectionName)
         {
-            var match = new BsonDocument
-            {
-                {
-                    "_id", new BsonDocument
-                    {
-                        { "$eq", ofUserId }
-                    }
-                },
-                {
-                    $"{sectionName}.certainUsers", new BsonDocument
-                    {
-                        { "$in", new BsonArray(new BsonValue[] { userId }) }
-                    }
-                }
-            };
+            var filter = Builders<SecuritySettingsEntity>.Filter.Eq(x => x.UserId, ofUserId) &
+                         Builders<SecuritySettingsEntity>.Filter.In($"{sectionName}.certainUsers", new Guid[] { userId });
 
             return await context.SecuritySettings
-                .Aggregate()
-                .Match(match)
+                .Find(filter)
                 .AnyAsync();
         }
 
