@@ -9,14 +9,23 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GhostNetwork.Profiles.Api.Controllers
 {
+    public class SecuritySettingResolvingInputModel
+    {
+        public Guid ToUserId { get; set; }
+
+        public string SectionName { get; set; }
+    }
+
     [ApiController]
     public class SecuritySettingsController : ControllerBase
     {
         private readonly ISecuritySettingService securitySettingsService;
+        private readonly IProfileService profileService;
 
-        public SecuritySettingsController(ISecuritySettingService securitySettingsService)
+        public SecuritySettingsController(ISecuritySettingService securitySettingsService, IProfileService profileService)
         {
             this.securitySettingsService = securitySettingsService;
+            this.profileService = profileService;
         }
 
         [HttpGet("profiles/{userId:guid}/security-settings")]
@@ -31,6 +40,27 @@ namespace GhostNetwork.Profiles.Api.Controllers
             }
 
             return NotFound();
+        }
+
+        [HttpPost("profiles/{userId:guid}/security-settings")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> CheckAccess([FromRoute] Guid userId, [FromBody] SecuritySettingResolvingInputModel inputModel)
+        {
+            if (await profileService.GetByIdAsync(inputModel.ToUserId) == null)
+            {
+                return NotFound();
+            }
+
+            var result = await securitySettingsService.ResolveAccess(userId, inputModel.ToUserId, inputModel.SectionName);
+
+            if (result)
+            {
+                return NoContent();
+            }
+
+            return Forbid();
         }
 
         [HttpPut("profiles/{userId:guid}/security-settings")]
