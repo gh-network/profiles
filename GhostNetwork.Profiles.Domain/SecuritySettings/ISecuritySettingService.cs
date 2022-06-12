@@ -17,7 +17,7 @@ namespace GhostNetwork.Profiles.SecuritySettings
             SecuritySettingsSection comments,
             SecuritySettingsSection profilePhoto);
 
-        ValueTask<bool> ResolveAccess(Guid userId, Guid toUserId, string sectionName);
+        Task<bool> ResolveAccess(Guid userId, Guid toUserId, string sectionName);
     }
 
     public class SecuritySettingsService : ISecuritySettingService
@@ -74,7 +74,7 @@ namespace GhostNetwork.Profiles.SecuritySettings
             return DomainResult.Success();
         }
 
-        public async ValueTask<bool> ResolveAccess(Guid userId, Guid toUserId, string sectionName)
+        public async Task<bool> ResolveAccess(Guid userId, Guid toUserId, string sectionName)
         {
             if (userId == toUserId)
             {
@@ -98,7 +98,7 @@ namespace GhostNetwork.Profiles.SecuritySettings
 
             if (section.Access == Access.OnlyCertainUsers)
             {
-                if (!await securitySettingsStorage.ContainsInCertainUsers(userId, toUserId, sectionName))
+                if (!await securitySettingsStorage.ContainsInCertainUsersAsync(userId, toUserId, sectionName))
                 {
                     return false;
                 }
@@ -106,7 +106,7 @@ namespace GhostNetwork.Profiles.SecuritySettings
 
             if (section.Access == Access.EveryoneExceptCertainUsers)
             {
-                if (await securitySettingsStorage.ContainsInCertainUsers(userId, toUserId, sectionName))
+                if (await securitySettingsStorage.ContainsInCertainUsersAsync(userId, toUserId, sectionName))
                 {
                     return false;
                 }

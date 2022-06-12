@@ -45,7 +45,7 @@ namespace GhostNetwork.Profiles.MongoDb
             return new SecuritySettingsSection(section.Access, null!);
         }
 
-        public async ValueTask<bool> ContainsInCertainUsers(Guid userId, Guid ofUserId, string sectionName)
+        public async Task<bool> ContainsInCertainUsersAsync(Guid userId, Guid ofUserId, string sectionName)
         {
             var filter = Builders<SecuritySettingsEntity>.Filter.Eq(x => x.UserId, ofUserId) &
                          Builders<SecuritySettingsEntity>.Filter.In($"{sectionName}.certainUsers", new Guid[] { userId });
