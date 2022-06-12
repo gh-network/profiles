@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using GhostNetwork.Profiles.SecuritySettings;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace GhostNetwork.Profiles.MongoDb
@@ -23,6 +24,49 @@ namespace GhostNetwork.Profiles.MongoDb
             return settings == null
                 ? null
                 : ToDomain(settings);
+        }
+
+        public async Task<SecuritySettingsSection> FindSectionByUserIdAsync(Guid userId, string sectionName)
+        {
+            var filter = Builders<SecuritySettingsEntity>.Filter.Eq(x => x.UserId, userId);
+
+            var project = new BsonDocument
+            {
+                { "_id", 0 },
+                { "access", $"${sectionName}.access" }
+            };
+
+            var section = await context.SecuritySettings
+                .Aggregate()
+                .Match(filter)
+                .Project<SecuritySettingsSectionEntity>(project)
+                .FirstOrDefaultAsync();
+
+            return new SecuritySettingsSection(section.Access, null!);
+        }
+
+        public async ValueTask<bool> ContainsInCertainUsers(Guid userId, Guid ofUserId, string sectionName)
+        {
+            var match = new BsonDocument
+            {
+                {
+                    "_id", new BsonDocument
+                    {
+                        { "$eq", ofUserId }
+                    }
+                },
+                {
+                    $"{sectionName}.certainUsers", new BsonDocument
+                    {
+                        { "$in", new BsonArray(new BsonValue[] { userId }) }
+                    }
+                }
+            };
+
+            return await context.SecuritySettings
+                .Aggregate()
+                .Match(match)
+                .AnyAsync();
         }
 
         public async Task UpsertAsync(SecuritySetting updatedSettings)
