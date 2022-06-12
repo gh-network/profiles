@@ -60,7 +60,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
                 return NoContent();
             }
 
-            return Forbid();
+            return StatusCode(StatusCodes.Status403Forbidden);
         }
 
         [HttpPut("profiles/{userId:guid}/security-settings")]
