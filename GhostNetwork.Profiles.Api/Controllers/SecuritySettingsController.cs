@@ -9,23 +9,18 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GhostNetwork.Profiles.Api.Controllers
 {
-    public class SecuritySettingResolvingInputModel
-    {
-        public Guid ToUserId { get; set; }
-
-        public string SectionName { get; set; }
-    }
-
     [ApiController]
     public class SecuritySettingsController : ControllerBase
     {
         private readonly ISecuritySettingService securitySettingsService;
         private readonly IProfileService profileService;
+        private readonly IAccessResolver accessResolver;
 
-        public SecuritySettingsController(ISecuritySettingService securitySettingsService, IProfileService profileService)
+        public SecuritySettingsController(ISecuritySettingService securitySettingsService, IProfileService profileService, IAccessResolver accessResolver)
         {
             this.securitySettingsService = securitySettingsService;
             this.profileService = profileService;
+            this.accessResolver = accessResolver;
         }
 
         [HttpGet("profiles/{userId:guid}/security-settings")]
@@ -53,7 +48,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
                 return NotFound();
             }
 
-            var result = await securitySettingsService.ResolveAccess(userId, inputModel.ToUserId, inputModel.SectionName);
+            var result = await accessResolver.ResolveAccessAsync(userId, inputModel.ToUserId, inputModel.SectionName);
 
             if (result)
             {
