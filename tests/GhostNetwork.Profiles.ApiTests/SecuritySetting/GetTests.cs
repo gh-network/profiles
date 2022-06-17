@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using GhostNetwork.Profiles;
+﻿using GhostNetwork.Profiles;
 using GhostNetwork.Profiles.SecuritySettings;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
+using System;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace GhostNetwork.Profile.ApiTests.SecuritySetting
 {
