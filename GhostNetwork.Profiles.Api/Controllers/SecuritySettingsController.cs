@@ -42,7 +42,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
             return NotFound();
         }
 
-        [HttpPost("profiles/{userId:guid}/security-settings")]
+        [HttpPost("profiles/{userId:guid}/security-settings/check-access")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
