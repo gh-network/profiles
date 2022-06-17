@@ -2,6 +2,8 @@ using System;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using GhostNetwork.EventBus;
+using GhostNetwork.EventBus.AzureServiceBus;
+using GhostNetwork.EventBus.RabbitMq;
 using GhostNetwork.Profiles.Api.Helpers.OpenApi;
 using GhostNetwork.Profiles.Friends;
 using GhostNetwork.Profiles.MongoDb;
@@ -14,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
+using RabbitMQ.Client;
 using Swashbuckle.AspNetCore.Filters;
 
 namespace GhostNetwork.Profiles.Api
