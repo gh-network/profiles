@@ -24,36 +24,17 @@ namespace GhostNetwork.Profiles.SecuritySettings
 
             var section = await securitySettingStorage.FindSectionByUserIdAsync(toUserId, sectionName);
 
-            if (section.Access == Access.NoOne)
+            return section.Access switch
             {
-                return false;
-            }
-
-            if (section.Access == Access.OnlyFriends)
-            {
-                if (!await relationsService.IsFriendAsync(userId, toUserId))
-                {
-                    return false;
-                }
-            }
-
-            if (section.Access == Access.OnlyCertainUsers)
-            {
-                if (!await securitySettingStorage.ContainsInCertainUsersAsync(userId, toUserId, sectionName))
-                {
-                    return false;
-                }
-            }
-
-            if (section.Access == Access.EveryoneExceptCertainUsers)
-            {
-                if (await securitySettingStorage.ContainsInCertainUsersAsync(userId, toUserId, sectionName))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+                Access.Everyone => true,
+                Access.NoOne => false,
+                Access.OnlyFriends => await relationsService.IsFriendAsync(userId, toUserId),
+                Access.OnlyCertainUsers => await securitySettingStorage
+                    .ContainsInCertainUsersAsync(userId, toUserId, sectionName),
+                Access.EveryoneExceptCertainUsers => !await securitySettingStorage
+                    .ContainsInCertainUsersAsync(userId, toUserId, sectionName),
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
     }
 }
