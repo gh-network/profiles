@@ -1,14 +1,13 @@
 ﻿using Domain;
+using GhostNetwork.Profiles;
 using GhostNetwork.Profiles.Api.Models;
 using GhostNetwork.Profiles.SecuritySettings;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GhostNetwork.Profile.ApiTests.SecuritySetting
@@ -43,10 +42,14 @@ namespace GhostNetwork.Profile.ApiTests.SecuritySetting
                     It.IsAny<SecuritySettingsSection>(), 
                     It.IsAny<SecuritySettingsSection>()))
                 .ReturnsAsync(DomainResult.Success());
+            var profileServiceMock = new Mock<IProfileService>();
+            var accessResolverMock = new Mock<IAccessResolver>();
 
             var client = TestServerHelper.New(collection =>
             {
                 collection.AddScoped(_ => serviceMock.Object);
+                collection.AddScoped(_ => profileServiceMock.Object);
+                collection.AddScoped(_ => accessResolverMock.Object);
             });
 
             //Act
@@ -74,6 +77,8 @@ namespace GhostNetwork.Profile.ApiTests.SecuritySetting
 
 
             var serviceMock = new Mock<ISecuritySettingService>();
+            var profileServiceMock = new Mock<IProfileService>();
+            var accessResolverMock = new Mock<IAccessResolver>();
 
             serviceMock.Setup(x => x.UpsertAsync(
                     userId,
@@ -87,6 +92,8 @@ namespace GhostNetwork.Profile.ApiTests.SecuritySetting
             var client = TestServerHelper.New(collection =>
             {
                 collection.AddScoped(_ => serviceMock.Object);
+                collection.AddScoped(_ => profileServiceMock.Object);
+                collection.AddScoped(_ => accessResolverMock.Object);
             });
 
             //Act

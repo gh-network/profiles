@@ -7,6 +7,10 @@ namespace GhostNetwork.Profiles.SecuritySettings
     {
         Task<SecuritySetting> FindByUserIdAsync(Guid userId);
 
+        Task<Access> GetSectionAccessAsync(Guid userId, string sectionName);
+
+        Task<bool> ContainsInCertainUsersAsync(Guid userId, Guid ofUserId, string sectionName);
+
         Task UpsertAsync(SecuritySetting updatedSettings);
     }
 }

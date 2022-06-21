@@ -86,6 +86,7 @@ namespace GhostNetwork.Profiles.Api
             services.AddScoped<ISecuritySettingService, SecuritySettingsService>();
 
             services.AddScoped<IRelationsService, MongoRelationsStorage>();
+            services.AddScoped<IAccessResolver, AccessResolver>();
 
             services.AddControllers()
                 .AddJsonOptions(options =>

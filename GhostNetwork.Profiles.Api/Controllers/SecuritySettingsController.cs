@@ -13,10 +13,14 @@ namespace GhostNetwork.Profiles.Api.Controllers
     public class SecuritySettingsController : ControllerBase
     {
         private readonly ISecuritySettingService securitySettingsService;
+        private readonly IProfileService profileService;
+        private readonly IAccessResolver accessResolver;
 
-        public SecuritySettingsController(ISecuritySettingService securitySettingsService)
+        public SecuritySettingsController(ISecuritySettingService securitySettingsService, IProfileService profileService, IAccessResolver accessResolver)
         {
             this.securitySettingsService = securitySettingsService;
+            this.profileService = profileService;
+            this.accessResolver = accessResolver;
         }
 
         [HttpGet("profiles/{userId:guid}/security-settings")]
@@ -31,6 +35,27 @@ namespace GhostNetwork.Profiles.Api.Controllers
             }
 
             return NotFound();
+        }
+
+        [HttpPost("profiles/{userId:guid}/security-settings/check-access")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> CheckAccess([FromRoute] Guid userId, [FromBody] SecuritySettingResolvingInputModel inputModel)
+        {
+            if (await profileService.GetByIdAsync(inputModel.ToUserId) == null)
+            {
+                return NotFound();
+            }
+
+            var result = await accessResolver.ResolveAccessAsync(userId, inputModel.ToUserId, inputModel.SectionName);
+
+            if (result)
+            {
+                return NoContent();
+            }
+
+            return StatusCode(StatusCodes.Status403Forbidden);
         }
 
         [HttpPut("profiles/{userId:guid}/security-settings")]
