@@ -26,7 +26,7 @@ namespace GhostNetwork.Profiles.MongoDb
                 : ToDomain(settings);
         }
 
-        public async Task<SecuritySettingsSection> FindSectionByUserIdAsync(Guid userId, string sectionName)
+        public async Task<Access> GetSectionAccessAsync(Guid userId, string sectionName)
         {
             var filter = Builders<SecuritySettingsEntity>.Filter.Eq(x => x.UserId, userId);
 
@@ -42,7 +42,7 @@ namespace GhostNetwork.Profiles.MongoDb
                 .Project<SecuritySettingsSectionEntity>(project)
                 .FirstOrDefaultAsync();
 
-            return new SecuritySettingsSection(section.Access, null!);
+            return new SecuritySettingsSection(section.Access, null!).Access;
         }
 
         public async Task<bool> ContainsInCertainUsersAsync(Guid userId, Guid ofUserId, string sectionName)

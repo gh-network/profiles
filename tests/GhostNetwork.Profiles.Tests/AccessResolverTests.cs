@@ -3,8 +3,6 @@ using GhostNetwork.Profiles.SecuritySettings;
 using Moq;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace GhostNetwork.Profiles.Tests
@@ -21,14 +19,11 @@ namespace GhostNetwork.Profiles.Tests
             var userId = Guid.NewGuid();
             var toUserId = userId;
 
-
-            var section = new SecuritySettingsSection(Access.Everyone, Enumerable.Empty<Guid>());
-
             var securityStorageMock = new Mock<ISecuritySettingStorage>();
             var relationServiceMock = new Mock<IRelationsService>();
 
-            securityStorageMock.Setup(s => s.FindSectionByUserIdAsync(toUserId, sectionName))
-                .ReturnsAsync(section);
+            securityStorageMock.Setup(s => s.GetSectionAccessAsync(toUserId, sectionName))
+                .ReturnsAsync(Access.Everyone);
 
 
             var accessResolver = new AccessResolver(securityStorageMock.Object, relationServiceMock.Object);
@@ -49,13 +44,11 @@ namespace GhostNetwork.Profiles.Tests
             var userId = Guid.NewGuid();
             var toUserId = Guid.NewGuid();
 
-            var section = new SecuritySettingsSection(Access.Everyone, Enumerable.Empty<Guid>());
-
             var securityStorageMock = new Mock<ISecuritySettingStorage>();
             var relationServiceMock = new Mock<IRelationsService>();
 
-            securityStorageMock.Setup(s => s.FindSectionByUserIdAsync(toUserId, sectionName))
-                .ReturnsAsync(section);
+            securityStorageMock.Setup(s => s.GetSectionAccessAsync(toUserId, sectionName))
+                .ReturnsAsync(Access.Everyone);
 
             var accessResolver = new AccessResolver(securityStorageMock.Object, relationServiceMock.Object);
 
@@ -75,13 +68,11 @@ namespace GhostNetwork.Profiles.Tests
             var userId = Guid.NewGuid();
             var toUserId = Guid.NewGuid();
 
-            var section = new SecuritySettingsSection(Access.NoOne, Enumerable.Empty<Guid>());
-
             var securityStorageMock = new Mock<ISecuritySettingStorage>();
             var relationServiceMock = new Mock<IRelationsService>();
 
-            securityStorageMock.Setup(s => s.FindSectionByUserIdAsync(toUserId, sectionName))
-                .ReturnsAsync(section);
+            securityStorageMock.Setup(s => s.GetSectionAccessAsync(toUserId, sectionName))
+                .ReturnsAsync(Access.NoOne);
 
             var accessResolver = new AccessResolver(securityStorageMock.Object, relationServiceMock.Object);
 
@@ -101,11 +92,9 @@ namespace GhostNetwork.Profiles.Tests
             var userId = Guid.NewGuid();
             var toUserId = Guid.NewGuid();
 
-            var section = new SecuritySettingsSection(Access.OnlyFriends, Enumerable.Empty<Guid>());
-
             var securityStorageMock = new Mock<ISecuritySettingStorage>();
-            securityStorageMock.Setup(s => s.FindSectionByUserIdAsync(toUserId, sectionName))
-                .ReturnsAsync(section);
+            securityStorageMock.Setup(s => s.GetSectionAccessAsync(toUserId, sectionName))
+                .ReturnsAsync(Access.OnlyFriends);
 
             var relationServiceMock = new Mock<IRelationsService>();
             relationServiceMock.Setup(s => s.IsFriendAsync(userId, toUserId))
@@ -129,11 +118,9 @@ namespace GhostNetwork.Profiles.Tests
             var userId = Guid.NewGuid();
             var toUserId = Guid.NewGuid();
 
-            var section = new SecuritySettingsSection(Access.OnlyFriends, Enumerable.Empty<Guid>());
-
             var securityStorageMock = new Mock<ISecuritySettingStorage>();
-            securityStorageMock.Setup(s => s.FindSectionByUserIdAsync(toUserId, sectionName))
-                .ReturnsAsync(section);
+            securityStorageMock.Setup(s => s.GetSectionAccessAsync(toUserId, sectionName))
+                .ReturnsAsync(Access.OnlyFriends);
 
             var relationServiceMock = new Mock<IRelationsService>();
             relationServiceMock.Setup(s => s.IsFriendAsync(userId, toUserId))
@@ -157,12 +144,10 @@ namespace GhostNetwork.Profiles.Tests
             var userId = Guid.NewGuid();
             var toUserId = Guid.NewGuid();
 
-            var section = new SecuritySettingsSection(Access.OnlyCertainUsers, new List<Guid> { userId });
-
             var securityStorageMock = new Mock<ISecuritySettingStorage>();
 
-            securityStorageMock.Setup(s => s.FindSectionByUserIdAsync(toUserId, sectionName))
-                .ReturnsAsync(section);
+            securityStorageMock.Setup(s => s.GetSectionAccessAsync(toUserId, sectionName))
+                .ReturnsAsync(Access.OnlyCertainUsers);
             securityStorageMock.Setup(s => s.ContainsInCertainUsersAsync(userId, toUserId, sectionName))
                 .ReturnsAsync(true);
 
@@ -188,12 +173,10 @@ namespace GhostNetwork.Profiles.Tests
             var userId = Guid.NewGuid();
             var toUserId = Guid.NewGuid();
 
-            var section = new SecuritySettingsSection(Access.OnlyCertainUsers, new List<Guid> { userId });
-
             var securityStorageMock = new Mock<ISecuritySettingStorage>();
 
-            securityStorageMock.Setup(s => s.FindSectionByUserIdAsync(toUserId, sectionName))
-                .ReturnsAsync(section);
+            securityStorageMock.Setup(s => s.GetSectionAccessAsync(toUserId, sectionName))
+                .ReturnsAsync(Access.OnlyCertainUsers);
             securityStorageMock.Setup(s => s.ContainsInCertainUsersAsync(userId, toUserId, sectionName))
                 .ReturnsAsync(false);
 
@@ -219,12 +202,10 @@ namespace GhostNetwork.Profiles.Tests
             var userId = Guid.NewGuid();
             var toUserId = Guid.NewGuid();
 
-            var section = new SecuritySettingsSection(Access.EveryoneExceptCertainUsers, Enumerable.Empty<Guid>());
-
             var securityStorageMock = new Mock<ISecuritySettingStorage>();
 
-            securityStorageMock.Setup(s => s.FindSectionByUserIdAsync(toUserId, sectionName))
-                .ReturnsAsync(section);
+            securityStorageMock.Setup(s => s.GetSectionAccessAsync(toUserId, sectionName))
+                .ReturnsAsync(Access.EveryoneExceptCertainUsers);
             securityStorageMock.Setup(s => s.ContainsInCertainUsersAsync(userId, toUserId, sectionName))
                 .ReturnsAsync(false);
 
@@ -250,12 +231,10 @@ namespace GhostNetwork.Profiles.Tests
             var userId = Guid.NewGuid();
             var toUserId = Guid.NewGuid();
 
-            var section = new SecuritySettingsSection(Access.EveryoneExceptCertainUsers, new List<Guid> { userId });
-
             var securityStorageMock = new Mock<ISecuritySettingStorage>();
 
-            securityStorageMock.Setup(s => s.FindSectionByUserIdAsync(toUserId, sectionName))
-                .ReturnsAsync(section);
+            securityStorageMock.Setup(s => s.GetSectionAccessAsync(toUserId, sectionName))
+                .ReturnsAsync(Access.EveryoneExceptCertainUsers);
             securityStorageMock.Setup(s => s.ContainsInCertainUsersAsync(userId, toUserId, sectionName))
                 .ReturnsAsync(true);
 

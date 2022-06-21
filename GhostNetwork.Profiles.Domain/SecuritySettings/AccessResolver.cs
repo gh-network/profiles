@@ -22,9 +22,7 @@ namespace GhostNetwork.Profiles.SecuritySettings
                 return true;
             }
 
-            var section = await securitySettingStorage.FindSectionByUserIdAsync(toUserId, sectionName);
-
-            return section.Access switch
+            return await securitySettingStorage.GetSectionAccessAsync(toUserId, sectionName) switch
             {
                 Access.Everyone => true,
                 Access.NoOne => false,
