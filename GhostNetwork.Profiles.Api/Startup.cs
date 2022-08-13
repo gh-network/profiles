@@ -36,10 +36,10 @@ namespace GhostNetwork.Profiles.Api
         {
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo
+                options.SwaggerDoc("api", new OpenApiInfo
                 {
-                    Title = "Profiles API V1",
-                    Version = "1.0.0"
+                    Title = "GhostNetwork.Profiles",
+                    Version = "1.3.5"
                 });
 
                 options.OperationFilter<OperationIdFilter>();
