@@ -101,7 +101,7 @@ namespace GhostNetwork.Profiles.Api
             {
                 app
                     .UseSwagger()
-                    .UseSwaggerUI(config => { config.SwaggerEndpoint("/swagger/v1/swagger.json", "Profiles Api V1"); });
+                    .UseSwaggerUI(config => { config.SwaggerEndpoint("/swagger/api/swagger.json", "Profiles Api V1"); });
 
                 app.UseCors(builder => builder.AllowAnyHeader()
                     .AllowAnyMethod()
