@@ -42,7 +42,12 @@ namespace GhostNetwork.Profiles.MongoDb
                 .Project<SecuritySettingsSectionEntity>(project)
                 .FirstOrDefaultAsync();
 
-            return new SecuritySettingsSection(section.Access, null!).Access;
+            if (section == null)
+            {
+                return Access.Everyone;
+            }
+
+            return section.Access;
         }
 
         public async Task<bool> ContainsInCertainUsersAsync(Guid userId, Guid ofUserId, string sectionName)
