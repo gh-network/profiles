@@ -22,7 +22,7 @@ jobs:
         run: docker-compose up -d
       - name: generate-package
         run: |
-          npx @openapitools/openapi-generator-cli generate -i http://localhost:5300/swagger/v1/swagger.json \
+          npx @openapitools/openapi-generator-cli generate -i http://localhost:5300/swagger/api/swagger.json \
             -g csharp-netcore \
             -o ./http-client \
             --remove-operation-id-prefix \
