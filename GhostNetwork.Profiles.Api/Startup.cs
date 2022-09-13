@@ -1,6 +1,5 @@
 using System;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using GhostNetwork.EventBus;
 using GhostNetwork.EventBus.AzureServiceBus;
 using GhostNetwork.EventBus.RabbitMq;
@@ -95,7 +94,7 @@ namespace GhostNetwork.Profiles.Api
                 });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider provider)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider provider, IHostApplicationLifetime hostApplicationLifetime)
         {
             if (env.IsDevelopment())
             {
@@ -106,9 +105,6 @@ namespace GhostNetwork.Profiles.Api
                 app.UseCors(builder => builder.AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowAnyOrigin());
-
-                var profileStorage = provider.GetRequiredService<IProfileStorage>();
-                SeedAsync(profileStorage).GetAwaiter().GetResult();
             }
 
             app.UseRouting();
@@ -117,21 +113,14 @@ namespace GhostNetwork.Profiles.Api
             {
                 endpoints.MapControllers();
             });
-        }
 
-        private async Task SeedAsync(IProfileStorage profileStorage)
-        {
-            var alice = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66af76");
-            if (await profileStorage.FindByIdAsync(alice) == null)
+            hostApplicationLifetime.ApplicationStarted.Register(() =>
             {
-                await profileStorage.InsertAsync(new Profile(alice, "Alice", "Alice", "Female", null, null, null));
-            }
-
-            var bob = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66af77");
-            if (await profileStorage.FindByIdAsync(bob) == null)
-            {
-                await profileStorage.InsertAsync(new Profile(bob, "Bob", "Bob", "Male", null, null, null));
-            }
+                var scope = app.ApplicationServices.CreateScope();
+                var mongoDb = scope.ServiceProvider.GetService<MongoDbContext>();
+                mongoDb?.MigrateGuidAsync()
+                    .GetAwaiter().GetResult();
+            });
         }
     }
 }
