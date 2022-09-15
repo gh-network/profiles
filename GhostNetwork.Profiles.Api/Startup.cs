@@ -38,7 +38,7 @@ namespace GhostNetwork.Profiles.Api
                 options.SwaggerDoc("api", new OpenApiInfo
                 {
                     Title = "GhostNetwork.Profiles",
-                    Version = "1.3.7"
+                    Version = "1.3.8"
                 });
 
                 options.OperationFilter<OperationIdFilter>();
@@ -119,6 +119,8 @@ namespace GhostNetwork.Profiles.Api
                 var scope = app.ApplicationServices.CreateScope();
                 var mongoDb = scope.ServiceProvider.GetService<MongoDbContext>();
                 mongoDb?.MigrateGuidAsync()
+                    .GetAwaiter().GetResult();
+                mongoDb?.MigrateProfileCreationDateAsync()
                     .GetAwaiter().GetResult();
             });
         }
