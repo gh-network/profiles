@@ -43,7 +43,8 @@ namespace GhostNetwork.Profiles.MongoDb
                 LastName = profile.LastName,
                 Gender = profile.Gender,
                 DateOfBirth = profile.DateOfBirth?.ToUnixTimeMilliseconds(),
-                City = profile.City
+                City = profile.City,
+                CreatedOn = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
             };
 
             await context.Profiles.InsertOneAsync(entity);

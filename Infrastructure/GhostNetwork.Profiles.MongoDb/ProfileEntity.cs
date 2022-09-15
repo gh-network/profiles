@@ -25,5 +25,8 @@ namespace GhostNetwork.Profiles.MongoDb
 
         [BsonElement("profilePicture")]
         public string ProfilePicture { get; set; }
+
+        [BsonElement("createdOn")]
+        public long CreatedOn { get; set; }
     }
 }

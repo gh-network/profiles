@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
@@ -80,6 +81,13 @@ namespace GhostNetwork.Profiles.MongoDb
 
                 await FriendRequests.DeleteManyAsync(Builders<FriendsEntity>.Filter.Not(Builders<FriendsEntity>.Filter.Type(p => p.FromUser, BsonType.String)));
             }
+        }
+
+        public async Task MigrateProfileCreationDateAsync()
+        {
+            await Profiles.UpdateManyAsync(
+                Builders<ProfileEntity>.Filter.Not(Builders<ProfileEntity>.Filter.Exists(p => p.CreatedOn)),
+                Builders<ProfileEntity>.Update.Set(p => p.CreatedOn, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()));
         }
     }
 }
