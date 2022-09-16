@@ -8,6 +8,8 @@ namespace GhostNetwork.Profiles
     {
         Task<IEnumerable<Profile>> SearchByIdsAsync(IEnumerable<Guid> ids);
 
+        Task<(IEnumerable<Profile>, long)> SearchByIdsAsync(int skip, int take);
+
         Task<Profile> FindByIdAsync(Guid id);
 
         Task<Guid> InsertAsync(Profile profile);

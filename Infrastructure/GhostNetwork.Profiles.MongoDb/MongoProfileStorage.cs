@@ -26,6 +26,26 @@ namespace GhostNetwork.Profiles.MongoDb
             return profiles.Select(ToDomain);
         }
 
+        public async Task<(IEnumerable<Profile>, long)> SearchByIdsAsync(int skip, int take)
+        {
+            var filter = Builders<ProfileEntity>.Filter.Empty;
+            var order = Builders<ProfileEntity>.Sort.Combine(
+                Builders<ProfileEntity>.Sort.Descending(x => x.CreatedOn),
+                Builders<ProfileEntity>.Sort.Descending(x => x.Id));
+
+            var profiles = await context.Profiles
+                .Find(filter)
+                .Sort(order)
+                .Skip(skip)
+                .Limit(take)
+                .ToListAsync();
+
+            var totalCount = await context.Profiles
+                .CountDocumentsAsync(filter);
+
+            return (profiles.Select(ToDomain).ToList(), totalCount);
+        }
+
         public async Task<Profile> FindByIdAsync(Guid id)
         {
             var filter = Builders<ProfileEntity>.Filter.Eq(p => p.Id, id);

@@ -34,6 +34,22 @@ namespace GhostNetwork.Profiles.Api.Controllers
         }
 
         /// <summary>
+        /// Search profiles
+        /// </summary>
+        /// <response code="200">Returns profiles</response>
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<Profile>> SearchAsync(
+            [FromQuery] int skip = 0,
+            [FromQuery] int take = 20)
+        {
+            var (profiles, totalCount) = await profileService.SearchAsync(skip, take);
+
+            Response.Headers.Add("X-Total-Count", totalCount.ToString());
+            return Ok(profiles);
+        }
+
+        /// <summary>
         /// Get profile by id
         /// </summary>
         /// <param name="id">Profile id</param>

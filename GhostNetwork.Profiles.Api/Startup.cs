@@ -38,7 +38,7 @@ namespace GhostNetwork.Profiles.Api
                 options.SwaggerDoc("api", new OpenApiInfo
                 {
                     Title = "GhostNetwork.Profiles",
-                    Version = "1.3.8"
+                    Version = "1.4.0"
                 });
 
                 options.OperationFilter<OperationIdFilter>();

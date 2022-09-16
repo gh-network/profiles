@@ -11,6 +11,8 @@ namespace GhostNetwork.Profiles
     {
         Task<IEnumerable<Profile>> SearchByIdsAsync(IEnumerable<Guid> ids);
 
+        Task<(IEnumerable<Profile>, long)> SearchAsync(int skip, int take);
+
         Task<Profile> GetByIdAsync(Guid id);
 
         Task<(DomainResult, Profile)> CreateAsync(Guid? id, string firstName, string lastName, string gender, DateTimeOffset? dateOfBirth, string city);
@@ -80,6 +82,11 @@ namespace GhostNetwork.Profiles
         public async Task<IEnumerable<Profile>> SearchByIdsAsync(IEnumerable<Guid> ids)
         {
             return await profileStorage.SearchByIdsAsync(ids);
+        }
+
+        public Task<(IEnumerable<Profile>, long)> SearchAsync(int skip, int take)
+        {
+            return profileStorage.SearchByIdsAsync(skip, take);
         }
 
         public async Task<Profile> GetByIdAsync(Guid id)
