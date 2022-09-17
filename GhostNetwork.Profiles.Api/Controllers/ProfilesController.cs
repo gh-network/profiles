@@ -36,6 +36,8 @@ namespace GhostNetwork.Profiles.Api.Controllers
         /// <summary>
         /// Search profiles
         /// </summary>
+        /// <param name="skip">Skips N profiles before start fetching</param>
+        /// <param name="take">Takes maximum N profiles</param>
         /// <response code="200">Returns profiles</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
