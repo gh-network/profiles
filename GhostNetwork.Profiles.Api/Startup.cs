@@ -118,10 +118,7 @@ namespace GhostNetwork.Profiles.Api
             {
                 var scope = app.ApplicationServices.CreateScope();
                 var mongoDb = scope.ServiceProvider.GetService<MongoDbContext>();
-                mongoDb?.MigrateGuidAsync()
-                    .GetAwaiter().GetResult();
-                mongoDb?.MigrateProfileCreationDateAsync()
-                    .GetAwaiter().GetResult();
+                mongoDb?.ConfigureAsync();
             });
         }
     }

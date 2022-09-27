@@ -142,18 +142,18 @@ namespace GhostNetwork.Profiles.MongoDb
 
         public async Task DeleteFriendAsync(Guid user, Guid friend)
         {
-            var deleteFilter = Filter.Eq(p => p.FromUser, user)
-                               & Filter.Eq(p => p.ToUser, friend)
-                               & (Filter.Eq(p => p.Status, RequestStatus.Declined)
-                                  | Filter.Eq(p => p.Status, RequestStatus.Accepted));
+            await context.FriendRequests.UpdateOneAsync(
+                Filter.Eq(p => p.FromUser, user)
+                & Filter.Eq(p => p.ToUser, friend)
+                & Filter.Eq(p => p.Status, RequestStatus.Accepted),
+                Update.Set(p => p.Status, RequestStatus.Outgoing));
 
-            var updateFilter = Filter.Eq(p => p.FromUser, friend)
-                               & Filter.Eq(p => p.ToUser, user)
-                               & Filter.Eq(p => p.Status, RequestStatus.Accepted);
-            var updateToFollowers = Update.Set(p => p.Status, RequestStatus.Declined);
+            await context.FriendRequests.UpdateOneAsync(
+                Filter.Eq(p => p.FromUser, friend)
+                & Filter.Eq(p => p.ToUser, user)
+                & Filter.Eq(p => p.Status, RequestStatus.Accepted),
+                Update.Set(p => p.Status, RequestStatus.Declined));
 
-            await context.FriendRequests.DeleteOneAsync(deleteFilter);
-            await context.FriendRequests.UpdateOneAsync(updateFilter, updateToFollowers);
             await eventBus.PublishAsync(new Deleted(user, friend));
         }
 

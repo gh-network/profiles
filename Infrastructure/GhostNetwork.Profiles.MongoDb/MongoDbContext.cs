@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
@@ -38,56 +36,16 @@ namespace GhostNetwork.Profiles.MongoDb
         public IMongoCollection<FriendsEntity> FriendRequests =>
             database.GetCollection<FriendsEntity>(FriendRequestsCollection);
 
-        public async Task MigrateGuidAsync()
+        public async Task ConfigureAsync()
         {
-            var profiles = await Profiles
-                .Find(Builders<ProfileEntity>.Filter.Not(Builders<ProfileEntity>.Filter.Type(p => p.Id, BsonType.String)))
-                .ToListAsync();
-
-            if (profiles.Any())
+            var requestIndex = Builders<FriendsEntity>.IndexKeys.Combine(
+                Builders<FriendsEntity>.IndexKeys.Ascending(request => request.FromUser),
+                Builders<FriendsEntity>.IndexKeys.Ascending(request => request.ToUser));
+            await FriendRequests.Indexes.CreateOneAsync(new CreateIndexModel<FriendsEntity>(requestIndex, new CreateIndexOptions
             {
-                foreach (var profile in profiles)
-                {
-                    await Profiles.InsertOneAsync(profile);
-                }
-
-                await Profiles.DeleteManyAsync(Builders<ProfileEntity>.Filter.Not(Builders<ProfileEntity>.Filter.Type(p => p.Id, BsonType.String)));
-            }
-
-            var securitySettings = await SecuritySettings
-                .Find(Builders<SecuritySettingsEntity>.Filter.Not(Builders<SecuritySettingsEntity>.Filter.Type(p => p.UserId, BsonType.String)))
-                .ToListAsync();
-
-            if (securitySettings.Any())
-            {
-                foreach (var securitySetting in securitySettings)
-                {
-                    await SecuritySettings.InsertOneAsync(securitySetting);
-                }
-
-                await SecuritySettings.DeleteManyAsync(Builders<SecuritySettingsEntity>.Filter.Not(Builders<SecuritySettingsEntity>.Filter.Type(p => p.UserId, BsonType.String)));
-            }
-
-            var relations = await FriendRequests
-                .Find(Builders<FriendsEntity>.Filter.Not(Builders<FriendsEntity>.Filter.Type(p => p.FromUser, BsonType.String)))
-                .ToListAsync();
-
-            if (relations.Any())
-            {
-                foreach (var relation in relations)
-                {
-                    await FriendRequests.InsertOneAsync(relation);
-                }
-
-                await FriendRequests.DeleteManyAsync(Builders<FriendsEntity>.Filter.Not(Builders<FriendsEntity>.Filter.Type(p => p.FromUser, BsonType.String)));
-            }
-        }
-
-        public async Task MigrateProfileCreationDateAsync()
-        {
-            await Profiles.UpdateManyAsync(
-                Builders<ProfileEntity>.Filter.Not(Builders<ProfileEntity>.Filter.Exists(p => p.CreatedOn)),
-                Builders<ProfileEntity>.Update.Set(p => p.CreatedOn, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()));
+                Unique = true,
+                Background = true
+            }));
         }
     }
 }
