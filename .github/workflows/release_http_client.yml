@@ -25,6 +25,7 @@ jobs:
           npx @openapitools/openapi-generator-cli generate -i http://localhost:5300/swagger/api/swagger.json \
             -g csharp-netcore \
             -o ./http-client \
+            --library httpclient \
             --remove-operation-id-prefix \
             --additional-properties=packageName=$PACKAGE_NAME \
             --additional-properties=netCoreProjectFile=true
