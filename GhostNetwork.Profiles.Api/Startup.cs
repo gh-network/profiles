@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using GhostNetwork.EventBus;
 using GhostNetwork.EventBus.AzureServiceBus;
 using GhostNetwork.EventBus.RabbitMq;
+using GhostNetwork.Profiles.Api.Helpers;
 using GhostNetwork.Profiles.Api.Helpers.OpenApi;
 using GhostNetwork.Profiles.Friends;
 using GhostNetwork.Profiles.MongoDb;
@@ -13,8 +15,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
+using MongoDB.Driver.Core.Events;
 using RabbitMQ.Client;
 using Swashbuckle.AspNetCore.Filters;
 
@@ -38,7 +42,7 @@ namespace GhostNetwork.Profiles.Api
                 options.SwaggerDoc("api", new OpenApiInfo
                 {
                     Title = "GhostNetwork.Profiles",
-                    Version = "1.4.1"
+                    Version = "1.4.2"
                 });
 
                 options.OperationFilter<OperationIdFilter>();
@@ -65,12 +69,54 @@ namespace GhostNetwork.Profiles.Api
                     break;
             }
 
-            services.AddScoped(_ =>
+            services.AddSingleton(provider =>
             {
                 var connectionString = Configuration["MONGO_CONNECTION"];
                 var mongoUrl = MongoUrl.Create(connectionString);
-                var client = new MongoClient(mongoUrl);
-                return new MongoDbContext(client.GetDatabase(mongoUrl.DatabaseName ?? DefaultDbName));
+                var settings = MongoClientSettings.FromUrl(mongoUrl);
+                settings.ClusterConfigurator = cb =>
+                {
+                    cb.Subscribe<CommandStartedEvent>(_ =>
+                    {
+                        var logger = provider.GetRequiredService<ILogger<MongoDbContext>>();
+                        using var scope = logger.BeginScope(new Dictionary<string, object>
+                        {
+                            ["type"] = "outgoing:mongodb"
+                        });
+
+                        logger.LogInformation("Mongodb query started");
+                    });
+
+                    cb.Subscribe<CommandSucceededEvent>(e =>
+                    {
+                        var logger = provider.GetRequiredService<ILogger<MongoDbContext>>();
+                        using var scope = logger.BeginScope(new Dictionary<string, object>
+                        {
+                            ["type"] = "outgoing:mongodb",
+                            ["elapsedMilliseconds"] = e.Duration.Milliseconds
+                        });
+
+                        logger.LogInformation("Mongodb query finished");
+                    });
+
+                    cb.Subscribe<CommandFailedEvent>(e =>
+                    {
+                        var logger = provider.GetRequiredService<ILogger<MongoDbContext>>();
+                        using var scope = logger.BeginScope(new Dictionary<string, object>
+                        {
+                            ["type"] = "outgoing:mongodb",
+                            ["elapsedMilliseconds"] = e.Duration.Milliseconds
+                        });
+
+                        logger.LogInformation("Mongodb query failed");
+                    });
+                };
+                return new MongoClient(settings);
+            });
+            services.AddScoped(provider =>
+            {
+                var mongoUrl = MongoUrl.Create(Configuration["MONGO_CONNECTION"]);
+                return new MongoDbContext(provider.GetRequiredService<MongoClient>().GetDatabase(mongoUrl.DatabaseName ?? DefaultDbName));
             });
 
             services.AddScoped<IProfileStorage, MongoProfileStorage>();
@@ -96,6 +142,8 @@ namespace GhostNetwork.Profiles.Api
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider provider, IHostApplicationLifetime hostApplicationLifetime)
         {
+            app.UseMiddleware<LoggingMiddleware>();
+
             if (env.IsDevelopment())
             {
                 app
