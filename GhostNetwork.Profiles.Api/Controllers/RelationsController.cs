@@ -135,7 +135,7 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [HttpGet("{from:guid}/friends/{to:guid}/type")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<RelationType>> RelationTypeAsync([FromRoute] Guid from, [FromRoute] Guid to)
+        public async Task<ActionResult<RelationViewModel>> RelationTypeAsync([FromRoute] Guid from, [FromRoute] Guid to)
         {
             if (from == to)
             {
