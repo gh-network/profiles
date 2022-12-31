@@ -93,6 +93,25 @@ namespace GhostNetwork.Profiles.MongoDb
             return (requests.Select(r => r.FromUser).ToList(), requestCount);
         }
 
+        public async Task<RelationType> RelationTypeAsync(Guid userId, Guid ofUserId)
+        {
+            var filter = Filter.Eq(p => p.ToUser, ofUserId)
+                         & Filter.Eq(p => p.FromUser, userId);
+
+            var relation = await context.FriendRequests
+                .Find(filter)
+                .FirstOrDefaultAsync();
+
+            return relation?.Status switch
+            {
+                RequestStatus.Accepted => RelationType.Friend,
+                RequestStatus.Declined => RelationType.DeclinedFollower,
+                RequestStatus.Incoming => RelationType.PendingFollower,
+                RequestStatus.Outgoing => RelationType.Following,
+                _ => RelationType.NoRelation
+            };
+        }
+
         public async Task<bool> IsFriendAsync(Guid userId, Guid ofUserId)
         {
             var filter = Filter.Eq(p => p.ToUser, ofUserId)

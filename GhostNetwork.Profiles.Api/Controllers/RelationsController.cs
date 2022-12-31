@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using GhostNetwork.Profiles.Api.Models;
 using GhostNetwork.Profiles.Friends;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -114,7 +115,6 @@ namespace GhostNetwork.Profiles.Api.Controllers
         [HttpGet("{userId:guid}/friends/{friend:guid}/exists")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [SwaggerResponseHeader(StatusCodes.Status200OK, "X-TotalCount", "Boolean", "Boolean value that indicates that the user is a friend of another user.")]
         public async Task<ActionResult<bool>> IsFriendAsync([FromRoute] Guid userId, [FromRoute] Guid friend)
         {
             if (userId == friend)
@@ -123,6 +123,26 @@ namespace GhostNetwork.Profiles.Api.Controllers
             }
 
             return Ok(await relationsService.IsFriendAsync(userId, friend));
+        }
+
+        /// <summary>
+        /// Returned type of current relations eg Friend/Follower etc.
+        /// </summary>
+        /// <param name="from">User a</param>
+        /// <param name="to">User b</param>
+        /// <response code="200"></response>
+        /// <response code="400"></response>
+        [HttpGet("{from:guid}/friends/{to:guid}/type")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<RelationType>> RelationTypeAsync([FromRoute] Guid from, [FromRoute] Guid to)
+        {
+            if (from == to)
+            {
+                return BadRequest();
+            }
+
+            return Ok(new RelationViewModel(await relationsService.RelationTypeAsync(from, to)));
         }
 
         /// <summary>
