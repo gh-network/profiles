@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-	<CodeAnalysisRuleSet>../GhostNetwork.ruleset</CodeAnalysisRuleSet>
-    <RootNamespace>GhostNetwork.Profiles</RootNamespace>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <CodeAnalysisRuleSet>../GhostNetwork.ruleset</CodeAnalysisRuleSet>
+        <RootNamespace>GhostNetwork.Profiles</RootNamespace>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Boberneprotiv.Domain" Version="0.0.2" />
-    <PackageReference Include="GhostNetwork.EventBus" Version="1.0.0" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.354">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Boberneprotiv.Domain" Version="0.0.2" />
+        <PackageReference Include="GhostNetwork.EventBus" Version="1.0.0" />
+        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.354">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
 
 </Project>
