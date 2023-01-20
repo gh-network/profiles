@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		dev-compose.yml = dev-compose.yml
 		docker-compose.yml = docker-compose.yml
 		Dockerfile = Dockerfile
+		Readme.md = Readme.md
+		GhostNetwork.ruleset = GhostNetwork.ruleset
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GhostNetwork.Profiles.ApiTests", "tests\GhostNetwork.Profiles.ApiTests\GhostNetwork.Profiles.ApiTests.csproj", "{FA06937F-21BA-4686-860D-9CEC70649E09}"
