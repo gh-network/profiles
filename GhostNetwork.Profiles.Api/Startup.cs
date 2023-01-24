@@ -12,6 +12,7 @@ using GhostNetwork.Profiles.SecuritySettings;
 using GhostNetwork.Profiles.WorkExperiences;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -56,13 +57,15 @@ namespace GhostNetwork.Profiles.Api
             {
                 case "rabbit":
                     services.AddSingleton<IEventBus>(provider => new RabbitMqEventBus(
-                        new ConnectionFactory { Uri = new Uri(Configuration["RABBIT_CONNECTION"]) },
-                        new EventBus.RabbitMq.HandlerProvider(provider)));
+                        new ConnectionFactory { Uri = new Uri(Configuration["RABBIT_CONNECTION"]!) },
+                        new EventBus.RabbitMq.HandlerProvider(provider),
+                        propertiesProvider: new RabbitMqPropertiesProvider(provider.GetRequiredService<IHttpContextAccessor>())));
                     break;
                 case "servicebus":
                     services.AddSingleton<IEventBus>(provider => new AzureServiceEventBus(
                         Configuration["SERVICEBUS_CONNECTION"],
-                        new EventBus.AzureServiceBus.HandlerProvider(provider)));
+                        new EventBus.AzureServiceBus.HandlerProvider(provider),
+                        new EventHubMessageProvider(provider.GetRequiredService<IHttpContextAccessor>())));
                     break;
                 default:
                     services.AddSingleton<IEventBus, NullEventBus>();
