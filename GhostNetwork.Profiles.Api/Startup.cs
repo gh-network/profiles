@@ -38,6 +38,8 @@ namespace GhostNetwork.Profiles.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
+
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("api", new OpenApiInfo
